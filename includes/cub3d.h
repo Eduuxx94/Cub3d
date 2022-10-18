@@ -6,14 +6,16 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:34:25 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/17 20:20:37 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/18 20:22:55 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "mlx/mlx.h"
 # include <stdio.h>
+
+# include ".mlx/mlx.h"
+# include "get_next_line.h"
 
 #endif
