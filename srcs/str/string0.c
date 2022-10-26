@@ -1,38 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   string0.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/18 19:58:15 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/26 20:19:58 by ede-alme         ###   ########.fr       */
+/*   Created: 2022/10/26 22:11:31 by ede-alme          #+#    #+#             */
+/*   Updated: 2022/10/26 22:13:00 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "cub3d.h"
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
-# endif
+char	*ft_strdup(const char *s)
+{
+	char	*new;
+	int		size;
 
-# include <stdlib.h>
-# include <unistd.h>
-# include <fcntl.h>
-
-typedef struct s_gnl {
-	int		i;
-	int		j;
-	char	*temp;
-	int		i_line;
-	int		i_buffer;
-}		t_gnl;
-
-//Main Function
-char	*get_next_line(int fd);
-
-//Utils Functions
-char	*ft_get_buff(char *line, char *buffer, t_gnl var);
-
-#endif
+	size = 0;
+	while (s[size] != '\0')
+		size++;
+	new = malloc(sizeof(char) * (size + 1));
+	if (!new)
+		return (NULL);
+	while (size >= 0)
+	{
+		new[size] = s[size];
+		size--;
+	}
+	return (new);
+}

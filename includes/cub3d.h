@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:34:25 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/18 20:22:55 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/26 22:20:44 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,5 +17,37 @@
 
 # include ".mlx/mlx.h"
 # include "get_next_line.h"
+
+typedef struct s_rgb
+{
+	char	red;
+	char	green;
+	char	blue;
+	char	alpha;
+}	t_rgb;
+
+typedef struct s_file
+{
+	int		fd;
+	char	*file_path;
+	char	*_no;
+	char	*_so;
+	char	*_we;
+	char	*_ea;
+	t_rgb	floor;
+	t_rgb	ceilling;
+	char	**map;
+}	t_file;
+
+//Parse functions
+int		ft_start_parse(char *file_path);
+int		ft_file_check(char *file_path);
+void	ft_file_init(t_file *file, char *file_path);
+
+//Free parse functions
+int		ft_free_sfile(t_file *file);
+
+//String functions
+char	*ft_strdup(const char *s);
 
 #endif

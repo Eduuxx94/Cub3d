@@ -1,38 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   free_parse.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/18 19:58:15 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/26 20:19:58 by ede-alme         ###   ########.fr       */
+/*   Created: 2022/10/26 22:19:15 by ede-alme          #+#    #+#             */
+/*   Updated: 2022/10/26 22:24:26 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "cub3d.h"
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
-# endif
-
-# include <stdlib.h>
-# include <unistd.h>
-# include <fcntl.h>
-
-typedef struct s_gnl {
-	int		i;
-	int		j;
-	char	*temp;
-	int		i_line;
-	int		i_buffer;
-}		t_gnl;
-
-//Main Function
-char	*get_next_line(int fd);
-
-//Utils Functions
-char	*ft_get_buff(char *line, char *buffer, t_gnl var);
-
-#endif
+int	ft_free_sfile(t_file *file)
+{
+	if (file->map)
+		free(file->map);
+	if (file->_ea)
+		free(file->_ea);
+	if (file->_no)
+		free(file->_no);
+	if (file->_so)
+		free(file->_so);
+	if (file->_we)
+		free(file->_we);
+	if (file->file_path)
+		free(file->file_path);
+	printf("Limpou tudo\n");
+	return (1);
+}

@@ -6,7 +6,7 @@
 #    By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/17 19:20:47 by ede-alme          #+#    #+#              #
-#    Updated: 2022/10/18 20:28:24 by ede-alme         ###   ########.fr        #
+#    Updated: 2022/10/26 22:22:25 by ede-alme         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@ NAME = cub3d
 
 SRC_PATH = ./srcs/
 SRC_PATH_PARSE = ./srcs/parse/
+SRC_PATH_STR = ./srcs/str/
 
 INC_PATH = ./includes/
 
@@ -23,8 +24,11 @@ SRC_NAME = 	main.c \
 
 SRC_PARSE =	read_map.c \
 			get_next_line.c \
+			free_parse.c \
 
-SRC = $(SRC_NAME) $(SRC_PARSE)
+SRC_STR =	string0.c \
+
+SRC = $(SRC_NAME) $(SRC_PARSE) $(SRC_STR)
 
 OBJ_NAME = $(SRC:.c=.o)
 
@@ -41,6 +45,10 @@ $(OBJ_PATH)%.o:$(SRC_PATH)%.c
 	$(CC) $(CFLAGS) -I $(INC_PATH) -I/usr/include -Iincludes/.mlx -O3 -o  $@ -c $<
 
 $(OBJ_PATH)%.o:$(SRC_PATH_PARSE)%.c
+	@mkdir -p $(OBJ_PATH)
+	$(CC) $(CFLAGS) -I $(INC_PATH) -I/usr/include -Iincludes/.mlx -O3 -o  $@ -c $<
+
+$(OBJ_PATH)%.o:$(SRC_PATH_STR)%.c
 	@mkdir -p $(OBJ_PATH)
 	$(CC) $(CFLAGS) -I $(INC_PATH) -I/usr/include -Iincludes/.mlx -O3 -o  $@ -c $<
 

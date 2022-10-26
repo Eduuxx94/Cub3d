@@ -6,19 +6,19 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:39:46 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/18 20:42:52 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/26 22:10:15 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	main(void)
+int	main(int argc, char **argv)
 {
-	void	*mlx;
-	void	*mlx_win;
-
-	(void)mlx_win;
-	mlx = mlx_init();
-	mlx_win = mlx_new_window(mlx, 1200, 800, "Hello world!");
-	mlx_loop(mlx);
+	if (argc != 2)
+		return (printf("Missing file path or to many arguments...\n"));
+	if (ft_start_parse(argv[1]))
+		exit(0);
+	printf("Executou o mlx\n");
+	//start_mlx;
+	return (0);
 }

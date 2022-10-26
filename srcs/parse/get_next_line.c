@@ -6,13 +6,13 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 19:57:48 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/18 20:06:44 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/26 20:20:13 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_get_buff(char *line, char *buffer, t_vars var)
+char	*ft_get_buff(char *line, char *buffer, t_gnl var)
 {
 	var.i_line = 0;
 	var.i_buffer = 0;
@@ -45,7 +45,7 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 	static char	buffer[256][BUFFER_SIZE + 1];
-	t_vars		var;
+	t_gnl		var;
 
 	line = NULL;
 	while (fd < 256 && fd != -1)
