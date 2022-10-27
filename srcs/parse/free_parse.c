@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 22:19:15 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/26 22:24:26 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/27 16:57:28 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,6 @@ int	ft_free_sfile(t_file *file)
 		free(file->_we);
 	if (file->file_path)
 		free(file->file_path);
-	printf("Limpou tudo\n");
+	printf("Struct t_file was freeded\n");
 	return (1);
 }
