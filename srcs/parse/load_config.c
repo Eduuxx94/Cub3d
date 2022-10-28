@@ -1,25 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   load_config.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/17 19:34:25 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/28 10:55:27 by ede-alme         ###   ########.fr       */
+/*   Created: 2022/10/17 19:25:52 by ede-alme          #+#    #+#             */
+/*   Updated: 2022/10/28 10:55:50 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
+#include "parse.h"
 
-# include <stdio.h>
-
-# include ".mlx/mlx.h"
-# include "parse.h"
-
-//main.c functions
-int		ft_free_sfile(t_file *file);
-int		main(int argc, char **argv);
-
-#endif
+int	ft_start_parse(t_file *file, char *file_path)
+{
+	if (ft_file_init(file, file_path) || ft_file_load_tiles(file))
+		return (1);
+	if (0)
+		return (1);
+	return (0);
+}

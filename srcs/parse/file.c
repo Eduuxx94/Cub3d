@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_map.c                                         :+:      :+:    :+:   */
+/*   file.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/17 19:25:52 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/27 22:33:02 by ede-alme         ###   ########.fr       */
+/*   Created: 2022/10/28 10:18:47 by ede-alme          #+#    #+#             */
+/*   Updated: 2022/10/28 10:55:43 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "parse.h"
 
-int	ft_file_config(t_file *file)
+int	ft_file_load_tiles(t_file *file)
 {
 	char	*ln;
 	char	*temp;
@@ -36,18 +36,8 @@ int	ft_file_config(t_file *file)
 	}
 	if (ft_file_check(file->_ea, ".xpm") || ft_file_check(file->_no, ".xpm") || \
 		ft_file_check(file->_so, ".xpm") || ft_file_check(file->_we, ".xpm"))
-		return (ft_free_sfile(file));
+		return (1);
 	return (0);
-}
-
-void	ft_file_init(t_file *file, char *file_path)
-{
-	file->_ea = NULL;
-	file->_no = NULL;
-	file->_so = NULL;
-	file->_we = NULL;
-	file->map = NULL;
-	file->file_path = ft_strdup(file_path);
 }
 
 int	ft_file_check(char *file_path, char *type)
@@ -60,7 +50,7 @@ int	ft_file_check(char *file_path, char *type)
 	temp = type;
 	fd = open(file_path, O_RDONLY);
 	if (fd == -1)
-		return (printf("Exception: File Open Error\t'%s'\n", strerror(errno)));
+		return (printf("Exception:\t%s:\t'%s'\n", file_path, strerror(errno)));
 	while (file_path[i] && (file_path[i] != '.' || file_path[i + 1] == '/'))
 		i++;
 	if ((!i || file_path[i - 1] == '/') && !close(fd))
@@ -74,15 +64,16 @@ int	ft_file_check(char *file_path, char *type)
 	return (1);
 }
 
-int	ft_start_parse(char *file_path)
+int	ft_file_init(t_file *file, char *file_path)
 {
-	t_file	file;
-
-	file.fd = open(file_path, O_RDONLY);
-	if (ft_file_check(file_path, ".cub"))
+	file->_ea = NULL;
+	file->_no = NULL;
+	file->_so = NULL;
+	file->_we = NULL;
+	file->map = NULL;
+	file->file_path = ft_strtrim(file_path);
+	if (ft_file_check(file->file_path, ".cub"))
 		return (1);
-	ft_file_init(&file, file_path);
-	if (ft_file_config(&file))// && ft_file_map(&file)
-		return (1);
+	file->fd = open(file->file_path, O_RDONLY);
 	return (0);
 }

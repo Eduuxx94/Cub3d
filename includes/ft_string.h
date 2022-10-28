@@ -1,31 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_parse.c                                       :+:      :+:    :+:   */
+/*   ft_string.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/26 22:19:15 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/27 16:57:28 by ede-alme         ###   ########.fr       */
+/*   Created: 2022/10/28 10:29:01 by ede-alme          #+#    #+#             */
+/*   Updated: 2022/10/28 10:51:53 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#ifndef FT_STRING_H
+# define FT_STRING_H
 
-int	ft_free_sfile(t_file *file)
-{
-	if (file->map)
-		free(file->map);
-	if (file->_ea)
-		free(file->_ea);
-	if (file->_no)
-		free(file->_no);
-	if (file->_so)
-		free(file->_so);
-	if (file->_we)
-		free(file->_we);
-	if (file->file_path)
-		free(file->file_path);
-	printf("Struct t_file was freeded\n");
-	return (1);
-}
+# include <string.h>
+# include <stdlib.h>
+
+//String functions
+char	*ft_strdup(const char *s);
+char	*ft_strtrim(const char *str);
+size_t	ft_strlen(const char *s);
+
+#endif

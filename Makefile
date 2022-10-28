@@ -6,7 +6,7 @@
 #    By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/17 19:20:47 by ede-alme          #+#    #+#              #
-#    Updated: 2022/10/27 20:50:55 by ede-alme         ###   ########.fr        #
+#    Updated: 2022/10/28 10:54:47 by ede-alme         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = cub3d
 
 SRC_PATH = ./srcs/
 SRC_PATH_PARSE = ./srcs/parse/
-SRC_PATH_STR = ./srcs/str/
+SRC_PATH_STR = ./srcs/ft_string/
 
 INC_PATH = ./includes/
 
@@ -22,11 +22,11 @@ OBJ_PATH = ./objs/
 
 SRC_NAME = 	main.c \
 
-SRC_PARSE =	read_map.c \
+SRC_PARSE =	load_config.c \
+			file.c \
 			get_next_line.c \
-			free_parse.c \
 
-SRC_STR =	string0.c \
+SRC_STR =	ft_string.c \
 
 SRC = $(SRC_NAME) $(SRC_PARSE) $(SRC_STR)
 
