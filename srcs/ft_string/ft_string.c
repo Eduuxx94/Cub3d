@@ -6,15 +6,27 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 22:11:31 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/28 10:32:59 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/28 17:57:34 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_string.h"
 
+int	ft_strisspace(const char *str)
+{
+	while (str && *str)
+	{
+		if (*str != '\f' && *str != '\n' && *str != '\r' && *str != '\t'\
+			&& *str != '\v' && *str != ' ')
+			return (0);
+		str++;
+	}
+	return (1);
+}
+
 size_t	ft_strlen(const char *s)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (s[i] != '\0')

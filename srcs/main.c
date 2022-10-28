@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:39:46 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/28 16:56:53 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/28 18:36:07 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,15 @@
 
 int	ft_free_sfile(t_file *file)
 {
+	char	**temp;
+
 	if (file->map)
-		free(file->map);
+	{
+		temp = file->map;
+		while (*file->map)
+			free(*(file->map++));
+		free(temp);
+	}
 	if (file->_ea)
 		free(file->_ea);
 	if (file->_no)
@@ -33,7 +40,7 @@ int	ft_free_sfile(t_file *file)
 
 int	main(int argc, char **argv)
 {
-	t_file	file;
+	static t_file	file;
 
 	if (argc != 2)
 		return (printf("Missing file path or to many arguments...\n"));
