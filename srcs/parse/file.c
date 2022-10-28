@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 10:18:47 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/28 10:55:43 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/28 16:32:12 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,12 @@ int	ft_file_init(t_file *file, char *file_path)
 	file->_so = NULL;
 	file->_we = NULL;
 	file->map = NULL;
+	file->ceilling.red = -1;
+	file->ceilling.green = -1;
+	file->ceilling.blue = -1;
+	file->floor.red = -1;
+	file->floor.green = -1;
+	file->floor.blue = -1;
 	file->file_path = ft_strtrim(file_path);
 	if (ft_file_check(file->file_path, ".cub"))
 		return (1);

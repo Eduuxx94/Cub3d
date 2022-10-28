@@ -6,7 +6,7 @@
 #    By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/17 19:20:47 by ede-alme          #+#    #+#              #
-#    Updated: 2022/10/28 10:54:47 by ede-alme         ###   ########.fr        #
+#    Updated: 2022/10/28 16:58:33 by ede-alme         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRC_NAME = 	main.c \
 SRC_PARSE =	load_config.c \
 			file.c \
 			get_next_line.c \
+			load_colors.c \
 
 SRC_STR =	ft_string.c \
 

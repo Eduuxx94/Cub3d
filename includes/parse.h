@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 10:22:49 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/28 10:55:10 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/28 16:55:58 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@
 
 typedef struct s_rgb
 {
-	char	red;
-	char	green;
-	char	blue;
-	char	alpha;
+	int	red;
+	int	green;
+	int	blue;
+	int	alpha;
 }	t_rgb;
 
 typedef struct s_file
@@ -41,12 +41,17 @@ typedef struct s_file
 	char	**map;
 }	t_file;
 
-//Parse.c functions
+//load_config.c functions
 int		ft_start_parse(t_file *file, char *file_path);
 
 //File.c functions
 int		ft_file_init(t_file *file, char *file_path);
 int		ft_file_check(char *file_path, char *type);
 int		ft_file_load_tiles(t_file *file);
+
+//load_colors.c functions
+int		ft_check_file_colors(t_file *file);
+int		ft_get_file_colors(t_rgb *rgb, char *str);
+int		ft_color_line_export(char *str);
 
 #endif

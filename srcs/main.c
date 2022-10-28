@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:39:46 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/28 10:43:41 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/28 16:56:53 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	main(int argc, char **argv)
 		return (printf("Missing file path or to many arguments...\n"));
 	if (!ft_start_parse(&file, argv[1]))
 	{
-		printf("Executou o mlx\n");
+		printf("Executou o mlx\n\n");
 		ft_free_sfile(&file);
 		exit(0);
 	}
