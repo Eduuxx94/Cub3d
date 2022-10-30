@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_string.h                                        :+:      :+:    :+:   */
+/*   mem.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/28 10:29:01 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/28 18:37:00 by ede-alme         ###   ########.fr       */
+/*   Created: 2022/10/30 09:34:01 by ede-alme          #+#    #+#             */
+/*   Updated: 2022/10/30 12:07:57 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_STRING_H
-# define FT_STRING_H
+#include "utils.h"
 
-# include <string.h>
-# include <stdlib.h>
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	size_t			i;
+	unsigned char	*instr;
+	unsigned char	*outstr;
 
-//String functions
-char	*ft_strdup(const char *s);
-char	*ft_strtrim(const char *str);
-size_t	ft_strlen(const char *s);
-int	    ft_strisspace(const char *str);
-
-#endif
+	i = 0;
+	instr = (unsigned char *)src;
+	outstr = (unsigned char *)dest;
+	while (n > 0)
+	{
+		outstr[i] = instr[i];
+		i++;
+		n--;
+	}
+	return (outstr);
+}

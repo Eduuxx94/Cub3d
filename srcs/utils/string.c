@@ -1,20 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_string.c                                        :+:      :+:    :+:   */
+/*   string.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 22:11:31 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/28 17:57:34 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/30 09:36:24 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_string.h"
+#include "utils.h"
 
 int	ft_strisspace(const char *str)
 {
-	while (str && *str)
+	if (!str)
+		return (0);
+	while (*str)
 	{
 		if (*str != '\f' && *str != '\n' && *str != '\r' && *str != '\t'\
 			&& *str != '\v' && *str != ' ')
@@ -28,6 +30,8 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
+	if (!s)
+		return (0);
 	i = 0;
 	while (s[i] != '\0')
 		i++;

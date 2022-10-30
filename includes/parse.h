@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 10:22:49 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/28 18:07:41 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/30 09:38:13 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <string.h>
 
 # include "get_next_line.h"
-# include "ft_string.h"
+# include "utils.h"
 
 typedef struct s_rgb
 {

@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/17 19:34:25 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/30 09:41:11 by ede-alme         ###   ########.fr       */
+/*   Created: 2022/10/30 09:42:19 by ede-alme          #+#    #+#             */
+/*   Updated: 2022/10/30 12:13:15 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
+#include "utils.h"
+//teste
+int		ft_strisspace(const char *str);
 
-# include <stdio.h>
+t_utils	util(void)
+{
+	static t_utils	util = {
+		ft_strisspace, ft_strlen, ft_strtrim, ft_strdup, ft_memcpy,
+		ft_matrixdup, ft_matrixlen
+	};
 
-# include ".mlx/mlx.h"
-# include "parse.h"
-
-//main.c functions
-int		ft_free_sfile(t_file *file);
-int		main(int argc, char **argv);
-
-#endif
+	return (util);
+}

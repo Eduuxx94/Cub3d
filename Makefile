@@ -6,7 +6,7 @@
 #    By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/17 19:20:47 by ede-alme          #+#    #+#              #
-#    Updated: 2022/10/28 18:38:01 by ede-alme         ###   ########.fr        #
+#    Updated: 2022/10/30 12:03:03 by ede-alme         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = cub3d
 
 SRC_PATH = ./srcs/
 SRC_PATH_PARSE = ./srcs/parse/
-SRC_PATH_STR = ./srcs/ft_string/
+SRC_PATH_UTILS = ./srcs/utils/
 
 INC_PATH = ./includes/
 
@@ -28,9 +28,12 @@ SRC_PARSE =	load_config.c \
 			colors.c \
 			map.c \
 
-SRC_STR =	ft_string.c \
+SRC_UTILS =	utils.c \
+			string.c \
+			mem.c \
+			matrix.c \
 
-SRC = $(SRC_NAME) $(SRC_PARSE) $(SRC_STR)
+SRC = $(SRC_NAME) $(SRC_PARSE) $(SRC_UTILS)
 
 OBJ_NAME = $(SRC:.c=.o)
 
@@ -50,7 +53,7 @@ $(OBJ_PATH)%.o:$(SRC_PATH_PARSE)%.c
 	@mkdir -p $(OBJ_PATH)
 	$(CC) $(CFLAGS) -I $(INC_PATH) -I/usr/include -Iincludes/.mlx -O3 -o  $@ -c $<
 
-$(OBJ_PATH)%.o:$(SRC_PATH_STR)%.c
+$(OBJ_PATH)%.o:$(SRC_PATH_UTILS)%.c
 	@mkdir -p $(OBJ_PATH)
 	$(CC) $(CFLAGS) -I $(INC_PATH) -I/usr/include -Iincludes/.mlx -O3 -o  $@ -c $<
 
