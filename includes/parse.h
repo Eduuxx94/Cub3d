@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 10:22:49 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/30 09:38:13 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/30 18:06:21 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ typedef struct s_file
 	char	**map;
 }	t_file;
 
-//load_config.c functions
+//parse.c functions
+int		ft_file_map(t_file *file);
 int		ft_start_parse(t_file *file, char *file_path);
 
 //File.c functions
@@ -55,6 +56,10 @@ int		ft_get_file_colors(t_rgb *rgb, char *str);
 int		ft_color_line_export(char *str);
 
 //map.c functions
-int		ft_file_map(t_file *file);
+int		ft_check_map(char **map, int x, int y);
+int		get_map_pos(char **map, char pos);
+int		is_player(char c);
+int		is_valid_map_obj(char c);
+int		ft_map_player_count(char **map);
 
 #endif

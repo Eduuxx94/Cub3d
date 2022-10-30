@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 10:29:01 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/30 12:12:26 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/30 18:08:01 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ typedef struct s_utils
 	char	*(*strdup)(const char *s);
 	void	*(*memcpy)(void *dest, const void *src, size_t n);
 	char	**(*matrixdup)(const char **matrix);
-	size_t	(*matrixlen)(const char **matrix);
+	int		(*matrixlen)(const char **matrix);
+	void	(*matrixfree)(char **matrix);
 }	t_utils;
 
 //main
@@ -41,7 +42,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n);
 
 //Matrix functions
 char	**ft_matrixdup(const char **matrix);
-size_t	ft_matrixlen(const char **matrix);
-
+int		ft_matrixlen(const char **matrix);
+void	ft_matrixfree(char **matrix);
 
 #endif

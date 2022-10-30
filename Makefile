@@ -6,7 +6,7 @@
 #    By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/17 19:20:47 by ede-alme          #+#    #+#              #
-#    Updated: 2022/10/30 12:03:03 by ede-alme         ###   ########.fr        #
+#    Updated: 2022/10/30 18:08:43 by ede-alme         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ OBJ_PATH = ./objs/
 
 SRC_NAME = 	main.c \
 
-SRC_PARSE =	load_config.c \
+SRC_PARSE =	parse.c \
 			file.c \
 			get_next_line.c \
 			colors.c \
@@ -41,7 +41,7 @@ OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
 
 CC = gcc
 
-CFLAGS = -g -Wall -Wextra -Werror -fsanitize=address
+CFLAGS = #-g -Wall -Wextra -Werror -fsanitize=address
 
 MLX = includes/.mlx/libmlx_Linux.a
 

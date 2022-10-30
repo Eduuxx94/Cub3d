@@ -6,11 +6,25 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 08:42:27 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/30 12:09:39 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/30 17:29:56 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
+
+void	ft_matrixfree(char **matrix)
+{
+	int	i;
+
+	i = utils().matrixlen((const char **)matrix);
+	while (--i >= 0)
+	{
+		if (matrix[i])
+			free(matrix[i]);
+	}
+	if (matrix)
+		free(matrix);
+}
 
 //Will allocate a new **array(char) and copy the entire contents of **matrix
 char	**ft_matrixdup(const char **matrix)
@@ -33,9 +47,9 @@ char	**ft_matrixdup(const char **matrix)
 }
 
 /*Will calculate the length of the **matrix*/
-size_t	ft_matrixlen(const char **matrix)
+int	ft_matrixlen(const char **matrix)
 {
-	size_t	i;
+	int	i;
 
 	if (!matrix)
 		return (0);

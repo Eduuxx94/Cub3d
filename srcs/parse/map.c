@@ -6,42 +6,102 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:18:47 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/30 12:13:42 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/10/30 18:05:48 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-int	ft_get_map_alloc(t_file *file, int size)
+//'0' for walls and 'D' for doors// '.' for check player steps
+int	ft_check_map(char **map, int x, int y)
 {
-	char	*temp;
-	int		result;
+	int	result;
 
-	temp = get_next_line(file->fd);
 	result = 0;
-	while (size == 0 && ft_strisspace(temp))
-	{
-		free(temp);
-		temp = get_next_line(file->fd);
-	}
-	if (!temp)
-	{
-		file->map = malloc(sizeof(char *) * (size + 1));
-		if (!file->map)
-			return (1);
-	}
-	else
-		result = ft_get_map_alloc(file, (size + 1));
-	if (result)
-		free(temp);
-	else
-		file->map[size] = temp;
+	map[y][x] = '.';
+	if (map[y][x + 1] && map[y][x + 1] == ' ')
+		return (printf("Check map error!\tline: '%s'\n", map[y]));
+	if (map[y + 1][x] && map[y + 1][x] == ' ')
+		return (printf("Check map error!\tline: '%s'\n", map[y + 1]));
+	if (x - 1 >= 0 && map[y][x - 1] && map[y][x - 1] == ' ')
+		return (printf("Check map error!\tline: '%s'\n", map[y]));
+	if (y - 1 >= 0 && map[y - 1][x] && map[y - 1][x] == ' ')
+		return (printf("Check map error!\tline: '%s'\n", map[y - 1]));
+	if (map[y][x + 1] && (map[y][x + 1] == '0' || map[y][x + 1] == 'D'))
+		result += ft_check_map(map, x + 1, y);
+	if (map[y + 1][x] && (map[y + 1][x] == '0' || map[y + 1][x] == 'D'))
+		result += ft_check_map(map, x, y + 1);
+	if (y - 1 >= 0 && map[y - 1][x] && (map[y - 1][x] == '0' || \
+		map[y - 1][x] == 'D'))
+		result += ft_check_map(map, x, y - 1);
+	if (x - 1 >= 0 && map[y][x - 1] && (map[y][x - 1] == '0' || \
+		map[y][x - 1] == 'D'))
+		result += ft_check_map(map, x - 1, y);
 	return (result);
 }
 
-int	ft_file_map(t_file *file)
+int	get_map_pos(char **map, char pos)
 {
-	if (ft_get_map_alloc(file, 0))
+	int	x;
+	int	y;
+
+	y = -1;
+	while (map[++y])
+	{
+		x = -1;
+		while (map[y][++x])
+		{
+			if (is_player(map[y][x]))
+			{
+				if (pos == 'y')
+					return (y);
+				else if (pos == 'x')
+					return (x);
+			}
+		}
+	}
+	return (0);
+}
+
+int	is_player(char c)
+{
+	if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
 		return (1);
+	return (0);
+}
+
+int	is_valid_map_obj(char c)
+{
+	if (c == '0' || c == ' ' || c == '1' || c == 'N' || c == 'S' || c == 'E' || \
+		c == 'W')
+		return (0);
+	return (1);
+}
+
+int	ft_map_player_count(char **map)
+{
+	int	x;
+	int	y;
+	int	player;
+
+	y = -1;
+	player = 0;
+	while (map[++y])
+	{
+		x = -1;
+		while (map[y][++x])
+		{
+			if (map[y][x] == '\n')
+				map[y][x] = ' ';
+			if (is_valid_map_obj(map[y][x]))
+				return (printf("Check map error!\t'%c' Is invalid\n", map[y][x]));
+			if (is_player(map[y][x]))
+				player++;
+		}
+	}
+	if (player == 0)
+		return (printf("Check map error!\t'No player was found'\n"));
+	else if (player > 1)
+		return (printf("Check map error!\t'Was found %i players'\n", player));
 	return (0);
 }
