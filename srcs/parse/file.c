@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 10:18:47 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/28 18:37:36 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/02 21:52:28 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ int	ft_file_load_tiles(t_file *file)
 			break ;
 		ln = ft_strtrim(temp);
 		free(temp);
-		if (ft_strlen(ln) > 3 && ln[0] == 'N' && ln[1] == 'O' && ln[2] == ' ')
-			file->_ea = ft_strtrim(ln + 2);
-		if (ft_strlen(ln) > 3 && ln[0] == 'S' && ln[1] == 'O' && ln[2] == ' ')
+		if (!file->_no && ln[0] == 'N' && ln[1] == 'O' && ln[2] == ' ')
 			file->_no = ft_strtrim(ln + 2);
-		if (ft_strlen(ln) > 3 && ln[0] == 'W' && ln[1] == 'E' && ln[2] == ' ')
+		if (!file->_so && ln[0] == 'S' && ln[1] == 'O' && ln[2] == ' ')
 			file->_so = ft_strtrim(ln + 2);
-		if (ft_strlen(ln) > 3 && ln[0] == 'E' && ln[1] == 'A' && ln[2] == ' ')
+		if (!file->_we && ln[0] == 'W' && ln[1] == 'E' && ln[2] == ' ')
 			file->_we = ft_strtrim(ln + 2);
+		if (!file->_ea && ln[0] == 'E' && ln[1] == 'A' && ln[2] == ' ')
+			file->_ea = ft_strtrim(ln + 2);
 		free(ln);
 	}
 	if (ft_file_check(file->_ea, ".xpm") || ft_file_check(file->_no, ".xpm") || \
