@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ede-alme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:18:47 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/02 21:53:59 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/03 13:58:25 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,8 @@ int	ft_player_range(char **map)
 	int	pos_y;
 	int	y;
 	int	x;
-	int	last;
 
 	y = -1;
-	last = ft_strlen(map[0]);
 	pos_x = get_map_pos(map, 'x');
 	pos_y = get_map_pos(map, 'y');
 	while (map[++y] && y <= pos_y)
@@ -29,11 +27,11 @@ int	ft_player_range(char **map)
 		x = -1;
 		while (map[y][++x])
 			;
-		if (x > last)
-			return (printf("Check map error!\t'Check top of player edges.'"));
+		if (y == pos_y && y > 0 && pos_x > (int)utils().strlen(map[y - 1]))
+			return (printf("Check map error!\t'Check top of player edges.'\n"));
 	}
 	x = -1;
-	if (!map[y] || pos_y == 0)
+	if (!map[y] || pos_y == 0 || pos_x == 0)
 		return (printf("Check map error!\t'Player cannot stand on the edges'\n"));
 	while (map[y][++x])
 		if (x >= pos_x)
