@@ -6,19 +6,11 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:25:52 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/02 21:54:03 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/03 21:07:01 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
-
-int	is_valid_map_obj(char c)
-{
-	if (c == '0' || c == ' ' || c == '1' || c == 'N' || c == 'S' || c == 'E' || \
-		c == 'W')
-		return (0);
-	return (1);
-}
 
 int	ft_get_map_alloc(t_file *file, int size)
 {

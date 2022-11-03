@@ -1,38 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/18 19:58:15 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/26 20:19:58 by ede-alme         ###   ########.fr       */
+/*   Created: 2022/11/03 20:40:11 by ede-alme          #+#    #+#             */
+/*   Updated: 2022/11/03 20:48:07 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "parse.h"
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
-# endif
+int	is_player(char c)
+{
+	if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
+		return (1);
+	return (0);
+}
 
-# include <stdlib.h>
-# include <unistd.h>
-# include <fcntl.h>
-
-typedef struct s_gnl {
-	int		i;
-	int		j;
-	char	*temp;
-	int		i_line;
-	int		i_buffer;
-}		t_gnl;
-
-//Main Function
-char	*get_next_line(int fd);
-
-//Utils Functions
-char	*ft_get_buff(char *line, char *buffer, t_gnl var);
-
-#endif
+int	is_valid_map_obj(char c)
+{
+	if (c == '0' || c == ' ' || c == '1' || is_player(c))
+		return (0);
+	return (1);
+}

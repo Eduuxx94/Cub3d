@@ -6,7 +6,7 @@
 #    By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/17 19:20:47 by ede-alme          #+#    #+#              #
-#    Updated: 2022/11/02 21:28:42 by ede-alme         ###   ########.fr        #
+#    Updated: 2022/11/03 20:50:16 by ede-alme         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,12 +23,13 @@ OBJ_PATH = ./objs/
 SRC_NAME = 	main.c \
 
 SRC_PARSE =	parse.c \
+			parse_utils.c \
 			file.c \
-			get_next_line.c \
 			colors.c \
 			map.c \
 
 SRC_UTILS =	utils.c \
+			get_next_line.c \
 			string.c \
 			mem.c \
 			matrix.c \

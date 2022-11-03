@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-alme <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:18:47 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/03 13:58:25 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/03 20:43:49 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,6 @@ int	get_map_pos(char **map, char pos)
 			}
 		}
 	}
-	return (0);
-}
-
-int	is_player(char c)
-{
-	if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
-		return (1);
 	return (0);
 }
 

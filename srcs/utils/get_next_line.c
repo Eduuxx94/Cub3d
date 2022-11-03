@@ -6,11 +6,11 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 19:57:48 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/26 20:20:13 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/03 20:51:40 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "utils.h"
 
 char	*ft_get_buff(char *line, char *buffer, t_gnl var)
 {
