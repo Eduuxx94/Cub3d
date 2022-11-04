@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ede-alme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:25:52 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/03 21:07:01 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/04 15:27:12 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	ft_file_map(t_file *file)
 		return (1);
 	checkmap = utils().matrixdup((const char **)file->map);
 	if (ft_check_map(checkmap, get_map_pos(file->map, 'x'), get_map_pos \
-		(file->map, 'y')))
+		(file->map, 'y')) && printf("Check map error!\t'Map not closed!'\n"))
 	{
 		utils().matrixfree(checkmap);
 		return (1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ede-alme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:18:47 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/03 20:43:49 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/04 15:24:16 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,19 +47,20 @@ int	ft_check_map(char **map, int x, int y)
 	result = 0;
 	map[y][x] = '.';
 	if (map[y][x + 1] && map[y][x + 1] == ' ')
-		return (printf("Check map error!\tline: '%s'\n", map[y]));
-	if (map[y + 1][x] && map[y + 1][x] == ' ')
-		return (printf("Check map error!\tline: '%s'\n", map[y + 1]));
+		return (1);
+	if (map[y + 1] && ((int)ft_strlen(map[y + 1]) < x || map[y + 1][x] == ' '))
+		return (1);
 	if (x - 1 >= 0 && map[y][x - 1] && map[y][x - 1] == ' ')
-		return (printf("Check map error!\tline: '%s'\n", map[y]));
-	if (y - 1 >= 0 && map[y - 1][x] && map[y - 1][x] == ' ')
-		return (printf("Check map error!\tline: '%s'\n", map[y - 1]));
+		return (1);
+	if (y - 1 >= 0 && ((int)ft_strlen(map[y - 1]) < x || map[y - 1][x] == ' '))
+		return (1);
 	if (map[y][x + 1] && (map[y][x + 1] == '0' || map[y][x + 1] == 'D'))
 		result += ft_check_map(map, x + 1, y);
-	if (map[y + 1][x] && (map[y + 1][x] == '0' || map[y + 1][x] == 'D'))
+	if (map[y + 1] && (int)ft_strlen(map[y + 1]) > x && (map[y + 1][x] == '0' \
+		|| map[y + 1][x] == 'D'))
 		result += ft_check_map(map, x, y + 1);
-	if (y - 1 >= 0 && map[y - 1][x] && (map[y - 1][x] == '0' || \
-		map[y - 1][x] == 'D'))
+	if (y - 1 >= 0 && (int)ft_strlen(map[y - 1]) > x && (map[y - 1][x] == '0' \
+		|| map[y - 1][x] == 'D'))
 		result += ft_check_map(map, x, y - 1);
 	if (x - 1 >= 0 && map[y][x - 1] && (map[y][x - 1] == '0' || \
 		map[y][x - 1] == 'D'))
