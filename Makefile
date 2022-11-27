@@ -6,7 +6,7 @@
 #    By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/17 19:20:47 by ede-alme          #+#    #+#              #
-#    Updated: 2022/11/03 20:50:16 by ede-alme         ###   ########.fr        #
+#    Updated: 2022/11/27 13:53:12 by ede-alme         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,8 @@ NAME = cub3d
 SRC_PATH = ./srcs/
 SRC_PATH_PARSE = ./srcs/parse/
 SRC_PATH_UTILS = ./srcs/utils/
+SRC_PATH_ENGINE = ./srcs/engine/
+
 
 INC_PATH = ./includes/
 
@@ -34,7 +36,9 @@ SRC_UTILS =	utils.c \
 			mem.c \
 			matrix.c \
 
-SRC = $(SRC_NAME) $(SRC_PARSE) $(SRC_UTILS)
+SRC_ENGINE = engine.c \
+
+SRC = $(SRC_NAME) $(SRC_PARSE) $(SRC_UTILS) $(SRC_ENGINE)
 
 OBJ_NAME = $(SRC:.c=.o)
 
@@ -55,6 +59,10 @@ $(OBJ_PATH)%.o:$(SRC_PATH_PARSE)%.c
 	$(CC) $(CFLAGS) -I $(INC_PATH) -I/usr/include -Iincludes/.mlx -O3 -o  $@ -c $<
 
 $(OBJ_PATH)%.o:$(SRC_PATH_UTILS)%.c
+	@mkdir -p $(OBJ_PATH)
+	$(CC) $(CFLAGS) -I $(INC_PATH) -I/usr/include -Iincludes/.mlx -O3 -o  $@ -c $<
+
+$(OBJ_PATH)%.o:$(SRC_PATH_ENGINE)%.c
 	@mkdir -p $(OBJ_PATH)
 	$(CC) $(CFLAGS) -I $(INC_PATH) -I/usr/include -Iincludes/.mlx -O3 -o  $@ -c $<
 

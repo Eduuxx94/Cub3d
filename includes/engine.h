@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   engine.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/17 19:34:25 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/27 11:17:54 by ede-alme         ###   ########.fr       */
+/*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
+/*   Updated: 2022/11/27 13:19:52 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
+#ifndef ENGINE_H
+# define ENGINE_H
 
-# include <stdio.h>
+# include "cub3d.h"
 
-# include ".mlx/mlx.h"
-# include "parse.h"
-# include "engine.h"
+typedef struct s_eng
+{
+	t_file	*file;
+	void	*mlx_ptr;
+	void	*win_ptr;
+}	t_eng;
 
-//main.c functions
-int		ft_free_sfile(t_file *file);
-int		main(int argc, char **argv);
+void	ft_start_engine(t_file *file);
 
 #endif
