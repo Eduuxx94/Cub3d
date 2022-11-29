@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/28 19:25:42 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/28 20:16:54 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_close(t_eng *eng)
 int	trigger(int keycode, t_eng *eng)
 {
 	printf("Keycode:%d\n", keycode);
-	if (keycode == 65307)
+	if (keycode == ESC)
 		ft_close(eng);
 	return (0);
 }
@@ -38,7 +38,7 @@ void	ft_start_engine(t_file *file)
 
 	eng.file = file;
 	eng.mlx_ptr = mlx_init();
-	eng.win_ptr = mlx_new_window(eng.mlx_ptr, 800, 600, "Hello world!");
+	eng.win_ptr = mlx_new_window(eng.mlx_ptr, 1000, 700, "Hello world!");
 	mlx_hook(eng.win_ptr, 17, 0, ft_close, &eng);
 	mlx_key_hook(eng.win_ptr, trigger, &eng);
 	mlx_loop(eng.mlx_ptr);
