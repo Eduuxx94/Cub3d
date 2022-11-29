@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/28 20:16:54 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/29 19:22:22 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	ft_start_engine(t_file *file)
 	eng.mlx_ptr = mlx_init();
 	eng.win_ptr = mlx_new_window(eng.mlx_ptr, 1000, 700, "Hello world!");
 	mlx_hook(eng.win_ptr, 17, 0, ft_close, &eng);
+
+	
 	mlx_key_hook(eng.win_ptr, trigger, &eng);
 	mlx_loop(eng.mlx_ptr);
 }
