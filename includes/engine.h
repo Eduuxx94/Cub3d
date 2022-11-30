@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/30 20:08:42 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/30 21:42:26 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ enum e_keys
 	SPACE = 32,
 	ENTER = 65293,
 	SHIFT = 65505,
-	kEY_D = 100,
+	KEY_D = 100,
 	KEY_A = 97,
 	KEY_W = 119,
 	KEY_S = 115,
@@ -42,6 +42,18 @@ typedef struct s_eng
 	t_file			*file;
 	void			*mlx_ptr;
 	void			*win_ptr;
+	double			posX;
+	double			posY;
+	double			dirX;
+	double			dirY;
+	double			planeX;
+	double			planeY;
+	double			time;
+	double			oldTime;
+	int				key_down;
+	int				key_back;
+	int				key_rigth;
+	int				key_left;
 }	t_eng;
 
 void	ft_start_engine(t_file *file);
