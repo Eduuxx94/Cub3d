@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   engine.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdias-mo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/28 20:09:04 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/30 18:23:55 by jdias-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define ENGINE_H
 
 # include "cub3d.h"
+
+# define WIDTH 800
+# define HEIGHT 600
 
 enum e_keys
 {
@@ -33,13 +36,38 @@ enum e_keys
 	KEY_LEFT = 65361
 };
 
-typedef struct s_eng
+typedef struct	s_img
 {
-	t_file	*file;
-	void	*mlx_ptr;
-	void	*win_ptr;
-}	t_eng;
+	void	*ptr;
+	char	*addr;
+	int		bpp;
+	int		line_length;
+	int		endian;
+	int		width;
+	int		height;
+//	char	*path;
+}				t_img;
 
-void	ft_start_engine(t_file *file);
+typedef struct s_mlx
+{
+	void	*ptr;
+	void	*win;
+	t_img	img;
+}				t_mlx;
+
+typedef struct s_game
+{
+	t_mlx	mlx;
+	t_file	*file;
+}				t_game;
+
+void		my_mlx_pixel_put(t_img *img, int x, int y, int color);
+void		game_clear(t_game *game);
+int			game_quit(t_game *game);
+int			key_press(int key, t_game *game);
+void		render_bg(t_game *game, int color);
+int			render(t_game *game);
+void		start_mlx(t_game *game);
+void		hook_mlx(t_game *game);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mem.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdias-mo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 09:34:01 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/30 12:07:57 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/30 18:14:03 by jdias-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,16 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 		n--;
 	}
 	return (outstr);
+}
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	unsigned char	*a;
+
+	a = (unsigned char *)s;
+	while (n--)
+	{
+		*a++ = (unsigned char)c;
+	}
+	return (s);
 }

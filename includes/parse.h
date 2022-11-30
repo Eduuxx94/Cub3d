@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdias-mo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 10:22:49 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/03 21:01:22 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/30 18:00:58 by jdias-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int		ft_get_map_alloc(t_file *file, int size);
 int		ft_file_map(t_file *file);
 int		ft_start_parse(t_file *file, char *file_path);
 
-//File.c functions
+//file.c functions
 int		ft_check_tile(char **tile, char *line, char *cardinal);
 int		ft_file_load_tiles(t_file *file);
 int		ft_file_check(char *file_path, char *type);
