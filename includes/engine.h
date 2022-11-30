@@ -6,7 +6,7 @@
 /*   By: jdias-mo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/30 20:53:33 by jdias-mo         ###   ########.fr       */
+/*   Updated: 2022/11/30 20:55:24 by jdias-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void		game_clear(t_game *game);
 int			game_quit(t_game *game);
 int			key_press(int key, t_game *game);
 //tests
-void		player_move(int	key, t_game *game)
+void		player_move(int	key, t_game *game);
 void		render_player(t_game *game, int x, int y, int color);
 void		render_bg(t_game *game, int color);
 int			render(t_game *game);
