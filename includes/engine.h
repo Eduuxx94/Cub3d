@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/28 20:09:04 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/11/30 20:08:42 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define ENGINE_H
 
 # include "cub3d.h"
+# include "sys/time.h"
+# include <stdlib.h>
 
 enum e_keys
 {
@@ -35,9 +37,11 @@ enum e_keys
 
 typedef struct s_eng
 {
-	t_file	*file;
-	void	*mlx_ptr;
-	void	*win_ptr;
+	struct timeval	fps_time;
+	int				fps;
+	t_file			*file;
+	void			*mlx_ptr;
+	void			*win_ptr;
 }	t_eng;
 
 void	ft_start_engine(t_file *file);
