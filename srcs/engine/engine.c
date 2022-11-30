@@ -6,7 +6,7 @@
 /*   By: jdias-mo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/30 18:24:04 by jdias-mo         ###   ########.fr       */
+/*   Updated: 2022/11/30 20:52:25 by jdias-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,26 @@ int	game_quit(t_game *game)
 	return (0);
 }
 
+void	player_move(int	key, t_game *game)
+{
+	if (key == KEY_W && game->player.y - 16 >= 0)
+		game->player.y -= 8;
+	else if (key == KEY_S && game->player.y + 16 <= HEIGHT)
+		game->player.y += 8;
+	else if (key == KEY_A && game->player.x - 16 >= 0)
+		game->player.x -= 8;
+	else if (key == KEY_D && game->player.x + 16 <= WIDTH)
+		game->player.x += 8;
+	mlx_clear_window(game->mlx.ptr, game->mlx.win);
+	render(game);
+}
+
 int	key_press(int key, t_game *game)
 {
 	if (key == ESC)
 		game_quit(game);
+	else if (key == KEY_W || key == KEY_S || key == KEY_A || key == KEY_D)
+		player_move(key, game);
 	return (0);
 }
 
@@ -60,9 +76,30 @@ void	render_bg(t_game *game, int color)
 	}
 }
 
+void	render_player(t_game *game, int x, int y, int color)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < HEIGHT)
+	{
+		j = -1;
+		while (++j < WIDTH)
+		{
+			if (i >= y - 8 && i <= y + 8)
+			{
+				if (j >= x - 8 && j <= x + 8)
+					my_mlx_pixel_put(&game->mlx.img, j, i, color);
+			}
+		}
+	}
+}
+
 int	render(t_game *game)
 {
-	render_bg(game, 0xFFFFFF);//test
+	render_bg(game, 0xFFCCCC);//test
+	render_player(game, game->player.x, game->player.y, 0xCD5C5C);
 	mlx_put_image_to_window(game->mlx.ptr, game->mlx.win, game->mlx.img.ptr, 0, 0);
 	return (0);
 }
@@ -98,6 +135,4 @@ void	start_mlx(t_game *game)
 		exit(2);
 	}
 	game->mlx.img.addr = mlx_get_data_addr(game->mlx.img.ptr, &game->mlx.img.bpp, &game->mlx.img.line_length,&game->mlx.img.endian);
-	game->mlx.img.width = WIDTH;
-	game->mlx.img.height = HEIGHT;
 }
