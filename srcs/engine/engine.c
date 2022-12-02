@@ -6,14 +6,14 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/02 19:34:21 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/02 21:35:29 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "engine.h"
 
-#define screenWidth 640
-#define screenHeight 480
+#define screenHeight 900
+#define screenWidth 1200
 #define mapWidth 24
 #define mapHeight 24
 
@@ -59,17 +59,8 @@ int	ft_close(t_eng *eng)
 
 int	trigger(int keycode, t_eng *eng)
 {
-	printf("Keycode:%d\n", keycode);
 	if (keycode == ESC)
 		ft_close(eng);
-	if (keycode == KEY_W)
-		eng->key_down = 1;
-	if (keycode == KEY_S)
-		eng->key_back = 1;
-	if (keycode == KEY_D)
-		eng->key_rigth = 1;
-	if (keycode == KEY_A)
-		eng->key_left = 1;
 	return (0);
 }
 
@@ -90,6 +81,12 @@ void	fps(t_eng *eng)
 
 void	verLine(t_eng *eng, int x, int drawStart, int drawEnd, int color)
 {
+	int	i;
+
+	i = -1;
+	while (++i <= screenHeight)
+		if (i < drawStart && i > drawEnd)
+			mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, 0);
 	while (drawStart < drawEnd)
 	{
 		mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, drawStart, color);
@@ -101,12 +98,12 @@ int	update(t_eng *eng)
 {
 	int	x = -1;//test
 
-	//fps(eng);
+	fps(eng);
 	while (++x < screenWidth)
 	{
 		//calculate ray position and direction
     	double cameraX = 2 * x / (double)screenWidth - 1; //x-coordinate in camera space
-    	double rayDirX = eng->dirX + eng->planeX * cameraX;
+		double rayDirX = eng->dirX + eng->planeX * cameraX;
     	double rayDirY = eng->dirY + eng->planeY * cameraX;
     	//which box of the map we're in
     	int mapX = (int)eng->posX;
@@ -148,22 +145,22 @@ int	update(t_eng *eng)
     	if(rayDirX < 0)
       	{
         	stepX = -1;
-    		sideDistX = (eng->posX - mapX) * deltaDistX;
+    		sideDistX = (eng->posX - (double)mapX) * deltaDistX;
       	}
     	else
     	{
         	stepX = 1;
-        	sideDistX = (mapX + 1.0 - eng->posX) * deltaDistX;
+        	sideDistX = ((double)mapX + 1.0 - eng->posX) * deltaDistX;
       	}
     	if(rayDirY < 0)
     	{
         	stepY = -1;
-       		sideDistY = (eng->posY - mapY) * deltaDistY;
+       		sideDistY = (eng->posY - (double)mapY) * deltaDistY;
     	}
     	else
       	{
         	stepY = 1;
-       		sideDistY = (mapY + 1.0 - eng->posY) * deltaDistY;
+       		sideDistY = ((double)mapY + 1.0 - eng->posY) * deltaDistY;
       	}
 		//perform DDA
 		while(hit == 0)
@@ -210,11 +207,21 @@ int	update(t_eng *eng)
     	int color;
     	switch(worldMap[mapX][mapY])
     	{
-        	case 1:  color = 16711680;    break; //red
-        	case 2:  color = 65280;  break; //green
-        	case 3:  color = 255;   break; //blue
-        	case 4:  color = 16777215;  break; //white
-        	default: color = 16776960; break; //yellow
+        	case 1:
+				color = 16711680;
+				break; //red
+        	case 2:
+				color = 65280;
+				break; //green
+        	case 3:
+				color = 255;
+				break; //blue
+        	case 4:
+				color = 16777215;
+				break; //white
+        	default:
+				color = 16776960;
+				break; //yellow
     	}
 
     	//give x and y sides different brightness
@@ -222,7 +229,7 @@ int	update(t_eng *eng)
 			color = color / 2;
 
     	//draw the pixels of the stripe as a vertical line
-		printf("Pos: %d		DrawStart: %d, DrawEnd: %d	Color: %d\n", x, drawStart, drawEnd, color);
+		//printf("Pos: %d		DrawStart: %d, DrawEnd: %d	Color: %d\n", x, drawStart, drawEnd, color);
     	verLine(eng, x, drawStart, drawEnd, color);
 	}
 	//timing for input and FPS counter
@@ -231,10 +238,10 @@ int	update(t_eng *eng)
     eng->oldTime = eng->time;
     eng->time = current_time.tv_usec;
     double frameTime = (eng->time - eng->oldTime) / 1000.0; //frameTime is the time this frame has taken, in seconds
-	printf("Demorou %lf para desenhar tela\n", frameTime);
+	//printf("Demorou %lf para desenhar tela\n", frameTime);
 	//speed modifiers
-    double moveSpeed = frameTime * 0.2; //the constant value is in squares/second
-    double rotSpeed = frameTime * 0.01; //the constant value is in radians/second
+    double moveSpeed = frameTime * 0.05; //the constant value is in squares/second
+    double rotSpeed = frameTime * 0.001; //the constant value is in radians/second
 	(void)moveSpeed;
 	(void)rotSpeed;
 	if(eng->key_down)//falta corrigir esta etapa
@@ -275,9 +282,25 @@ int	update(t_eng *eng)
     	eng->planeY = oldPlaneX * sin(rotSpeed) + eng->planeY * cos(rotSpeed);
 		eng->key_left = 0;
     }
+	//usleep(1000);
 	/*
 	*/
-	printf("Passou aqui\n");
+	//printf("Passou aqui\n");
+	return (0);
+}
+
+int	keytest(int keycode, t_eng *eng)
+{
+	if (keycode == ESC)
+		ft_close(eng);
+	if (keycode == KEY_W)
+		eng->key_down = 1;
+	if (keycode == KEY_S)
+		eng->key_back = 1;
+	if (keycode == KEY_D)
+		eng->key_rigth = 1;
+	if (keycode == KEY_A)
+		eng->key_left = 1;
 	return (0);
 }
 
@@ -306,6 +329,7 @@ void	ft_start_engine(t_file *file)
 	eng.mlx_ptr = mlx_init();
 	eng.win_ptr = mlx_new_window(eng.mlx_ptr, screenWidth, screenHeight, "Cub3D");
 	mlx_hook(eng.win_ptr, 17, 0, ft_close, &eng);
+	mlx_hook(eng.win_ptr, 2, 1L<<0, keytest, &eng);
 	mlx_key_hook(eng.win_ptr, trigger, &eng);
 	mlx_loop_hook(eng.mlx_ptr, update, &eng); //construcao do raycast
 	mlx_loop(eng.mlx_ptr);
