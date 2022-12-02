@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/30 21:50:10 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/02 19:34:21 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,10 +90,10 @@ void	fps(t_eng *eng)
 
 void	verLine(t_eng *eng, int x, int drawStart, int drawEnd, int color)
 {
-	while (drawStart > drawEnd)
+	while (drawStart < drawEnd)
 	{
 		mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, drawStart, color);
-		drawStart--;
+		drawStart++;
 	}
 }
 
@@ -132,12 +132,11 @@ int	update(t_eng *eng)
 		if (rayDirX == 0)
 			deltaDistX = 1e30;
 		else
-			deltaDistX = 1 / rayDirX; //talvez esteja errado
+			deltaDistX = (double)abs((int)(1 / rayDirX)); //talvez esteja errado
 		if (rayDirY == 0)
 			deltaDistY = 1e30;
 		else
-			deltaDistY = 1 / rayDirY; //talvez esteja errado
-
+			deltaDistY = (double)abs((int)(1 / rayDirY)); //talvez esteja errado
     	double perpWallDist; //testes aqui
 		//what direction to step in x or y-direction (either +1 or -1)
     	int stepX;
@@ -208,69 +207,76 @@ int	update(t_eng *eng)
 			drawEnd = screenHeight - 1;
 
       	//choose wall color
-      int color;
-      switch(worldMap[mapX][mapY])
-      {
-        case 1:  color = 16711680;    break; //red
-        case 2:  color = 65280;  break; //green
-        case 3:  color = 255;   break; //blue
-        case 4:  color = 16777215;  break; //white
-        default: color = 16776960; break; //yellow
-      }
+    	int color;
+    	switch(worldMap[mapX][mapY])
+    	{
+        	case 1:  color = 16711680;    break; //red
+        	case 2:  color = 65280;  break; //green
+        	case 3:  color = 255;   break; //blue
+        	case 4:  color = 16777215;  break; //white
+        	default: color = 16776960; break; //yellow
+    	}
 
-      //give x and y sides different brightness
-      if(side == 1) {color = color / 2;}
+    	//give x and y sides different brightness
+    	if(side == 1)
+			color = color / 2;
 
-      //draw the pixels of the stripe as a vertical line
-      verLine(eng, x, drawStart, drawEnd, color);
+    	//draw the pixels of the stripe as a vertical line
+		printf("Pos: %d		DrawStart: %d, DrawEnd: %d	Color: %d\n", x, drawStart, drawEnd, color);
+    	verLine(eng, x, drawStart, drawEnd, color);
 	}
-	 //timing for input and FPS counter
+	//timing for input and FPS counter
 	struct timeval	current_time;
 	gettimeofday(&current_time, NULL);
     eng->oldTime = eng->time;
     eng->time = current_time.tv_usec;
     double frameTime = (eng->time - eng->oldTime) / 1000.0; //frameTime is the time this frame has taken, in seconds
+	printf("Demorou %lf para desenhar tela\n", frameTime);
 	//speed modifiers
-    double moveSpeed = frameTime * 5.0; //the constant value is in squares/second
-    double rotSpeed = frameTime * 3.0; //the constant value is in radians/second
+    double moveSpeed = frameTime * 0.2; //the constant value is in squares/second
+    double rotSpeed = frameTime * 0.01; //the constant value is in radians/second
+	(void)moveSpeed;
+	(void)rotSpeed;
 	if(eng->key_down)//falta corrigir esta etapa
     {
-    	if(!worldMap[(int)(eng->posX + eng->dirX * moveSpeed)][(int)(eng->posY)])
+    	if(worldMap[(int)(eng->posX + eng->dirX * moveSpeed)][(int)(eng->posY)] == 0)
 	  		eng->posX += eng->dirX * moveSpeed;
-    	if(!worldMap[(int)(eng->posX)][(int)(eng->posY + eng->dirY * moveSpeed)])
+    	if(worldMap[(int)(eng->posX)][(int)(eng->posY + eng->dirY * moveSpeed)] == 0)
 			eng->posY += eng->dirY * moveSpeed;
+		eng->key_down = 0;
     }
 	if(eng->key_back)//falta corrigir as direcoes
     {
-    	if(!worldMap[(int)(eng->posX - eng->dirX * moveSpeed)][(int)eng->posY])
+    	if(worldMap[(int)(eng->posX - eng->dirX * moveSpeed)][(int)eng->posY] == 0)
 			eng->posX -= eng->dirX * moveSpeed;
-    	if(!worldMap[(int)eng->posX][(int)(eng->posY - eng->dirY * moveSpeed)])
+    	if(worldMap[(int)eng->posX][(int)(eng->posY - eng->dirY * moveSpeed)] == 0)
 			eng->posY -= eng->dirY * moveSpeed;
+		eng->key_back = 0;
     }
 	if(eng->key_rigth)
     {
     	//both camera direction and camera plane must be rotated
     	double oldDirX = eng->dirX;
-    	eng->dirX = eng->dirX * -rotSpeed - eng->dirY * -rotSpeed;
-    	eng->dirY = oldDirX * -rotSpeed + eng->dirY * -rotSpeed;
+    	eng->dirX = eng->dirX * cos(-rotSpeed) - eng->dirY * sin(-rotSpeed);
+    	eng->dirY = oldDirX * sin(-rotSpeed) + eng->dirY * cos(-rotSpeed);
     	double oldPlaneX = eng->planeX;
-    	eng->planeX = eng->planeX * -rotSpeed - eng->planeY * -rotSpeed;
-    	eng->planeY = oldPlaneX * -rotSpeed + eng->planeY * -rotSpeed;
+    	eng->planeX = eng->planeX * cos(-rotSpeed) - eng->planeY * sin(-rotSpeed);
+    	eng->planeY = oldPlaneX * sin(-rotSpeed) + eng->planeY * cos(-rotSpeed);
+		eng->key_rigth = 0;
     }
 	if(eng->key_left)
     {
-      //both camera direction and camera plane must be rotated
-      double oldDirX = eng->dirX;
-      eng->dirX = eng->dirX * rotSpeed - eng->dirY * rotSpeed;
-      eng->dirY = oldDirX * rotSpeed + eng->dirY * rotSpeed;
-      double oldPlaneX = eng->planeX;
-      eng->planeX = eng->planeX * rotSpeed - eng->planeY * rotSpeed;
-      eng->planeY = oldPlaneX * rotSpeed + eng->planeY * rotSpeed;
+    	//both camera direction and camera plane must be rotated
+    	double oldDirX = eng->dirX;
+    	eng->dirX = eng->dirX * cos(rotSpeed) - eng->dirY * sin(rotSpeed);
+    	eng->dirY = oldDirX * sin(rotSpeed) + eng->dirY * cos(rotSpeed);
+    	double oldPlaneX = eng->planeX;
+    	eng->planeX = eng->planeX * cos(rotSpeed) - eng->planeY * sin(rotSpeed);
+    	eng->planeY = oldPlaneX * sin(rotSpeed) + eng->planeY * cos(rotSpeed);
+		eng->key_left = 0;
     }
-	eng->key_rigth = 0;
-	eng->key_left = 0;
-	eng->key_down = 0;
-	eng->key_back = 0;
+	/*
+	*/
 	printf("Passou aqui\n");
 	return (0);
 }
@@ -278,6 +284,7 @@ int	update(t_eng *eng)
 void	ft_start_engine(t_file *file)
 {
 	t_eng	eng;
+	struct timeval	current_time;
 
 	//all tests will be commented!
 	eng.posX = 22;	//x and y start position
@@ -286,12 +293,13 @@ void	ft_start_engine(t_file *file)
 	eng.dirY = 0; 	//initial direction vector
 	eng.planeX = 0;		//the 2d raycaster version of camera plane
 	eng.planeY = 0.66; //the 2d raycaster version of camera plane
-	eng.time = 0; //time of current frame
+	gettimeofday(&current_time, NULL);
+	eng.time = current_time.tv_usec; //time of current frame
 	eng.oldTime = 0; //time of previous frame
 
 	eng.key_down = 0;
 	eng.key_back = 0;
-	eng.key_left = 0;
+	eng.key_rigth= 0;
 	eng.key_left = 0;
 	eng.file = file;
 	eng.fps = 0;

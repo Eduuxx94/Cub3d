@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/30 21:42:26 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/02 19:17:42 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "cub3d.h"
 # include "sys/time.h"
 # include <stdlib.h>
+# include <math.h>
 
 enum e_keys
 {
