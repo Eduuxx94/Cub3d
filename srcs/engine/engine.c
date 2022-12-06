@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/02 21:35:29 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/06 21:32:26 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	verLine(t_eng *eng, int x, int drawStart, int drawEnd, int color)
 
 	i = -1;
 	while (++i <= screenHeight)
-		if (i < drawStart && i > drawEnd)
+		if (i <= drawStart || i >= drawEnd)
 			mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, 0);
 	while (drawStart < drawEnd)
 	{
@@ -98,7 +98,7 @@ int	update(t_eng *eng)
 {
 	int	x = -1;//test
 
-	fps(eng);
+	//fps(eng);
 	while (++x < screenWidth)
 	{
 		//calculate ray position and direction
@@ -106,8 +106,8 @@ int	update(t_eng *eng)
 		double rayDirX = eng->dirX + eng->planeX * cameraX;
     	double rayDirY = eng->dirY + eng->planeY * cameraX;
     	//which box of the map we're in
-    	int mapX = (int)eng->posX;
-    	int mapY = (int)eng->posY;
+    	int mapX = eng->posX;
+    	int mapY = eng->posY;
 
     	//length of ray from current position to next x or y-side
     	double sideDistX;
@@ -129,11 +129,11 @@ int	update(t_eng *eng)
 		if (rayDirX == 0)
 			deltaDistX = 1e30;
 		else
-			deltaDistX = (double)abs((int)(1 / rayDirX)); //talvez esteja errado
+			deltaDistX = fabs(1 / rayDirX); //talvez esteja errado
 		if (rayDirY == 0)
 			deltaDistY = 1e30;
 		else
-			deltaDistY = (double)abs((int)(1 / rayDirY)); //talvez esteja errado
+			deltaDistY = fabs(1 / rayDirY); //talvez esteja errado
     	double perpWallDist; //testes aqui
 		//what direction to step in x or y-direction (either +1 or -1)
     	int stepX;
@@ -193,7 +193,7 @@ int	update(t_eng *eng)
     	else
 			perpWallDist = (sideDistY - deltaDistY);
 		//Calculate height of line to draw on screen
-    	int lineHeight = (int)(screenHeight / perpWallDist);
+    	int lineHeight = (screenHeight / perpWallDist);
 
     	//calculate lowest and highest pixel to fill in current stripe
     	int drawStart = -lineHeight / 2 + screenHeight / 2;
@@ -236,21 +236,19 @@ int	update(t_eng *eng)
 	struct timeval	current_time;
 	gettimeofday(&current_time, NULL);
     eng->oldTime = eng->time;
-    eng->time = current_time.tv_usec;
+    eng->time = 1000000 * current_time.tv_sec + current_time.tv_usec;//current_time.tv_usec;
     double frameTime = (eng->time - eng->oldTime) / 1000.0; //frameTime is the time this frame has taken, in seconds
 	//printf("Demorou %lf para desenhar tela\n", frameTime);
 	//speed modifiers
-    double moveSpeed = frameTime * 0.05; //the constant value is in squares/second
-    double rotSpeed = frameTime * 0.001; //the constant value is in radians/second
-	(void)moveSpeed;
-	(void)rotSpeed;
+    double moveSpeed = frameTime * 0.01; //the constant value is in squares/second
+    double rotSpeed = frameTime * 0.002; //the constant value is in radians/second
 	if(eng->key_down)//falta corrigir esta etapa
     {
     	if(worldMap[(int)(eng->posX + eng->dirX * moveSpeed)][(int)(eng->posY)] == 0)
 	  		eng->posX += eng->dirX * moveSpeed;
     	if(worldMap[(int)(eng->posX)][(int)(eng->posY + eng->dirY * moveSpeed)] == 0)
 			eng->posY += eng->dirY * moveSpeed;
-		eng->key_down = 0;
+		//eng->key_down = 0;
     }
 	if(eng->key_back)//falta corrigir as direcoes
     {
@@ -258,7 +256,7 @@ int	update(t_eng *eng)
 			eng->posX -= eng->dirX * moveSpeed;
     	if(worldMap[(int)eng->posX][(int)(eng->posY - eng->dirY * moveSpeed)] == 0)
 			eng->posY -= eng->dirY * moveSpeed;
-		eng->key_back = 0;
+		//eng->key_back = 0;
     }
 	if(eng->key_rigth)
     {
@@ -269,7 +267,7 @@ int	update(t_eng *eng)
     	double oldPlaneX = eng->planeX;
     	eng->planeX = eng->planeX * cos(-rotSpeed) - eng->planeY * sin(-rotSpeed);
     	eng->planeY = oldPlaneX * sin(-rotSpeed) + eng->planeY * cos(-rotSpeed);
-		eng->key_rigth = 0;
+		//eng->key_rigth = 0;
     }
 	if(eng->key_left)
     {
@@ -280,12 +278,8 @@ int	update(t_eng *eng)
     	double oldPlaneX = eng->planeX;
     	eng->planeX = eng->planeX * cos(rotSpeed) - eng->planeY * sin(rotSpeed);
     	eng->planeY = oldPlaneX * sin(rotSpeed) + eng->planeY * cos(rotSpeed);
-		eng->key_left = 0;
+		//eng->key_left = 0;
     }
-	//usleep(1000);
-	/*
-	*/
-	//printf("Passou aqui\n");
 	return (0);
 }
 
@@ -294,7 +288,9 @@ int	keytest(int keycode, t_eng *eng)
 	if (keycode == ESC)
 		ft_close(eng);
 	if (keycode == KEY_W)
+	{
 		eng->key_down = 1;
+	}
 	if (keycode == KEY_S)
 		eng->key_back = 1;
 	if (keycode == KEY_D)
@@ -304,10 +300,24 @@ int	keytest(int keycode, t_eng *eng)
 	return (0);
 }
 
+int	keytestout(int keycode, t_eng *eng)
+{
+	if (keycode == ESC)
+		ft_close(eng);
+	if (keycode == KEY_W)
+		eng->key_down = 0;
+	if (keycode == KEY_S)
+		eng->key_back = 0;
+	if (keycode == KEY_D)
+		eng->key_rigth = 0;
+	if (keycode == KEY_A)
+		eng->key_left = 0;
+	return (0);
+}
+
 void	ft_start_engine(t_file *file)
 {
 	t_eng	eng;
-	struct timeval	current_time;
 
 	//all tests will be commented!
 	eng.posX = 22;	//x and y start position
@@ -316,8 +326,7 @@ void	ft_start_engine(t_file *file)
 	eng.dirY = 0; 	//initial direction vector
 	eng.planeX = 0;		//the 2d raycaster version of camera plane
 	eng.planeY = 0.66; //the 2d raycaster version of camera plane
-	gettimeofday(&current_time, NULL);
-	eng.time = current_time.tv_usec; //time of current frame
+	eng.time = 0; //time of current frame
 	eng.oldTime = 0; //time of previous frame
 
 	eng.key_down = 0;
@@ -330,7 +339,8 @@ void	ft_start_engine(t_file *file)
 	eng.win_ptr = mlx_new_window(eng.mlx_ptr, screenWidth, screenHeight, "Cub3D");
 	mlx_hook(eng.win_ptr, 17, 0, ft_close, &eng);
 	mlx_hook(eng.win_ptr, 2, 1L<<0, keytest, &eng);
-	mlx_key_hook(eng.win_ptr, trigger, &eng);
+	mlx_hook(eng.win_ptr, 3, 1L<<1, keytestout, &eng);
+	//mlx_key_hook(eng.win_ptr, trigger, &eng);
 	mlx_loop_hook(eng.mlx_ptr, update, &eng); //construcao do raycast
 	mlx_loop(eng.mlx_ptr);
 }
