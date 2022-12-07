@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/06 21:32:26 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/07 21:34:55 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,7 @@ int worldMap[mapWidth][mapHeight]=
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
+  {1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -35,13 +30,18 @@ int worldMap[mapWidth][mapHeight]=
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
@@ -98,7 +98,7 @@ int	update(t_eng *eng)
 {
 	int	x = -1;//test
 
-	//fps(eng);
+	fps(eng);
 	while (++x < screenWidth)
 	{
 		//calculate ray position and direction
@@ -203,9 +203,35 @@ int	update(t_eng *eng)
     	if(drawEnd >= screenHeight)
 			drawEnd = screenHeight - 1;
 
+		double wallX; //where exactly the wall was hit
+    	if(side == 0)
+			wallX = eng->posY + perpWallDist * rayDirY;
+		else
+			wallX = eng->posX + perpWallDist * rayDirX;
+    	wallX -= floor((wallX));
+		if (x == 0)
+		{
+			x = 0;
+			//printf("O valor da textura: %f\n", wallX); //o x da textura a ser pintado
+		}
+
       	//choose wall color
     	int color;
-    	switch(worldMap[mapX][mapY])
+		if (side)//Aqui sera escolhido qual textura sera mostrada exemplo: NO WE EA SO
+		{
+			if (rayDirY > 0)
+					color = 16711680; // EA east texture
+			else
+				color = 255; //WE west texture
+		}
+		else
+		{
+			if (rayDirX > 0)
+				color = 16776960; //SO south texture
+			else
+				color = 16777215; //NO north texture
+		}
+    	/*switch(worldMap[mapX][mapY])
     	{
         	case 1:
 				color = 16711680;
@@ -222,11 +248,11 @@ int	update(t_eng *eng)
         	default:
 				color = 16776960;
 				break; //yellow
-    	}
+    	}*/
 
     	//give x and y sides different brightness
-    	if(side == 1)
-			color = color / 2;
+    	//if(side == 1)
+		//	color = color / 2;
 
     	//draw the pixels of the stripe as a vertical line
 		//printf("Pos: %d		DrawStart: %d, DrawEnd: %d	Color: %d\n", x, drawStart, drawEnd, color);
@@ -240,7 +266,7 @@ int	update(t_eng *eng)
     double frameTime = (eng->time - eng->oldTime) / 1000.0; //frameTime is the time this frame has taken, in seconds
 	//printf("Demorou %lf para desenhar tela\n", frameTime);
 	//speed modifiers
-    double moveSpeed = frameTime * 0.01; //the constant value is in squares/second
+    double moveSpeed = frameTime * 0.005; //the constant value is in squares/second
     double rotSpeed = frameTime * 0.002; //the constant value is in radians/second
 	if(eng->key_down)//falta corrigir esta etapa
     {
