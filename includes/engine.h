@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/02 19:17:42 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/08 14:39:25 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,21 @@ enum e_keys
 	KEY_LEFT = 65361
 };
 
+typedef struct s_tex
+{
+	void	*tex[4];
+	char	*addr[4];
+	int		img_width;
+	int		img_height;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}	t_tex;
+
 typedef struct s_eng
 {
 	struct timeval	fps_time;
+	t_tex			tex;
 	int				fps;
 	t_file			*file;
 	void			*mlx_ptr;
@@ -51,10 +63,11 @@ typedef struct s_eng
 	double			planeY;
 	double			time;
 	double			oldTime;
-	int				key_down;
-	int				key_back;
-	int				key_rigth;
-	int				key_left;
+	int				key_W;
+	int				key_S;
+	int				key_D;
+	int				key_A;
+	int				screen_y;
 }	t_eng;
 
 void	ft_start_engine(t_file *file);

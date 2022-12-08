@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/07 21:45:52 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/08 14:52:24 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,18 +79,46 @@ void	fps(t_eng *eng)
 	}
 }
 
-void	verLine(t_eng *eng, int x, int drawStart, int drawEnd, int color)
+int	my_mlx_pixel_get(t_tex data, int x, int y, int tex)
+{
+	char	*dst;
+
+	dst = data.addr[tex] + (y * data.line_length + x * (data.bits_per_pixel / 8));
+	return (*(unsigned int*)dst);
+}
+
+void	verLine(t_eng *eng, int x, int drawStart, int drawEnd, int tex, double wallX)
 {
 	int	i;
+	int	xpercentage;
+	int	psize;
 
 	i = -1;
+	psize = drawEnd - drawStart;
+	xpercentage = wallX * 64;
+	(void)wallX;
+	(void)(drawEnd);
+	(void)drawStart;
+	(void)i;
+
 	while (++i <= screenHeight)
 		if (i <= drawStart || i >= drawEnd)
 			mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, 0);
-	while (drawStart < drawEnd)
+	if (drawStart >= 0)
+		i = drawStart;
+	else
+		i = 0;
+	while (i < screenHeight && i < drawEnd)
 	{
-		mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, drawStart, color);
-		drawStart++;
+		float	percentage;
+		
+		percentage =  (float)(i - drawStart) / psize;
+		//printf("size: %f	i: %d		drawStart: %d		drawEnd: %d\n", percentage, i, drawStart, drawEnd);
+		//printf("Percentage: %f		wallX: %d\n", percentage * 64, wallX * 64);
+		//if (x == 0)
+		//	printf("");
+		mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, my_mlx_pixel_get(eng->tex, xpercentage, percentage * 64, tex));
+		i++;
 	}
 }
 
@@ -197,11 +225,11 @@ int	update(t_eng *eng)
 
     	//calculate lowest and highest pixel to fill in current stripe
     	int drawStart = -lineHeight / 2 + screenHeight / 2;
-    	if(drawStart < 0)
-			drawStart = 0;
+    	//if(drawStart < 0)
+		//	drawStart = 0;
     	int drawEnd = lineHeight / 2 + screenHeight / 2;
-    	if(drawEnd >= screenHeight)
-			drawEnd = screenHeight - 1;
+    	//if(drawEnd >= screenHeight)
+		//	drawEnd = screenHeight - 1;
 
 		double wallX; //where exactly the wall was hit
     	if(side == 0)
@@ -220,16 +248,16 @@ int	update(t_eng *eng)
 		if (side)//Aqui sera escolhido qual textura sera mostrada exemplo: NO WE EA SO
 		{
 			if (rayDirY > 0)
-					color = 16711680; // EA east texture
+					color = 3; // EA east texture
 			else
-				color = 255; //WE west texture
+				color = 2; //WE west texture
 		}
 		else
 		{
 			if (rayDirX > 0)
-				color = 16776960; //SO south texture
+				color = 1; //SO south texture
 			else
-				color = 16777215; //NO north texture
+				color = 0; //NO north texture
 		}
     	/*switch(worldMap[mapX][mapY])
     	{
@@ -256,7 +284,7 @@ int	update(t_eng *eng)
 
     	//draw the pixels of the stripe as a vertical line
 		//printf("Pos: %d		DrawStart: %d, DrawEnd: %d	Color: %d\n", x, drawStart, drawEnd, color);
-    	verLine(eng, x, drawStart, drawEnd, color);
+    	verLine(eng, x, drawStart + eng->screen_y, drawEnd + eng->screen_y, color, wallX);
 	}
 	//timing for input and FPS counter
 	struct timeval	current_time;
@@ -268,7 +296,7 @@ int	update(t_eng *eng)
 	//speed modifiers
     double moveSpeed = frameTime * 0.005; //the constant value is in squares/second
     double rotSpeed = frameTime * 0.002; //the constant value is in radians/second
-	if(eng->key_down)//falta corrigir esta etapa
+	if(eng->key_W)//falta corrigir esta etapa
     {
     	if(worldMap[(int)(eng->posX + eng->dirX * moveSpeed)][(int)(eng->posY)] == 0)
 	  		eng->posX += eng->dirX * moveSpeed;
@@ -276,7 +304,7 @@ int	update(t_eng *eng)
 			eng->posY += eng->dirY * moveSpeed;
 		//eng->key_down = 0;
     }
-	if(eng->key_back)//falta corrigir as direcoes
+	if(eng->key_S)//falta corrigir as direcoes
     {
     	if(worldMap[(int)(eng->posX - eng->dirX * moveSpeed)][(int)eng->posY] == 0)
 			eng->posX -= eng->dirX * moveSpeed;
@@ -284,7 +312,7 @@ int	update(t_eng *eng)
 			eng->posY -= eng->dirY * moveSpeed;
 		//eng->key_back = 0;
     }
-	if(eng->key_rigth)
+	if(eng->key_D)
     {
     	//both camera direction and camera plane must be rotated
     	double oldDirX = eng->dirX;
@@ -295,7 +323,7 @@ int	update(t_eng *eng)
     	eng->planeY = oldPlaneX * sin(-rotSpeed) + eng->planeY * cos(-rotSpeed);
 		//eng->key_rigth = 0;
     }
-	if(eng->key_left)
+	if(eng->key_A)
     {
     	//both camera direction and camera plane must be rotated
     	double oldDirX = eng->dirX;
@@ -314,15 +342,17 @@ int	keytest(int keycode, t_eng *eng)
 	if (keycode == ESC)
 		ft_close(eng);
 	if (keycode == KEY_W)
-	{
-		eng->key_down = 1;
-	}
+		eng->key_W = 1;
 	if (keycode == KEY_S)
-		eng->key_back = 1;
+		eng->key_S = 1;
 	if (keycode == KEY_D)
-		eng->key_rigth = 1;
+		eng->key_D = 1;
 	if (keycode == KEY_A)
-		eng->key_left = 1;
+		eng->key_A = 1;
+	if (keycode == KEY_UP)
+		eng->screen_y += 5;
+	if (keycode == KEY_DOWN)
+		eng->screen_y -= 5;
 	return (0);
 }
 
@@ -331,13 +361,13 @@ int	keytestout(int keycode, t_eng *eng)
 	if (keycode == ESC)
 		ft_close(eng);
 	if (keycode == KEY_W)
-		eng->key_down = 0;
+		eng->key_W = 0;
 	if (keycode == KEY_S)
-		eng->key_back = 0;
+		eng->key_S = 0;
 	if (keycode == KEY_D)
-		eng->key_rigth = 0;
+		eng->key_D = 0;
 	if (keycode == KEY_A)
-		eng->key_left = 0;
+		eng->key_A = 0;
 	return (0);
 }
 
@@ -355,14 +385,25 @@ void	ft_start_engine(t_file *file)
 	eng.time = 0; //time of current frame
 	eng.oldTime = 0; //time of previous frame
 
-	eng.key_down = 0;
-	eng.key_back = 0;
-	eng.key_rigth= 0;
-	eng.key_left = 0;
 	eng.file = file;
+	eng.key_W = 0;
+	eng.key_S = 0;
+	eng.key_D= 0;
+	eng.key_A = 0;
+	eng.screen_y = 0;
 	eng.fps = 0;
 	eng.mlx_ptr = mlx_init();
 	eng.win_ptr = mlx_new_window(eng.mlx_ptr, screenWidth, screenHeight, "Cub3D");
+
+	eng.tex.tex[0] = mlx_xpm_file_to_image(eng.mlx_ptr, eng.file->_no, &eng.tex.img_width, &eng.tex.img_height);
+	eng.tex.addr[0] = mlx_get_data_addr(eng.tex.tex[0], &eng.tex.bits_per_pixel, &eng.tex.line_length, &eng.tex.endian);
+	eng.tex.tex[1] = mlx_xpm_file_to_image(eng.mlx_ptr, eng.file->_so, &eng.tex.img_width, &eng.tex.img_height);
+	eng.tex.addr[1] = mlx_get_data_addr(eng.tex.tex[1], &eng.tex.bits_per_pixel, &eng.tex.line_length, &eng.tex.endian);
+	eng.tex.tex[2] = mlx_xpm_file_to_image(eng.mlx_ptr, eng.file->_we, &eng.tex.img_width, &eng.tex.img_height);
+	eng.tex.addr[2] = mlx_get_data_addr(eng.tex.tex[2], &eng.tex.bits_per_pixel, &eng.tex.line_length, &eng.tex.endian);
+	eng.tex.tex[3] = mlx_xpm_file_to_image(eng.mlx_ptr, eng.file->_ea, &eng.tex.img_width, &eng.tex.img_height);
+	eng.tex.addr[3] = mlx_get_data_addr(eng.tex.tex[3], &eng.tex.bits_per_pixel, &eng.tex.line_length, &eng.tex.endian);
+	
 	mlx_hook(eng.win_ptr, 17, 0, ft_close, &eng);
 	mlx_hook(eng.win_ptr, 2, 1L<<0, keytest, &eng);
 	mlx_hook(eng.win_ptr, 3, 1L<<1, keytestout, &eng);

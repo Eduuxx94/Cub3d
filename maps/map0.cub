@@ -1,7 +1,7 @@
-NO ./tiles/new.xpm
-SO ./tiles/new.xpm
-WE ./tiles/new.xpm
-EA ./tiles/new.xpm
+NO ./tiles/1.xpm
+SO ./tiles/2.xpm
+WE ./tiles/3.xpm
+EA ./tiles/4.xpm
 
 F 220,100,0
 C 225,30,0
