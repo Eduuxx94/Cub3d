@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 16:53:44 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/10/28 17:21:49 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/09 14:57:37 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ int	ft_get_file_colors(t_rgb *rgb, char *str)
 		rgb->blue = ft_color_line_export(str++);
 	while (*str && *str >= '0' && *str <= '9')
 		str++;
-	if (!*str && rgb->red >= 0 && rgb->red <= 250 && rgb->green >= 0 && \
-		rgb->green <= 250 && rgb->blue >= 0 && rgb->blue <= 250)
+	if (!*str && rgb->red >= 0 && rgb->red <= 255 && rgb->green >= 0 && \
+		rgb->green <= 255 && rgb->blue >= 0 && rgb->blue <= 255)
 	{
 		free(temp);
 		return (0);

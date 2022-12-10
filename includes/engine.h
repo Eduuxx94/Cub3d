@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/08 14:39:25 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/10 16:30:41 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,18 @@ typedef struct s_tex
 	int		endian;
 }	t_tex;
 
+typedef struct s_canva
+{
+	void	*img;
+	char	*addr;
+	int		img_width;
+	int		img_height;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}	t_canva;
+
+
 typedef struct s_eng
 {
 	struct timeval	fps_time;
@@ -67,6 +79,7 @@ typedef struct s_eng
 	int				key_S;
 	int				key_D;
 	int				key_A;
+	int				key_shift;
 	int				screen_y;
 }	t_eng;
 

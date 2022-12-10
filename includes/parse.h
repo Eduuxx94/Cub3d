@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 10:22:49 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/03 21:01:22 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/09 14:27:32 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 
 typedef struct s_rgb
 {
+	int	rgb;
 	int	red;
 	int	green;
 	int	blue;

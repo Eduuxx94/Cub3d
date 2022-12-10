@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/08 14:52:24 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/10 15:04:46 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,10 @@ int worldMap[mapWidth][mapHeight]=
 
 int	ft_close(t_eng *eng)
 {
+	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[0]);
+	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[1]);
+	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[2]);
+	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[3]);
 	mlx_loop_end(eng->mlx_ptr);
 	mlx_clear_window(eng->mlx_ptr, eng->win_ptr);
 	mlx_destroy_window(eng->mlx_ptr, eng->win_ptr);
@@ -81,46 +85,53 @@ void	fps(t_eng *eng)
 
 int	my_mlx_pixel_get(t_tex data, int x, int y, int tex)
 {
-	char	*dst;
+	return (*(unsigned int*)(data.addr[tex] + (y * data.line_length + x * (data.bits_per_pixel / 8))));
+}
 
-	dst = data.addr[tex] + (y * data.line_length + x * (data.bits_per_pixel / 8));
-	return (*(unsigned int*)dst);
+int	rgb(int r, int g, int b)
+{
+	int	result;
+
+	result = 0 | r;
+	result = result << 8;
+	result = result | g;
+	result = result << 8;
+	result = result | b;
+	return (result);
 }
 
 void	verLine(t_eng *eng, int x, int drawStart, int drawEnd, int tex, double wallX)
 {
-	int	i;
-	int	xpercentage;
-	int	psize;
+	float	percentage;
+	int		i;
+	int		xpercentage;
+	int		psize;
 
 	i = -1;
 	psize = drawEnd - drawStart;
 	xpercentage = wallX * 64;
-	(void)wallX;
-	(void)(drawEnd);
-	(void)drawStart;
-	(void)i;
 
 	while (++i <= screenHeight)
-		if (i <= drawStart || i >= drawEnd)
-			mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, 0);
+	{
+		if (i <= drawStart)
+			mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, eng->file->ceilling.rgb);
+		else if (i >= drawStart && i <= drawEnd)
+			i = drawEnd;
+		else
+			mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i,  eng->file->floor.rgb);
+	}
 	if (drawStart >= 0)
 		i = drawStart;
 	else
 		i = 0;
-	while (i < screenHeight && i < drawEnd)
+	while (i < screenHeight && i <= drawEnd)
 	{
-		float	percentage;
-		
 		percentage =  (float)(i - drawStart) / psize;
-		//printf("size: %f	i: %d		drawStart: %d		drawEnd: %d\n", percentage, i, drawStart, drawEnd);
-		//printf("Percentage: %f		wallX: %d\n", percentage * 64, wallX * 64);
-		//if (x == 0)
-		//	printf("");
-		mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, my_mlx_pixel_get(eng->tex, xpercentage, percentage * 64, tex));
+		mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, my_mlx_pixel_get(eng->tex, xpercentage, percentage * 63, tex));
 		i++;
 	}
 }
+
 
 int	update(t_eng *eng)
 {
@@ -295,7 +306,7 @@ int	update(t_eng *eng)
 	//printf("Demorou %lf para desenhar tela\n", frameTime);
 	//speed modifiers
     double moveSpeed = frameTime * 0.005; //the constant value is in squares/second
-    double rotSpeed = frameTime * 0.002; //the constant value is in radians/second
+    double rotSpeed = frameTime * 0.001; //the constant value is in radians/second
 	if(eng->key_W)//falta corrigir esta etapa
     {
     	if(worldMap[(int)(eng->posX + eng->dirX * moveSpeed)][(int)(eng->posY)] == 0)
@@ -316,29 +327,37 @@ int	update(t_eng *eng)
     {
     	//both camera direction and camera plane must be rotated
     	double oldDirX = eng->dirX;
-    	eng->dirX = eng->dirX * cos(-rotSpeed) - eng->dirY * sin(-rotSpeed);
-    	eng->dirY = oldDirX * sin(-rotSpeed) + eng->dirY * cos(-rotSpeed);
+    	eng->dirX = eng->dirX * cos(-rotSpeed * eng-> key_D) - eng->dirY * sin(-rotSpeed * eng-> key_D);
+    	eng->dirY = oldDirX * sin(-rotSpeed * eng-> key_D) + eng->dirY * cos(-rotSpeed * eng-> key_D);
     	double oldPlaneX = eng->planeX;
-    	eng->planeX = eng->planeX * cos(-rotSpeed) - eng->planeY * sin(-rotSpeed);
-    	eng->planeY = oldPlaneX * sin(-rotSpeed) + eng->planeY * cos(-rotSpeed);
-		//eng->key_rigth = 0;
+    	eng->planeX = eng->planeX * cos(-rotSpeed * eng-> key_D) - eng->planeY * sin(-rotSpeed * eng-> key_D);
+    	eng->planeY = oldPlaneX * sin(-rotSpeed * eng-> key_D) + eng->planeY * cos(-rotSpeed * eng-> key_D);
+		//eng->key_D = 0;
     }
 	if(eng->key_A)
     {
     	//both camera direction and camera plane must be rotated
     	double oldDirX = eng->dirX;
-    	eng->dirX = eng->dirX * cos(rotSpeed) - eng->dirY * sin(rotSpeed);
-    	eng->dirY = oldDirX * sin(rotSpeed) + eng->dirY * cos(rotSpeed);
+    	eng->dirX = eng->dirX * cos(rotSpeed * eng->key_A) - eng->dirY * sin(rotSpeed * eng->key_A);
+    	eng->dirY = oldDirX * sin(rotSpeed * eng->key_A) + eng->dirY * cos(rotSpeed * eng->key_A);
     	double oldPlaneX = eng->planeX;
-    	eng->planeX = eng->planeX * cos(rotSpeed) - eng->planeY * sin(rotSpeed);
-    	eng->planeY = oldPlaneX * sin(rotSpeed) + eng->planeY * cos(rotSpeed);
-		//eng->key_left = 0;
+    	eng->planeX = eng->planeX * cos(rotSpeed * eng->key_A) - eng->planeY * sin(rotSpeed * eng->key_A);
+    	eng->planeY = oldPlaneX * sin(rotSpeed * eng->key_A) + eng->planeY * cos(rotSpeed * eng->key_A);
+		//eng->key_A = 0;
     }
+	//mlx_mouse_move(eng->mlx_ptr, eng->win_ptr, screenWidth / 2, screenHeight / 2);
+	//mlx_mouse_hide(eng->mlx_ptr, eng->win_ptr);
 	return (0);
 }
 
 int	keytest(int keycode, t_eng *eng)
 {
+	if (keycode == SHIFT)
+	{
+		eng->key_shift = !eng->key_shift;
+		if (eng->key_shift)
+			mlx_mouse_show(eng->mlx_ptr, eng->win_ptr);
+	}
 	if (keycode == ESC)
 		ft_close(eng);
 	if (keycode == KEY_W)
@@ -371,6 +390,35 @@ int	keytestout(int keycode, t_eng *eng)
 	return (0);
 }
 
+int	mouse(int x, int y, t_eng *eng)
+{
+	if (eng->key_shift)
+		return (1);
+	mlx_mouse_hide(eng->mlx_ptr, eng->win_ptr);
+	if (y != screenHeight / 2)
+	{
+		if (y > screenHeight / 2)
+			eng->screen_y -= (y - screenHeight / 2) * 0.20 + 1;
+		else
+			eng->screen_y += (screenHeight / 2 - y) * 0.20 + 1;
+		mlx_mouse_move(eng->mlx_ptr, eng->win_ptr, screenWidth / 2, screenHeight / 2);
+	}
+	if (x != screenWidth / 2)
+	{
+		if (x > screenWidth / 2)
+			eng->key_D = (x - screenWidth / 2) * 0.10 + 1;
+		else
+			eng->key_A = (screenWidth / 2 - x) * 0.10 + 1;
+		mlx_mouse_move(eng->mlx_ptr, eng->win_ptr, screenWidth / 2, screenHeight / 2);
+	}
+	else
+	{
+		eng->key_D = 0;
+		eng->key_A = 0;
+	}
+	return(0);
+}
+
 void	ft_start_engine(t_file *file)
 {
 	t_eng	eng;
@@ -384,14 +432,17 @@ void	ft_start_engine(t_file *file)
 	eng.planeY = 0.66; //the 2d raycaster version of camera plane
 	eng.time = 0; //time of current frame
 	eng.oldTime = 0; //time of previous frame
-
 	eng.file = file;
+	eng.file->ceilling.rgb = rgb(eng.file->ceilling.red, eng.file->ceilling.green, eng.file->ceilling.blue);
+	eng.file->floor.rgb = rgb(eng.file->floor.red, eng.file->floor.green, eng.file->floor.blue);
+
 	eng.key_W = 0;
 	eng.key_S = 0;
 	eng.key_D= 0;
 	eng.key_A = 0;
 	eng.screen_y = 0;
 	eng.fps = 0;
+	eng.key_shift = 1;
 	eng.mlx_ptr = mlx_init();
 	eng.win_ptr = mlx_new_window(eng.mlx_ptr, screenWidth, screenHeight, "Cub3D");
 
@@ -404,10 +455,11 @@ void	ft_start_engine(t_file *file)
 	eng.tex.tex[3] = mlx_xpm_file_to_image(eng.mlx_ptr, eng.file->_ea, &eng.tex.img_width, &eng.tex.img_height);
 	eng.tex.addr[3] = mlx_get_data_addr(eng.tex.tex[3], &eng.tex.bits_per_pixel, &eng.tex.line_length, &eng.tex.endian);
 	
+	//mlx_key_hook(eng.win_ptr, trigger, &eng);
+	mlx_hook(eng.win_ptr, 6, (1L<<6), mouse, &eng);
+	mlx_loop_hook(eng.mlx_ptr, update, &eng); //construcao do raycast
 	mlx_hook(eng.win_ptr, 17, 0, ft_close, &eng);
 	mlx_hook(eng.win_ptr, 2, 1L<<0, keytest, &eng);
 	mlx_hook(eng.win_ptr, 3, 1L<<1, keytestout, &eng);
-	//mlx_key_hook(eng.win_ptr, trigger, &eng);
-	mlx_loop_hook(eng.mlx_ptr, update, &eng); //construcao do raycast
 	mlx_loop(eng.mlx_ptr);
 }
