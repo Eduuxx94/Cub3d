@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/10 16:54:31 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/10 18:14:17 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,14 +121,12 @@ void	verLine(t_eng *eng, int x, int drawStart, int drawEnd, int tex, double wall
 
 	while (++i <= screenHeight)
 	{
-		//mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, eng->file->ceilling.rgb);
 		if (i <= drawStart)
-			my_mlx_canva_put(&eng->canva, x, i, eng->file->ceilling.rgb);
+			my_mlx_canva_put(&eng->canva, x, i, eng->file->ceilling.rgb);//mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, eng->file->ceilling.rgb);
 		else if (i >= drawStart && i <= drawEnd)
 			i = drawEnd;
 		else
-			my_mlx_canva_put(&eng->canva, x, i, eng->file->floor.rgb);
-		//mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i,  eng->file->floor.rgb);
+			my_mlx_canva_put(&eng->canva, x, i, eng->file->floor.rgb);//mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i,  eng->file->floor.rgb);
 	}
 	if (drawStart >= 0)
 		i = drawStart;
@@ -137,8 +135,7 @@ void	verLine(t_eng *eng, int x, int drawStart, int drawEnd, int tex, double wall
 	while (i < screenHeight && i <= drawEnd)
 	{
 		percentage =  (float)(i - drawStart) / psize;
-		//mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, my_mlx_pixel_get(eng->tex, xpercentage, percentage * 63, tex));
-		my_mlx_canva_put(&eng->canva, x, i, my_mlx_pixel_get(eng->tex, xpercentage, percentage * 63, tex));
+		my_mlx_canva_put(&eng->canva, x, i, my_mlx_pixel_get(eng->tex, xpercentage, percentage * 63, tex));//mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, my_mlx_pixel_get(eng->tex, xpercentage, percentage * 63, tex));
 		i++;
 	}
 }
@@ -229,7 +226,7 @@ int	update(t_eng *eng)
 				side = 1;
 			}
         	//Check if ray has hit a wall
-       		if(worldMap[mapX][mapY] > 0)
+       		if(eng->file->map[mapY][mapX] !='0')
 				hit = 1;
     	}
 		//Calculate distance projected on camera direction. This is the shortest distance from the point where the wall is
@@ -252,7 +249,6 @@ int	update(t_eng *eng)
     	int drawEnd = lineHeight / 2 + screenHeight / 2;
     	//if(drawEnd >= screenHeight)
 		//	drawEnd = screenHeight - 1;
-
 		double wallX; //where exactly the wall was hit
     	if(side == 0)
 			wallX = eng->posY + perpWallDist * rayDirY;
@@ -264,7 +260,6 @@ int	update(t_eng *eng)
 			x = 0;
 			//printf("O valor da textura: %f\n", wallX); //o x da textura a ser pintado
 		}
-
       	//choose wall color
     	int color;
 		if (side)//Aqui sera escolhido qual textura sera mostrada exemplo: NO WE EA SO
@@ -321,17 +316,17 @@ int	update(t_eng *eng)
     double rotSpeed = frameTime * 0.001; //the constant value is in radians/second
 	if(eng->key_W)//falta corrigir esta etapa
     {
-    	if(worldMap[(int)(eng->posX + eng->dirX * moveSpeed)][(int)(eng->posY)] == 0)
+    	if(eng->file->map[(int)(eng->posY)][(int)(eng->posX + eng->dirX * moveSpeed)] == '0')
 	  		eng->posX += eng->dirX * moveSpeed;
-    	if(worldMap[(int)(eng->posX)][(int)(eng->posY + eng->dirY * moveSpeed)] == 0)
+    	if(eng->file->map[(int)(eng->posY + eng->dirY * moveSpeed)][(int)(eng->posX)] == '0')
 			eng->posY += eng->dirY * moveSpeed;
 		//eng->key_down = 0;
     }
 	if(eng->key_S)//falta corrigir as direcoes
     {
-    	if(worldMap[(int)(eng->posX - eng->dirX * moveSpeed)][(int)eng->posY] == 0)
+    	if(eng->file->map[(int)eng->posY][(int)(eng->posX - eng->dirX * moveSpeed)] == '0')
 			eng->posX -= eng->dirX * moveSpeed;
-    	if(worldMap[(int)eng->posX][(int)(eng->posY - eng->dirY * moveSpeed)] == 0)
+    	if(eng->file->map[(int)(eng->posY - eng->dirY * moveSpeed)][(int)eng->posX] == '0')
 			eng->posY -= eng->dirY * moveSpeed;
 		//eng->key_back = 0;
     }
@@ -436,15 +431,16 @@ void	ft_start_engine(t_file *file)
 	t_eng	eng;
 
 	//all tests will be commented!
-	eng.posX = 22;	//x and y start position
-	eng.posY = 12;  //x and y start position
+	eng.file = file;
+	eng.posX = get_map_pos(eng.file->map, 'x');	//x and y start position
+	eng.posY = get_map_pos(eng.file->map, 'y');  //x and y start position
+	eng.file->map[(int)eng.posY][(int)eng.posX] = '0';
 	eng.dirX = -1;	//initial direction vector
 	eng.dirY = 0; 	//initial direction vector
 	eng.planeX = 0;		//the 2d raycaster version of camera plane
 	eng.planeY = 0.66; //the 2d raycaster version of camera plane
 	eng.time = 0; //time of current frame
 	eng.oldTime = 0; //time of previous frame
-	eng.file = file;
 	eng.file->ceilling.rgb = rgb(eng.file->ceilling.red, eng.file->ceilling.green, eng.file->ceilling.blue);
 	eng.file->floor.rgb = rgb(eng.file->floor.red, eng.file->floor.green, eng.file->floor.blue);
 
