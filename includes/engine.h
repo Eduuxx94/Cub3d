@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/10 16:30:41 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/10 16:43:03 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ typedef struct s_canva
 {
 	void	*img;
 	char	*addr;
-	int		img_width;
-	int		img_height;
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
@@ -63,6 +61,7 @@ typedef struct s_eng
 {
 	struct timeval	fps_time;
 	t_tex			tex;
+	t_canva			canva;
 	int				fps;
 	t_file			*file;
 	void			*mlx_ptr;

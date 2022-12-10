@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/10 15:04:46 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/10 16:54:31 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,14 @@ int	my_mlx_pixel_get(t_tex data, int x, int y, int tex)
 	return (*(unsigned int*)(data.addr[tex] + (y * data.line_length + x * (data.bits_per_pixel / 8))));
 }
 
+void	my_mlx_canva_put(t_canva *canva, int x, int y, int color)
+{
+	char	*dst;
+
+	dst = canva->addr + (y * canva->line_length + x * (canva->bits_per_pixel / 8));
+	*(unsigned int*)dst = color;
+}
+
 int	rgb(int r, int g, int b)
 {
 	int	result;
@@ -113,12 +121,14 @@ void	verLine(t_eng *eng, int x, int drawStart, int drawEnd, int tex, double wall
 
 	while (++i <= screenHeight)
 	{
+		//mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, eng->file->ceilling.rgb);
 		if (i <= drawStart)
-			mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, eng->file->ceilling.rgb);
+			my_mlx_canva_put(&eng->canva, x, i, eng->file->ceilling.rgb);
 		else if (i >= drawStart && i <= drawEnd)
 			i = drawEnd;
 		else
-			mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i,  eng->file->floor.rgb);
+			my_mlx_canva_put(&eng->canva, x, i, eng->file->floor.rgb);
+		//mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i,  eng->file->floor.rgb);
 	}
 	if (drawStart >= 0)
 		i = drawStart;
@@ -127,7 +137,8 @@ void	verLine(t_eng *eng, int x, int drawStart, int drawEnd, int tex, double wall
 	while (i < screenHeight && i <= drawEnd)
 	{
 		percentage =  (float)(i - drawStart) / psize;
-		mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, my_mlx_pixel_get(eng->tex, xpercentage, percentage * 63, tex));
+		//mlx_pixel_put(eng->mlx_ptr, eng->win_ptr, x, i, my_mlx_pixel_get(eng->tex, xpercentage, percentage * 63, tex));
+		my_mlx_canva_put(&eng->canva, x, i, my_mlx_pixel_get(eng->tex, xpercentage, percentage * 63, tex));
 		i++;
 	}
 }
@@ -297,6 +308,7 @@ int	update(t_eng *eng)
 		//printf("Pos: %d		DrawStart: %d, DrawEnd: %d	Color: %d\n", x, drawStart, drawEnd, color);
     	verLine(eng, x, drawStart + eng->screen_y, drawEnd + eng->screen_y, color, wallX);
 	}
+	mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->canva.img, 0, 0);
 	//timing for input and FPS counter
 	struct timeval	current_time;
 	gettimeofday(&current_time, NULL);
@@ -454,6 +466,9 @@ void	ft_start_engine(t_file *file)
 	eng.tex.addr[2] = mlx_get_data_addr(eng.tex.tex[2], &eng.tex.bits_per_pixel, &eng.tex.line_length, &eng.tex.endian);
 	eng.tex.tex[3] = mlx_xpm_file_to_image(eng.mlx_ptr, eng.file->_ea, &eng.tex.img_width, &eng.tex.img_height);
 	eng.tex.addr[3] = mlx_get_data_addr(eng.tex.tex[3], &eng.tex.bits_per_pixel, &eng.tex.line_length, &eng.tex.endian);
+
+	eng.canva.img = mlx_new_image(eng.mlx_ptr, screenWidth, screenHeight);
+	eng.canva.addr = mlx_get_data_addr(eng.canva.img, &eng.canva.bits_per_pixel, &eng.canva.line_length, &eng.canva.endian);
 	
 	//mlx_key_hook(eng.win_ptr, trigger, &eng);
 	mlx_hook(eng.win_ptr, 6, (1L<<6), mouse, &eng);
