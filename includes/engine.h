@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/10 16:43:03 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/11 11:39:07 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ typedef struct s_eng
 	int				key_S;
 	int				key_D;
 	int				key_A;
+	int				key_rigth;
+	int				key_left;
 	int				key_shift;
 	int				screen_y;
 }	t_eng;

@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/10 18:14:17 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/11 14:04:21 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	ft_close(t_eng *eng)
 	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[1]);
 	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[2]);
 	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[3]);
+	mlx_destroy_image(eng->mlx_ptr, eng->canva.img);
 	mlx_loop_end(eng->mlx_ptr);
 	mlx_clear_window(eng->mlx_ptr, eng->win_ptr);
 	mlx_destroy_window(eng->mlx_ptr, eng->win_ptr);
@@ -143,10 +144,10 @@ void	verLine(t_eng *eng, int x, int drawStart, int drawEnd, int tex, double wall
 
 int	update(t_eng *eng)
 {
-	int	x = -1;//test
+	int	x = screenWidth;//test
 
 	fps(eng);
-	while (++x < screenWidth)
+	while (--x)
 	{
 		//calculate ray position and direction
     	double cameraX = 2 * x / (double)screenWidth - 1; //x-coordinate in camera space
@@ -265,16 +266,16 @@ int	update(t_eng *eng)
 		if (side)//Aqui sera escolhido qual textura sera mostrada exemplo: NO WE EA SO
 		{
 			if (rayDirY > 0)
-					color = 3; // EA east texture
+					color = 0; // EA east texture
 			else
-				color = 2; //WE west texture
+				color = 1; //WE west texture
 		}
 		else
 		{
 			if (rayDirX > 0)
-				color = 1; //SO south texture
+				color = 2; //SO south texture
 			else
-				color = 0; //NO north texture
+				color = 3; //NO north texture
 		}
     	/*switch(worldMap[mapX][mapY])
     	{
@@ -322,6 +323,50 @@ int	update(t_eng *eng)
 			eng->posY += eng->dirY * moveSpeed;
 		//eng->key_down = 0;
     }
+	if(eng->key_D)//falta corrigir as direcoes
+    {
+		eng-> key_left = -1;
+		double oldDirX = eng->dirX;
+    	eng->dirX = eng->dirX * cos(-1.57001 * eng-> key_left) - eng->dirY * sin(-1.57001 * eng-> key_left);
+    	eng->dirY = oldDirX * sin(-1.57001 * eng-> key_left) + eng->dirY * cos(-1.57001 * eng-> key_left);
+    	double oldPlaneX = eng->planeX;
+    	eng->planeX = eng->planeX * cos(-1.57001 * eng-> key_left) - eng->planeY * sin(-1.57001 * eng-> key_left);
+    	eng->planeY = oldPlaneX * sin(-1.57001 * eng-> key_left) + eng->planeY * cos(-1.57001 * eng-> key_left);
+		if(eng->file->map[(int)(eng->posY)][(int)(eng->posX + eng->dirX * moveSpeed)] == '0')
+	  		eng->posX += eng->dirX * moveSpeed;
+    	if(eng->file->map[(int)(eng->posY + eng->dirY * moveSpeed)][(int)(eng->posX)] == '0')
+			eng->posY += eng->dirY * moveSpeed;
+		eng-> key_left = 1;
+		oldDirX = eng->dirX;
+    	eng->dirX = eng->dirX * cos(-1.57001 * eng-> key_left) - eng->dirY * sin(-1.57001 * eng-> key_left);
+    	eng->dirY = oldDirX * sin(-1.57001 * eng-> key_left) + eng->dirY * cos(-1.57001 * eng-> key_left);
+    	oldPlaneX = eng->planeX;
+    	eng->planeX = eng->planeX * cos(-1.57001 * eng-> key_left) - eng->planeY * sin(-1.57001 * eng-> key_left);
+    	eng->planeY = oldPlaneX * sin(-1.57001 * eng-> key_left) + eng->planeY * cos(-1.57001 * eng-> key_left);
+		eng-> key_left = 0;
+    }
+	if(eng->key_A)//falta corrigir esta etapa
+    {
+		eng-> key_left = 1;
+		double oldDirX = eng->dirX;
+    	eng->dirX = eng->dirX * cos(-1.57001 * eng-> key_left) - eng->dirY * sin(-1.57001 * eng-> key_left);
+    	eng->dirY = oldDirX * sin(-1.57001 * eng-> key_left) + eng->dirY * cos(-1.57001 * eng-> key_left);
+    	double oldPlaneX = eng->planeX;
+    	eng->planeX = eng->planeX * cos(-1.57001 * eng-> key_left) - eng->planeY * sin(-1.57001 * eng-> key_left);
+    	eng->planeY = oldPlaneX * sin(-1.57001 * eng-> key_left) + eng->planeY * cos(-1.57001 * eng-> key_left);
+		if(eng->file->map[(int)(eng->posY)][(int)(eng->posX + eng->dirX * moveSpeed)] == '0')
+	  		eng->posX += eng->dirX * moveSpeed;
+    	if(eng->file->map[(int)(eng->posY + eng->dirY * moveSpeed)][(int)(eng->posX)] == '0')
+			eng->posY += eng->dirY * moveSpeed;
+		eng-> key_left = -1;
+		oldDirX = eng->dirX;
+    	eng->dirX = eng->dirX * cos(-1.57001 * eng-> key_left) - eng->dirY * sin(-1.57001 * eng-> key_left);
+    	eng->dirY = oldDirX * sin(-1.57001 * eng-> key_left) + eng->dirY * cos(-1.57001 * eng-> key_left);
+    	oldPlaneX = eng->planeX;
+    	eng->planeX = eng->planeX * cos(-1.57001 * eng-> key_left) - eng->planeY * sin(-1.57001 * eng-> key_left);
+    	eng->planeY = oldPlaneX * sin(-1.57001 * eng-> key_left) + eng->planeY * cos(-1.57001 * eng-> key_left);
+		eng-> key_left = 0;
+    }
 	if(eng->key_S)//falta corrigir as direcoes
     {
     	if(eng->file->map[(int)eng->posY][(int)(eng->posX - eng->dirX * moveSpeed)] == '0')
@@ -330,26 +375,26 @@ int	update(t_eng *eng)
 			eng->posY -= eng->dirY * moveSpeed;
 		//eng->key_back = 0;
     }
-	if(eng->key_D)
+	if(eng->key_left)
     {
     	//both camera direction and camera plane must be rotated
     	double oldDirX = eng->dirX;
-    	eng->dirX = eng->dirX * cos(-rotSpeed * eng-> key_D) - eng->dirY * sin(-rotSpeed * eng-> key_D);
-    	eng->dirY = oldDirX * sin(-rotSpeed * eng-> key_D) + eng->dirY * cos(-rotSpeed * eng-> key_D);
+    	eng->dirX = eng->dirX * cos(-rotSpeed * eng-> key_left) - eng->dirY * sin(-rotSpeed * eng-> key_left);
+    	eng->dirY = oldDirX * sin(-rotSpeed * eng-> key_left) + eng->dirY * cos(-rotSpeed * eng-> key_left);
     	double oldPlaneX = eng->planeX;
-    	eng->planeX = eng->planeX * cos(-rotSpeed * eng-> key_D) - eng->planeY * sin(-rotSpeed * eng-> key_D);
-    	eng->planeY = oldPlaneX * sin(-rotSpeed * eng-> key_D) + eng->planeY * cos(-rotSpeed * eng-> key_D);
+    	eng->planeX = eng->planeX * cos(-rotSpeed * eng-> key_left) - eng->planeY * sin(-rotSpeed * eng-> key_left);
+    	eng->planeY = oldPlaneX * sin(-rotSpeed * eng-> key_left) + eng->planeY * cos(-rotSpeed * eng-> key_left);
 		//eng->key_D = 0;
     }
-	if(eng->key_A)
+	if(eng->key_rigth)
     {
     	//both camera direction and camera plane must be rotated
     	double oldDirX = eng->dirX;
-    	eng->dirX = eng->dirX * cos(rotSpeed * eng->key_A) - eng->dirY * sin(rotSpeed * eng->key_A);
-    	eng->dirY = oldDirX * sin(rotSpeed * eng->key_A) + eng->dirY * cos(rotSpeed * eng->key_A);
+    	eng->dirX = eng->dirX * cos(rotSpeed * eng->key_rigth) - eng->dirY * sin(rotSpeed * eng->key_rigth);
+    	eng->dirY = oldDirX * sin(rotSpeed * eng->key_rigth) + eng->dirY * cos(rotSpeed * eng->key_rigth);
     	double oldPlaneX = eng->planeX;
-    	eng->planeX = eng->planeX * cos(rotSpeed * eng->key_A) - eng->planeY * sin(rotSpeed * eng->key_A);
-    	eng->planeY = oldPlaneX * sin(rotSpeed * eng->key_A) + eng->planeY * cos(rotSpeed * eng->key_A);
+    	eng->planeX = eng->planeX * cos(rotSpeed * eng->key_rigth) - eng->planeY * sin(rotSpeed * eng->key_rigth);
+    	eng->planeY = oldPlaneX * sin(rotSpeed * eng->key_rigth) + eng->planeY * cos(rotSpeed * eng->key_rigth);
 		//eng->key_A = 0;
     }
 	//mlx_mouse_move(eng->mlx_ptr, eng->win_ptr, screenWidth / 2, screenHeight / 2);
@@ -375,9 +420,13 @@ int	keytest(int keycode, t_eng *eng)
 		eng->key_D = 1;
 	if (keycode == KEY_A)
 		eng->key_A = 1;
-	if (keycode == KEY_UP)
+	if (keycode == KEY_RIGTH)
+		eng->key_rigth = 1;
+	if (keycode == KEY_LEFT)
+		eng->key_left = 1;
+	if (keycode == KEY_UP && eng->screen_y < 400)
 		eng->screen_y += 5;
-	if (keycode == KEY_DOWN)
+	if (keycode == KEY_DOWN && eng->screen_y > -400)
 		eng->screen_y -= 5;
 	return (0);
 }
@@ -394,6 +443,10 @@ int	keytestout(int keycode, t_eng *eng)
 		eng->key_D = 0;
 	if (keycode == KEY_A)
 		eng->key_A = 0;
+	if (keycode == KEY_LEFT)
+		eng->key_left = 0;
+	if (keycode == KEY_RIGTH)
+		eng->key_rigth = 0;
 	return (0);
 }
 
@@ -404,24 +457,24 @@ int	mouse(int x, int y, t_eng *eng)
 	mlx_mouse_hide(eng->mlx_ptr, eng->win_ptr);
 	if (y != screenHeight / 2)
 	{
-		if (y > screenHeight / 2)
+		if (y > screenHeight / 2 && eng->screen_y > -400)
 			eng->screen_y -= (y - screenHeight / 2) * 0.20 + 1;
-		else
+		else if (y < screenHeight / 2 && eng->screen_y < 400)
 			eng->screen_y += (screenHeight / 2 - y) * 0.20 + 1;
 		mlx_mouse_move(eng->mlx_ptr, eng->win_ptr, screenWidth / 2, screenHeight / 2);
 	}
 	if (x != screenWidth / 2)
 	{
 		if (x > screenWidth / 2)
-			eng->key_D = (x - screenWidth / 2) * 0.10 + 1;
+			eng->key_rigth = (x - screenWidth / 2) * 0.10 + 1;
 		else
-			eng->key_A = (screenWidth / 2 - x) * 0.10 + 1;
+			eng->key_left = (screenWidth / 2 - x) * 0.10 + 1;
 		mlx_mouse_move(eng->mlx_ptr, eng->win_ptr, screenWidth / 2, screenHeight / 2);
 	}
 	else
 	{
-		eng->key_D = 0;
-		eng->key_A = 0;
+		eng->key_rigth = 0;
+		eng->key_left = 0;
 	}
 	return(0);
 }
@@ -434,11 +487,35 @@ void	ft_start_engine(t_file *file)
 	eng.file = file;
 	eng.posX = get_map_pos(eng.file->map, 'x');	//x and y start position
 	eng.posY = get_map_pos(eng.file->map, 'y');  //x and y start position
+	if (eng.file->map[(int)eng.posY][(int)eng.posX] == 'N')
+	{
+		eng.dirX = 0;	//initial direction vector
+		eng.dirY = -1; 	//initial direction vector
+		eng.planeX = 0.66;		//the 2d raycaster version of camera plane
+		eng.planeY = 0; //the 2d raycaster version of camera plane
+	}
+	if (eng.file->map[(int)eng.posY][(int)eng.posX] == 'S')
+	{
+		eng.dirX = 0;	//initial direction vector
+		eng.dirY = 1; 	//initial direction vector
+		eng.planeX = -0.66;		//the 2d raycaster version of camera plane
+		eng.planeY = 0; //the 2d raycaster version of camera plane
+	}
+	if (eng.file->map[(int)eng.posY][(int)eng.posX] == 'W')
+	{
+		eng.dirX = -1;	//initial direction vector
+		eng.dirY = 0; 	//initial direction vector
+		eng.planeX = 0;		//the 2d raycaster version of camera plane
+		eng.planeY = -0.66; //the 2d raycaster version of camera plane
+	}
+	if (eng.file->map[(int)eng.posY][(int)eng.posX] == 'E')
+	{
+		eng.dirX = 1;	//initial direction vector
+		eng.dirY = 0; 	//initial direction vector
+		eng.planeX = 0;		//the 2d raycaster version of camera plane
+		eng.planeY = 0.66; //the 2d raycaster version of camera plane
+	}
 	eng.file->map[(int)eng.posY][(int)eng.posX] = '0';
-	eng.dirX = -1;	//initial direction vector
-	eng.dirY = 0; 	//initial direction vector
-	eng.planeX = 0;		//the 2d raycaster version of camera plane
-	eng.planeY = 0.66; //the 2d raycaster version of camera plane
 	eng.time = 0; //time of current frame
 	eng.oldTime = 0; //time of previous frame
 	eng.file->ceilling.rgb = rgb(eng.file->ceilling.red, eng.file->ceilling.green, eng.file->ceilling.blue);
@@ -446,8 +523,10 @@ void	ft_start_engine(t_file *file)
 
 	eng.key_W = 0;
 	eng.key_S = 0;
-	eng.key_D= 0;
+	eng.key_D = 0;
 	eng.key_A = 0;
+	eng.key_left = 0;
+	eng.key_rigth = 0;
 	eng.screen_y = 0;
 	eng.fps = 0;
 	eng.key_shift = 1;
