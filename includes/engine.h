@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/13 17:40:37 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/13 22:30:28 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@
 
 enum e_keys
 {
+	RATE_20 = 47500,
+	RATE_35 = 27500,
+	RATE_50 = 18500,
+	RATE_75 = 12500,
+	RATE_MAX = 1,
 	ESC = 65307,
 	SPACE = 32,
 	ENTER = 65293,
@@ -56,32 +61,77 @@ typedef struct s_canva
 	int		endian;
 }	t_canva;
 
+typedef struct s_player
+{
+	double	posx;
+	double	posy;
+	double	dirx;
+	double	diry;
+	double	planex;
+	double	planey;
+}	t_player;
+
+typedef struct s_raycast
+{
+	double	camerax;
+	double	raydirx;
+	double	raydiry;
+	int		mapx;
+	int		mapy;
+	double	sidedistx;
+	double	sidedisty;
+	double	deltadistx;
+	double	deltadisty;
+	double	perpwalldist;
+	int		stepx;
+	int		stepy;
+	int		hit;
+	int		side;
+	int		lineheight;
+	int		drawstart;
+	int		drawend;
+	double	wallx;
+	int		texture;
+}	t_raycast;
+
+typedef struct s_event
+{
+	int		key_w;
+	int		key_s;
+	int		key_d;
+	int		key_a;
+	int		key_rigth;
+	int		key_left;
+	int		key_shift;
+	int		screen_y;
+	double	frame_time;
+	double	movespeed;
+	double	rotspeed;
+	double	olddirx;
+	double	oldplanex;
+}	t_event;
+
+typedef struct s_world
+{
+	struct timeval	timer;
+	int				frames_rate;
+	int				fps_counter;
+	double			world_time;
+	double			last_time;
+}	t_world;
+
 
 typedef struct s_eng
 {
-	struct timeval	timer;
+	t_file			*file;
+	t_player		player;
+	t_world			world;
+	t_event			event;
 	t_tex			tex;
 	t_canva			canva;
-	int				fps;
-	t_file			*file;
+	t_raycast		raycast;
 	void			*mlx_ptr;
 	void			*win_ptr;
-	double			posX;
-	double			posY;
-	double			dirX;
-	double			dirY;
-	double			planeX;
-	double			planeY;
-	double			time;
-	double			oldTime;
-	int				key_W;
-	int				key_S;
-	int				key_D;
-	int				key_A;
-	int				key_rigth;
-	int				key_left;
-	int				key_shift;
-	int				screen_y;
 }	t_eng;
 
 void	ft_start_engine(t_file *file);

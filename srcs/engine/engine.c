@@ -6,14 +6,14 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/13 17:39:09 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/13 22:56:07 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "engine.h"
 
-#define screenHeight 900
-#define screenWidth 1200
+#define screenHeight 1200
+#define screenWidth 1920
 
 int	ft_close(t_eng *eng)//Esta função é responsavel em dar free em todos os ponteiros do mlx e da struct file do parse
 {
@@ -32,27 +32,27 @@ int	ft_close(t_eng *eng)//Esta função é responsavel em dar free em todos os p
 	return (0);
 }
 
-void	fps(t_eng *eng)
+void	show_fps(t_eng *eng)
 {
 	struct timeval	current_time;
 
 	gettimeofday(&current_time, NULL);
-	if (current_time.tv_sec == eng->timer.tv_sec)//em quanto o segundo (current_time) for igual ao segundo do timer(relogio do jogo) vai contar os fps(frames por segundo)
-		eng->fps++;
-	else if (printf("FPS: (%d)\n", eng->fps))
+	if (current_time.tv_sec == eng->world.timer.tv_sec)//em quanto o segundo (current_time) for igual ao segundo do timer(relogio do jogo) vai contar os fps(frames por segundo)
+		eng->world.fps_counter++;
+	else if (printf("world.fps_counter: (%d)\n", eng->world.fps_counter))
 	{
 		printf("\e[1;1H\e[2J");
-		eng->fps = 0;
-		gettimeofday(&eng->timer, NULL);//Rélogio do jogo vai atualizar pois um segundo se passou
+		eng->world.fps_counter = 0;
+		gettimeofday(&eng->world.timer, NULL);//Rélogio do jogo vai atualizar pois um segundo se passou
 	}
 }
 
-int	my_mlx_pixel_get(t_tex data, int x, int y, int tex)
+int	get_pixel_image(t_eng *eng, int x, int y, int tex)
 {
-	return (*(unsigned int*)(data.addr[tex] + (y * data.line_length + x * (data.bits_per_pixel / 8))));//esta função retorna a cor da textura na posição tex[y][x]
+	return (*(unsigned int*)(eng->tex.addr[tex] + (y * eng->tex.line_length + x * (eng->tex.bits_per_pixel / 8))));//esta função retorna a cor da textura na posição tex[y][x]
 }
 
-void	my_mlx_canva_put(t_canva *canva, int x, int y, int color)
+void	put_pixel_image(t_canva *canva, int x, int y, int color)
 {
 	char	*dst;
 
@@ -72,28 +72,24 @@ int	rgb(int r, int g, int b)
 	return (result);//esta função irá ser acrescentada no parse, função destinada à junção das cores R G B para uma unica variavel (int)
 }
 
-void	verLine(t_eng *eng, int x, int drawStart, int drawEnd, int tex, double wallX)//esta função pinta o canva(imagem) que será mostrada na tela 
+void	paint_vertical(t_eng *eng, int x, int drawstart, int drawend)//esta função pinta o canva(imagem) que será mostrada na tela 
 {
-	float	percentage;
 	int		i;
 	int		xpercentage;
 	int		psize;
 
 	i = -1;
-	psize = drawEnd - drawStart;
-	xpercentage = wallX * 64;
+	psize = drawend - drawstart;
+	xpercentage = eng->raycast.wallx * 64;
 
 	while (++i <= screenHeight)
 	{
-		if (i < drawStart)
-			my_mlx_canva_put(&eng->canva, x, i, eng->file->ceilling.rgb);//Será pintado um pixel[y][x] com a cor do ceiling no canva
-		else if (i >= drawStart && i < drawEnd)
-		{
-			percentage =  (float)(i - drawStart) / psize;
-			my_mlx_canva_put(&eng->canva, x, i, my_mlx_pixel_get(eng->tex, xpercentage, percentage * eng->tex.img_width, tex));//será pintado um pixel[y][x] com a cor da textura[y][x] selecionada (int tex)
-		}
+		if (i < drawstart)
+			put_pixel_image(&eng->canva, x, i, eng->file->ceilling.rgb);//Será pintado um pixel[y][x] com a cor do ceiling no canva
+		else if (i < drawend)
+			put_pixel_image(&eng->canva, x, i, get_pixel_image(eng, xpercentage, (float)(i - drawstart) / psize * eng->tex.img_width, eng->raycast.texture));//será pintado um pixel[y][x] com a cor da textura[y][x] selecionada (int tex)
 		else
-			my_mlx_canva_put(&eng->canva, x, i, eng->file->floor.rgb);//Será pintado um pixel[y][x] com a cor do floor no canva
+			put_pixel_image(&eng->canva, x, i, eng->file->floor.rgb);//Será pintado um pixel[y][x] com a cor do floor no canva
 	}
 }
 
@@ -101,224 +97,199 @@ void	verLine(t_eng *eng, int x, int drawStart, int drawEnd, int tex, double wall
 int	update(t_eng *eng)//função de atualização de tela
 {
 	int	x = screenWidth;//x corresponde à posição maxima x da tela, ou seja a imagem será pintada do fim ao inicio.
-
-	fps(eng);
-	while (--x)
-	{
-		//calculate ray position and direction
-    	double cameraX = 2 * x / (double)screenWidth - 1; //x-coordinate in camera space
-		double rayDirX = eng->dirX + eng->planeX * cameraX;
-    	double rayDirY = eng->dirY + eng->planeY * cameraX;
-    	//which box of the map we're in
-    	int mapX = eng->posX;
-    	int mapY = eng->posY;
-
-    	//length of ray from current position to next x or y-side
-    	double sideDistX;
-    	double sideDistY;
-
-		//length of ray from one x or y-side to next x or y-side
-    	//these are derived as:
-    	//deltaDistX = sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX))
-    	//deltaDistY = sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY))
-    	//which can be simplified to abs(|rayDir| / rayDirX) and abs(|rayDir| / rayDirY)
-    	//where |rayDir| is the length of the vector (rayDirX, rayDirY). Its length,
-    	//unlike (dirX, dirY) is not 1, however this does not matter, only the
-    	//ratio between deltaDistX and deltaDistY matters, due to the way the DDA
-    	//stepping further below works. So the values can be computed as below.
-    	// Division through zero is prevented, even though technically that's not
-    	// needed in C++ with IEEE 754 floating point values.
-    	double deltaDistX;
-    	double deltaDistY;
-		if (rayDirX == 0)
-			deltaDistX = 1e30;
-		else
-			deltaDistX = fabs(1 / rayDirX); //talvez esteja errado
-		if (rayDirY == 0)
-			deltaDistY = 1e30;
-		else
-			deltaDistY = fabs(1 / rayDirY); //talvez esteja errado
-    	double perpWallDist; //testes aqui
-		//what direction to step in x or y-direction (either +1 or -1)
-    	int stepX;
-    	int stepY;
-
-      	int hit = 0; //was there a wall hit?
-    	int side; //was a NS or a EW wall hit?
-    	//calculate step and initial sideDist
-    	if(rayDirX < 0)
-      	{
-        	stepX = -1;
-    		sideDistX = (eng->posX - (double)mapX) * deltaDistX;
-      	}
-    	else
-    	{
-        	stepX = 1;
-        	sideDistX = ((double)mapX + 1.0 - eng->posX) * deltaDistX;
-      	}
-    	if(rayDirY < 0)
-    	{
-        	stepY = -1;
-       		sideDistY = (eng->posY - (double)mapY) * deltaDistY;
-    	}
-    	else
-      	{
-        	stepY = 1;
-       		sideDistY = ((double)mapY + 1.0 - eng->posY) * deltaDistY;
-      	}
-		//perform DDA
-		while(hit == 0)
-    	{
-        	//jump to next map square, either in x-direction, or in y-direction
-			if(sideDistX < sideDistY)
-			{
-				sideDistX += deltaDistX;
-				mapX += stepX;
-				side = 0;
-			}
-			else
-			{
-				sideDistY += deltaDistY;
-				mapY += stepY;
-				side = 1;
-			}
-        	//Check if ray has hit a wall
-       		if(eng->file->map[mapY][mapX] != '0')
-				hit = 1;
-    	}
-		//Calculate distance projected on camera direction. This is the shortest distance from the point where the wall is
-    	//hit to the camera plane. Euclidean to center camera point would give fisheye effect!
-    	//This can be computed as (mapX - posX + (1 - stepX) / 2) / rayDirX for side == 0, or same formula with Y
-    	//for size == 1, but can be simplified to the code below thanks to how sideDist and deltaDist are computed:
-    	//because they were left scaled to |rayDir|. sideDist is the entire length of the ray above after the multiple
-    	//steps, but we subtract deltaDist once because one step more into the wall was taken above.
-    	if(side == 0)
-			perpWallDist = (sideDistX - deltaDistX);
-    	else
-			perpWallDist = (sideDistY - deltaDistY);
-		//Calculate height of line to draw on screen
-    	int lineHeight = (screenHeight / perpWallDist);
-    	//calculate lowest and highest pixel to fill in current stripe
-    	int drawStart = -lineHeight / 2 + screenHeight / 2;
-    	int drawEnd = lineHeight / 2 + screenHeight / 2;
-		double wallX; //where exactly the wall was hit
-    	if(side == 0)
-			wallX = eng->posY + perpWallDist * rayDirY;
-		else
-			wallX = eng->posX + perpWallDist * rayDirX;
-    	wallX -= floor((wallX));
-		if (x == 0)
-		{
-			x = 0;
-			//printf("O valor da textura: %f\n", wallX); //o x da textura a ser pintado
-		}
-      	//choose wall color
-    	int color;
-		if (side)//Aqui sera escolhido qual textura sera mostrada exemplo: NO WE EA SO
-		{
-			if (rayDirY > 0)
-					color = 0; // EA east texture
-			else
-				color = 1; //WE west texture
-		}
-		else
-		{
-			if (rayDirX > 0)
-				color = 2; //SO south texture
-			else
-				color = 3; //NO north texture
-		}
-    	verLine(eng, x, drawStart + eng->screen_y, drawEnd + eng->screen_y, color, wallX);//draw the pixels of the stripe as a vertical line
-	}
-	mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->canva.img, 0, 0);
-	//timing for input and FPS counter
 	struct timeval	current_time;
+
+	//timing for input and fps_counter counter
 	gettimeofday(&current_time, NULL);
-    eng->oldTime = eng->time;
-    eng->time = 1000000 * current_time.tv_sec + current_time.tv_usec;//current_time.tv_usec;
-    double frameTime = (eng->time - eng->oldTime) / 1000.0; //frameTime is the time this frame has taken, in seconds
-	//printf("Demorou %lf para desenhar tela\n", frameTime);
-	//speed modifiers
-    double moveSpeed = frameTime * 0.005; //the constant value is in squares/second
-    double rotSpeed = frameTime * 0.001; //the constant value is in radians/second
-	if(eng->key_W)//falta corrigir esta etapa
-    {
-    	if(eng->file->map[(int)(eng->posY)][(int)(eng->posX + (eng->dirX * 15) * moveSpeed)] == '0')
-	  		eng->posX += eng->dirX * moveSpeed;
-    	if(eng->file->map[(int)(eng->posY + (eng->dirY * 15) * moveSpeed)][(int)(eng->posX)] == '0')
-			eng->posY += eng->dirY * moveSpeed;
-		//eng->key_down = 0;
-    }
-	if(eng->key_D)//falta corrigir as direcoes
-    {
-		double oldDirX = eng->dirX;
-    	eng->dirX = eng->dirX * cos(1.57001) - eng->dirY * sin(1.57001);
-    	eng->dirY = oldDirX * sin(1.57001) + eng->dirY * cos(1.57001);
-    	double oldPlaneX = eng->planeX;
-    	eng->planeX = eng->planeX * cos(1.57001) - eng->planeY * sin(1.57001);
-    	eng->planeY = oldPlaneX * sin(1.57001) + eng->planeY * cos(1.57001);
-		if(eng->file->map[(int)(eng->posY)][(int)(eng->posX + (eng->dirX * 15) * moveSpeed)] == '0')
-	  		eng->posX += eng->dirX * (moveSpeed * 0.5);
-    	if(eng->file->map[(int)(eng->posY + (eng->dirY * 15) * moveSpeed)][(int)(eng->posX)] == '0')
-			eng->posY += eng->dirY * (moveSpeed * 0.5);
-		oldDirX = eng->dirX;
-    	eng->dirX = eng->dirX * cos(-1.57001) - eng->dirY * sin(-1.57001);
-    	eng->dirY = oldDirX * sin(-1.57001) + eng->dirY * cos(-1.57001);
-    	oldPlaneX = eng->planeX;
-    	eng->planeX = eng->planeX * cos(-1.57001) - eng->planeY * sin(-1.57001);
-    	eng->planeY = oldPlaneX * sin(-1.57001) + eng->planeY * cos(-1.57001);
-    }
-	if(eng->key_A)//falta corrigir esta etapa
-    {
-		double oldDirX = eng->dirX;
-    	eng->dirX = eng->dirX * cos(-1.57001) - eng->dirY * sin(-1.57001);
-    	eng->dirY = oldDirX * sin(-1.57001) + eng->dirY * cos(-1.57001);
-    	double oldPlaneX = eng->planeX;
-    	eng->planeX = eng->planeX * cos(-1.57001) - eng->planeY * sin(-1.57001);
-    	eng->planeY = oldPlaneX * sin(-1.57001) + eng->planeY * cos(-1.57001);
-		if(eng->file->map[(int)(eng->posY)][(int)(eng->posX + (eng->dirX * 15) * moveSpeed)] == '0')
-	  		eng->posX += eng->dirX * (moveSpeed * 0.5);
-    	if(eng->file->map[(int)(eng->posY + (eng->dirY * 15) * moveSpeed)][(int)(eng->posX)] == '0')
-			eng->posY += eng->dirY * (moveSpeed * 0.5);
-		oldDirX = eng->dirX;
-    	eng->dirX = eng->dirX * cos(1.57001) - eng->dirY * sin(1.57001);
-    	eng->dirY = oldDirX * sin(1.57001) + eng->dirY * cos(1.57001);
-    	oldPlaneX = eng->planeX;
-    	eng->planeX = eng->planeX * cos(1.57001) - eng->planeY * sin(1.57001);
-    	eng->planeY = oldPlaneX * sin(1.57001) + eng->planeY * cos(1.57001);
-    }
-	if(eng->key_S)//falta corrigir as direcoes
-    {
-    	if(eng->file->map[(int)eng->posY][(int)(eng->posX - (eng->dirX * 15) * moveSpeed)] == '0')
-			eng->posX -= eng->dirX * moveSpeed;
-    	if(eng->file->map[(int)(eng->posY - (eng->dirY * 15) * moveSpeed)][(int)eng->posX] == '0')
-			eng->posY -= eng->dirY * moveSpeed;
-		//eng->key_back = 0;
-    }
-	if(eng->key_left)
-    {
-    	//both camera direction and camera plane must be rotated
-    	double oldDirX = eng->dirX;
-    	eng->dirX = eng->dirX * cos(-rotSpeed * eng-> key_left) - eng->dirY * sin(-rotSpeed * eng-> key_left);
-    	eng->dirY = oldDirX * sin(-rotSpeed * eng-> key_left) + eng->dirY * cos(-rotSpeed * eng-> key_left);
-    	double oldPlaneX = eng->planeX;
-    	eng->planeX = eng->planeX * cos(-rotSpeed * eng-> key_left) - eng->planeY * sin(-rotSpeed * eng-> key_left);
-    	eng->planeY = oldPlaneX * sin(-rotSpeed * eng-> key_left) + eng->planeY * cos(-rotSpeed * eng-> key_left);
-		eng->key_left = 0;
-    }
-	if(eng->key_rigth)
-    {
-    	//both camera direction and camera plane must be rotated
-    	double oldDirX = eng->dirX;
-    	eng->dirX = eng->dirX * cos(rotSpeed * eng->key_rigth) - eng->dirY * sin(rotSpeed * eng->key_rigth);
-    	eng->dirY = oldDirX * sin(rotSpeed * eng->key_rigth) + eng->dirY * cos(rotSpeed * eng->key_rigth);
-    	double oldPlaneX = eng->planeX;
-    	eng->planeX = eng->planeX * cos(rotSpeed * eng->key_rigth) - eng->planeY * sin(rotSpeed * eng->key_rigth);
-    	eng->planeY = oldPlaneX * sin(rotSpeed * eng->key_rigth) + eng->planeY * cos(rotSpeed * eng->key_rigth);
-		eng->key_rigth = 0;
-    }
-	//mlx_mouse_move(eng->mlx_ptr, eng->win_ptr, screenWidth / 2, screenHeight / 2);
-	//mlx_mouse_hide(eng->mlx_ptr, eng->win_ptr);
+    eng->world.world_time = 1000000 * current_time.tv_sec + current_time.tv_usec;//current_time.tv_usec;
+	if (eng->world.world_time - eng->world.last_time > eng->world.frames_rate)
+	{
+		show_fps(eng);
+		eng->event.frame_time = (eng->world.world_time - eng->world.last_time) / 1000.0; //eng->event.frame_time is the time this frame has taken, in seconds
+		eng->world.last_time = eng->world.world_time;
+		while (--x)
+		{
+			//calculate ray position and direction
+			eng->raycast.camerax = 2 * x / (double)screenWidth - 1; //x-coordinate in camera space
+			eng->raycast.raydirx = eng->player.dirx + eng->player.planex * eng->raycast.camerax;
+			eng->raycast.raydiry = eng->player.diry + eng->player.planey * eng->raycast.camerax;
+			//which box of the map we're in
+			eng->raycast.mapx = eng->player.posx;
+			eng->raycast.mapy = eng->player.posy;
+
+			//length of ray from current position to next x or y-side
+			if (eng->raycast.raydirx == 0)
+				eng->raycast.deltadistx = 1e30;
+			else
+				eng->raycast.deltadistx = fabs(1 / eng->raycast.raydirx); //talvez esteja errado
+			if (eng->raycast.raydiry == 0)
+				eng->raycast.deltadisty = 1e30;
+			else
+				eng->raycast.deltadisty = fabs(1 / eng->raycast.raydiry); //talvez esteja errado
+			//what direction to step in x or y-direction (either +1 or -1)
+			eng->raycast.hit = 0; //was there a wall hit?
+			//calculate step and initial sideDist
+			if(eng->raycast.raydirx < 0)
+			{
+				eng->raycast.stepx = -1;
+				eng->raycast.sidedistx = (eng->player.posx - (double)eng->raycast.mapx) * eng->raycast.deltadistx;
+			}
+			else
+			{
+				eng->raycast.stepx = 1;
+				eng->raycast.sidedistx = ((double)eng->raycast.mapx + 1.0 - eng->player.posx) * eng->raycast.deltadistx;
+			}
+			if(eng->raycast.raydiry < 0)
+			{
+				eng->raycast.stepy = -1;
+				eng->raycast.sidedisty = (eng->player.posy - (double)eng->raycast.mapy) * eng->raycast.deltadisty;
+			}
+			else
+			{
+				eng->raycast.stepy = 1;
+				eng->raycast.sidedisty = ((double)eng->raycast.mapy + 1.0 - eng->player.posy) * eng->raycast.deltadisty;
+			}
+			//perform DDA
+			while(eng->raycast.hit == 0)
+			{
+				//jump to next map square, either in x-direction, or in y-direction
+				if(eng->raycast.sidedistx < eng->raycast.sidedisty)
+				{
+					eng->raycast.sidedistx += eng->raycast.deltadistx;
+					eng->raycast.mapx += eng->raycast.stepx;
+					eng->raycast.side = 0;
+				}
+				else
+				{
+					eng->raycast.sidedisty += eng->raycast.deltadisty;
+					eng->raycast.mapy += eng->raycast.stepy;
+					eng->raycast.side = 1;
+				}
+				//Check if ray has hit a wall
+				if(eng->file->map[eng->raycast.mapy][eng->raycast.mapx] != '0')
+					eng->raycast.hit = 1;
+			}
+			//Calculate distance projected on camera direction. This is the shortest distance from the point where the wall is
+			//hit to the camera plane. Euclidean to center camera point would give fisheye effect!
+			//This can be computed as (eng->raycast.mapx - posX + (1 - eng->raycast.stepx) / 2) / eng->raycast.raydirx for side == 0, or same formula with Y
+			//for size == 1, but can be simplified to the code below thanks to how sideDist and deltaDist are computed:
+			//because they were left scaled to |rayDir|. sideDist is the entire length of the ray above after the multiple
+			//steps, but we subtract deltaDist once because one step more into the wall was taken above.
+			if(eng->raycast.side == 0)
+				eng->raycast.perpwalldist = (eng->raycast.sidedistx - eng->raycast.deltadistx);
+			else
+				eng->raycast.perpwalldist = (eng->raycast.sidedisty - eng->raycast.deltadisty);
+			//Calculate height of line to draw on screen
+			eng->raycast.lineheight = (screenHeight / eng->raycast.perpwalldist);
+			//calculate lowest and highest pixel to fill in current stripe
+			eng->raycast.drawstart = -eng->raycast.lineheight / 2 + screenHeight / 2;
+			eng->raycast.drawend = eng->raycast.lineheight / 2 + screenHeight / 2;
+			if(eng->raycast.side == 0)
+				eng->raycast.wallx = eng->player.posy + eng->raycast.perpwalldist * eng->raycast.raydiry;
+			else
+				eng->raycast.wallx = eng->player.posx + eng->raycast.perpwalldist * eng->raycast.raydirx;
+			eng->raycast.wallx -= floor((eng->raycast.wallx));
+			//choose wall color
+			if (eng->raycast.side) //Aqui sera escolhido qual textura sera mostrada exemplo: NO WE EA SO
+			{
+				if (eng->raycast.raydiry > 0)
+						eng->raycast.texture = 0; // EA east texture
+				else
+					eng->raycast.texture = 1; //WE west texture
+			}
+			else
+			{
+				if (eng->raycast.raydirx > 0)
+					eng->raycast.texture = 2; //SO south texture
+				else
+					eng->raycast.texture = 3; //NO north texture
+			}
+			paint_vertical(eng, x, eng->raycast.drawstart + eng->event.screen_y, eng->raycast.drawend + eng->event.screen_y);//draw the pixels of the stripe as a vertical line
+		}
+		mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->canva.img, 0, 0);
+		//printf("Demorou %lf para desenhar tela\n", eng->event.frame_time);
+		//speed modifiers
+		eng->event.movespeed = eng->event.frame_time * 0.003; //the constant value is in squares/second
+		eng->event.rotspeed = eng->event.frame_time * 0.00007; //the constant value is in radians/second
+		if(eng->event.key_w)//falta corrigir esta etapa
+		{
+			if(eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + eng->player.dirx * eng->event.movespeed)] == '0')
+				eng->player.posx += eng->player.dirx * eng->event.movespeed;
+			if(eng->file->map[(int)(eng->player.posy + eng->player.diry * eng->event.movespeed)][(int)(eng->player.posx)] == '0')
+				eng->player.posy += eng->player.diry * eng->event.movespeed;
+			//eng->event.key_down = 0;
+		}
+		if(eng->event.key_d)//falta corrigir as direcoes
+		{
+			eng->event.olddirx = eng->player.dirx;
+			eng->player.dirx = eng->player.dirx * cos(1.57001) - eng->player.diry * sin(1.57001);
+			eng->player.diry = eng->event.olddirx * sin(1.57001) + eng->player.diry * cos(1.57001);
+			eng->event.oldplanex = eng->player.planex;
+			eng->player.planex = eng->player.planex * cos(1.57001) - eng->player.planey * sin(1.57001);
+			eng->player.planey = eng->event.oldplanex * sin(1.57001) + eng->player.planey * cos(1.57001);
+			if(eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + eng->player.dirx * eng->event.movespeed)] == '0')
+				eng->player.posx += eng->player.dirx * (eng->event.movespeed * 0.5);
+			if(eng->file->map[(int)(eng->player.posy + eng->player.diry * eng->event.movespeed)][(int)(eng->player.posx)] == '0')
+				eng->player.posy += eng->player.diry * (eng->event.movespeed * 0.5);
+			eng->event.olddirx = eng->player.dirx;
+			eng->player.dirx = eng->player.dirx * cos(-1.57001) - eng->player.diry * sin(-1.57001);
+			eng->player.diry = eng->event.olddirx * sin(-1.57001) + eng->player.diry * cos(-1.57001);
+			eng->event.oldplanex = eng->player.planex;
+			eng->player.planex = eng->player.planex * cos(-1.57001) - eng->player.planey * sin(-1.57001);
+			eng->player.planey = eng->event.oldplanex * sin(-1.57001) + eng->player.planey * cos(-1.57001);
+		}
+		if(eng->event.key_a)//falta corrigir esta etapa
+		{
+			eng->event.olddirx = eng->player.dirx;
+			eng->player.dirx = eng->player.dirx * cos(-1.57001) - eng->player.diry * sin(-1.57001);
+			eng->player.diry = eng->event.olddirx * sin(-1.57001) + eng->player.diry * cos(-1.57001);
+			eng->event.oldplanex = eng->player.planex;
+			eng->player.planex = eng->player.planex * cos(-1.57001) - eng->player.planey * sin(-1.57001);
+			eng->player.planey = eng->event.oldplanex * sin(-1.57001) + eng->player.planey * cos(-1.57001);
+			if(eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + eng->player.dirx * eng->event.movespeed)] == '0')
+				eng->player.posx += eng->player.dirx * (eng->event.movespeed * 0.5);
+			if(eng->file->map[(int)(eng->player.posy + eng->player.diry * eng->event.movespeed)][(int)(eng->player.posx)] == '0')
+				eng->player.posy += eng->player.diry * (eng->event.movespeed * 0.5);
+			eng->event.olddirx = eng->player.dirx;
+			eng->player.dirx = eng->player.dirx * cos(1.57001) - eng->player.diry * sin(1.57001);
+			eng->player.diry = eng->event.olddirx * sin(1.57001) + eng->player.diry * cos(1.57001);
+			eng->event.oldplanex = eng->player.planex;
+			eng->player.planex = eng->player.planex * cos(1.57001) - eng->player.planey * sin(1.57001);
+			eng->player.planey = eng->event.oldplanex * sin(1.57001) + eng->player.planey * cos(1.57001);
+		}
+		if(eng->event.key_s)//falta corrigir as direcoes
+		{
+			if(eng->file->map[(int)eng->player.posy][(int)(eng->player.posx - eng->player.dirx * eng->event.movespeed)] == '0')
+				eng->player.posx -= eng->player.dirx * eng->event.movespeed;
+			if(eng->file->map[(int)(eng->player.posy - eng->player.diry * eng->event.movespeed)][(int)eng->player.posx] == '0')
+				eng->player.posy -= eng->player.diry * eng->event.movespeed;
+			//eng->key_back = 0;
+		}
+		if(eng->event.key_left)
+		{
+			//both camera direction and camera plane must be rotated
+			eng->event.olddirx = eng->player.dirx;
+			eng->player.dirx = eng->player.dirx * cos(-eng->event.rotspeed * eng->event.key_left) - eng->player.diry * sin(-eng->event.rotspeed * eng->event.key_left);
+			eng->player.diry = eng->event.olddirx * sin(-eng->event.rotspeed * eng->event.key_left) + eng->player.diry * cos(-eng->event.rotspeed * eng->event.key_left);
+			eng->event.oldplanex = eng->player.planex;
+			eng->player.planex = eng->player.planex * cos(-eng->event.rotspeed * eng->event.key_left) - eng->player.planey * sin(-eng->event.rotspeed * eng->event.key_left);
+			eng->player.planey = eng->event.oldplanex * sin(-eng->event.rotspeed * eng->event.key_left) + eng->player.planey * cos(-eng->event.rotspeed * eng->event.key_left);
+			eng->event.key_left = 0;
+		}
+		if(eng->event.key_rigth)
+		{
+			//both camera direction and camera plane must be rotated
+			eng->event.olddirx = eng->player.dirx;
+			eng->player.dirx = eng->player.dirx * cos(eng->event.rotspeed * eng->event.key_rigth) - eng->player.diry * sin(eng->event.rotspeed * eng->event.key_rigth);
+			eng->player.diry = eng->event.olddirx * sin(eng->event.rotspeed * eng->event.key_rigth) + eng->player.diry * cos(eng->event.rotspeed * eng->event.key_rigth);
+			eng->event.oldplanex = eng->player.planex;
+			eng->player.planex = eng->player.planex * cos(eng->event.rotspeed * eng->event.key_rigth) - eng->player.planey * sin(eng->event.rotspeed * eng->event.key_rigth);
+			eng->player.planey = eng->event.oldplanex * sin(eng->event.rotspeed * eng->event.key_rigth) + eng->player.planey * cos(eng->event.rotspeed * eng->event.key_rigth);
+			eng->event.key_rigth = 0;
+		}
+		//mlx_mouse_move(eng->mlx_ptr, eng->win_ptr, screenWidth / 2, screenHeight / 2);
+		//mlx_mouse_hide(eng->mlx_ptr, eng->win_ptr);
+	}
 	return (0);
 }
 
@@ -326,63 +297,63 @@ int	keytest(int keycode, t_eng *eng) //Esta função atualiza as variaveis para 
 {
 	if (keycode == SHIFT)
 	{
-		eng->key_shift = !eng->key_shift;
-		if (eng->key_shift)
+		eng->event.key_shift = !eng->event.key_shift;
+		if (eng->event.key_shift)
 			mlx_mouse_show(eng->mlx_ptr, eng->win_ptr);
 	}
 	else if (keycode == ESC)
 		ft_close(eng);
 	else if (keycode == KEY_W)
-		eng->key_W = 1;
+		eng->event.key_w = 1;
 	else if (keycode == KEY_S)
-		eng->key_S = 1;
+		eng->event.key_s = 1;
 	else if (keycode == KEY_D)
-		eng->key_D = 1;
+		eng->event.key_d = 1;
 	else if (keycode == KEY_A)
-		eng->key_A = 1;
+		eng->event.key_a = 1;
 	else if (keycode == KEY_RIGTH)
-		eng->key_rigth = 1;
+		eng->event.key_rigth = 15;
 	else if (keycode == KEY_LEFT)
-		eng->key_left = 1;
-	else if (keycode == KEY_UP && eng->screen_y < 400)
-		eng->screen_y += 5;
-	else if (keycode == KEY_DOWN && eng->screen_y > -400)
-		eng->screen_y -= 5;
+		eng->event.key_left = 15;
+	else if (keycode == KEY_UP && eng->event.screen_y < (screenHeight * 0.5))
+		eng->event.screen_y += 15;
+	else if (keycode == KEY_DOWN && eng->event.screen_y > (screenHeight * -0.5))
+		eng->event.screen_y -= 15;
 	return (0);
 }
 
 int	keytestout(int keycode, t_eng *eng)//esta função atualiza as variaveis para desativar eventos
 {
 	if (keycode == KEY_W)
-		eng->key_W = 0;
+		eng->event.key_w = 0;
 	if (keycode == KEY_S)
-		eng->key_S = 0;
+		eng->event.key_s = 0;
 	if (keycode == KEY_D)
-		eng->key_D = 0;
+		eng->event.key_d = 0;
 	if (keycode == KEY_A)
-		eng->key_A = 0;
+		eng->event.key_a = 0;
 	if (keycode == KEY_LEFT)
-		eng->key_left = 0;
+		eng->event.key_left = 0;
 	if (keycode == KEY_RIGTH)
-		eng->key_rigth = 0;
+		eng->event.key_rigth = 0;
 	return (0);
 }
 
 int	mouse(int x, int y, t_eng *eng) //função que deteta movimentos do mouse
 {
-	if (eng->key_shift)
+	if (eng->event.key_shift)
 		return (1);
 	mlx_mouse_hide(eng->mlx_ptr, eng->win_ptr);
 	if (y != screenHeight / 2 || x != screenWidth / 2)
 	{
-		if (y > screenHeight / 2 && eng->screen_y > -400)
-			eng->screen_y -= (y - screenHeight / 2) * 0.20 + 1;
-		else if (y < screenHeight / 2 && eng->screen_y < 400)
-			eng->screen_y += (screenHeight / 2 - y) * 0.20 + 1;
+		if (y > screenHeight / 2 && eng->event.screen_y > (screenHeight * -0.5))
+			eng->event.screen_y -= (y - screenHeight / 2);
+		else if (y < screenHeight / 2 && eng->event.screen_y < (screenHeight * 0.5))
+			eng->event.screen_y += (screenHeight / 2 - y);
 		if (x > screenWidth / 2)
-			eng->key_rigth += (x - screenWidth / 2) * 0.10 + 1;
+			eng->event.key_rigth = x - screenWidth / 2;
 		else if (x < screenWidth / 2)
-			eng->key_left += (screenWidth / 2 - x) * 0.10 + 1;
+			eng->event.key_left = screenWidth / 2 - x;
 		mlx_mouse_move(eng->mlx_ptr, eng->win_ptr, screenWidth / 2, screenHeight / 2);
 	}
 	return(0);
@@ -394,50 +365,51 @@ void	ft_start_engine(t_file *file)
 
 	//Inicialização de variaveis
 	eng.file = file;
-	eng.posX = get_map_pos(eng.file->map, 'x') + 0.5;	//x start position + 0.5 to center
-	eng.posY = get_map_pos(eng.file->map, 'y') + 0.5;  //y start position + 0.5 to center
-	if (eng.file->map[(int)eng.posY][(int)eng.posX] == 'N')
+	eng.player.posx = get_map_pos(eng.file->map, 'x') + 0.5;	//x start position + 0.5 to center
+	eng.player.posy = get_map_pos(eng.file->map, 'y') + 0.5;  //y start position + 0.5 to center
+	if (eng.file->map[(int)eng.player.posy][(int)eng.player.posx] == 'N')
 	{
-		eng.dirX = 0;	//initial direction vector
-		eng.dirY = -1; 	//initial direction vector
-		eng.planeX = 0.66;		//the 2d raycaster version of camera plane
-		eng.planeY = 0; //the 2d raycaster version of camera plane
+		eng.player.dirx = 0;	//initial direction vector
+		eng.player.diry = -1; 	//initial direction vector
+		eng.player.planex = 0.66;		//the 2d raycaster version of camera plane
+		eng.player.planey = 0; //the 2d raycaster version of camera plane
 	}
-	if (eng.file->map[(int)eng.posY][(int)eng.posX] == 'S')
+	if (eng.file->map[(int)eng.player.posy][(int)eng.player.posx] == 'S')
 	{
-		eng.dirX = 0;	//initial direction vector
-		eng.dirY = 1; 	//initial direction vector
-		eng.planeX = -0.66;		//the 2d raycaster version of camera plane
-		eng.planeY = 0; //the 2d raycaster version of camera plane
+		eng.player.dirx = 0;	//initial direction vector
+		eng.player.diry = 1; 	//initial direction vector
+		eng.player.planex = -0.66;		//the 2d raycaster version of camera plane
+		eng.player.planey = 0; //the 2d raycaster version of camera plane
 	}
-	if (eng.file->map[(int)eng.posY][(int)eng.posX] == 'W')
+	if (eng.file->map[(int)eng.player.posy][(int)eng.player.posx] == 'W')
 	{
-		eng.dirX = -1;	//initial direction vector
-		eng.dirY = 0; 	//initial direction vector
-		eng.planeX = 0;		//the 2d raycaster version of camera plane
-		eng.planeY = -0.66; //the 2d raycaster version of camera plane
+		eng.player.dirx = -1;	//initial direction vector
+		eng.player.diry = 0; 	//initial direction vector
+		eng.player.planex = 0;		//the 2d raycaster version of camera plane
+		eng.player.planey = -0.66; //the 2d raycaster version of camera plane
 	}
-	if (eng.file->map[(int)eng.posY][(int)eng.posX] == 'E')
+	if (eng.file->map[(int)eng.player.posy][(int)eng.player.posx] == 'E')
 	{
-		eng.dirX = 1;	//initial direction vector
-		eng.dirY = 0; 	//initial direction vector
-		eng.planeX = 0;		//the 2d raycaster version of camera plane
-		eng.planeY = 0.66; //the 2d raycaster version of camera plane
+		eng.player.dirx = 1;	//initial direction vector
+		eng.player.diry = 0; 	//initial direction vector
+		eng.player.planex = 0;		//the 2d raycaster version of camera plane
+		eng.player.planey = 0.66; //the 2d raycaster version of camera plane
 	}
-	eng.file->map[(int)eng.posY][(int)eng.posX] = '0';// Apaga o jogador no map file pois já temos as posições do mesmo
-	eng.time = 0; //time of current frame
-	eng.oldTime = 0; //time of previous frame
+	eng.file->map[(int)eng.player.posy][(int)eng.player.posx] = '0';// Apaga o jogador no map file pois já temos as posições do mesmo
+	eng.world.world_time = 0; //time of current frame
+	eng.world.last_time = 0; //time of previous frame
 	eng.file->ceilling.rgb = rgb(eng.file->ceilling.red, eng.file->ceilling.green, eng.file->ceilling.blue); //junta a cor de 3 variavel em uma so
 	eng.file->floor.rgb = rgb(eng.file->floor.red, eng.file->floor.green, eng.file->floor.blue); //junta a cor de 3 variavel em uma so
-	eng.key_W = 0;
-	eng.key_S = 0;
-	eng.key_D = 0;
-	eng.key_A = 0;
-	eng.key_left = 0;
-	eng.key_rigth = 0;
-	eng.screen_y = 0;
-	eng.fps = 0;
-	eng.key_shift = 1;
+	eng.event.key_w = 0;
+	eng.event.key_s = 0;
+	eng.world.frames_rate = RATE_MAX;
+	eng.event.key_d = 0;
+	eng.event.key_a = 0;
+	eng.event.key_left = 0;
+	eng.event.key_rigth = 0;
+	eng.event.key_shift = 1;
+	eng.event.screen_y = 0;
+	eng.world.fps_counter = 0;
 	
 	//começo do mlx
 	eng.mlx_ptr = mlx_init();
