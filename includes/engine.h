@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/11 11:39:07 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/13 17:40:37 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ typedef struct s_canva
 
 typedef struct s_eng
 {
-	struct timeval	fps_time;
+	struct timeval	timer;
 	t_tex			tex;
 	t_canva			canva;
 	int				fps;
