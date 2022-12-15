@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/13 22:30:28 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/15 21:23:01 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ typedef struct s_event
 typedef struct s_world
 {
 	struct timeval	timer;
+	int				fps;
 	int				frames_rate;
 	int				fps_counter;
 	double			world_time;

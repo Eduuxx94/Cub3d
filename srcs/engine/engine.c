@@ -6,16 +6,17 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/13 22:56:07 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/15 23:53:07 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "engine.h"
 
-#define screenHeight 1200
-#define screenWidth 1920
+#define screenHeight 740
+#define screenWidth 900
 
-int	ft_close(t_eng *eng)//Esta função é responsavel em dar free em todos os ponteiros do mlx e da struct file do parse
+//Dar free em todos os ponteiros do mlx e da struct file do parse
+int	ft_close(t_eng *eng)
 {
 	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[0]);
 	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[1]);
@@ -32,34 +33,42 @@ int	ft_close(t_eng *eng)//Esta função é responsavel em dar free em todos os p
 	return (0);
 }
 
+
+//Mostra no terminal os fps
 void	show_fps(t_eng *eng)
 {
 	struct timeval	current_time;
 
 	gettimeofday(&current_time, NULL);
-	if (current_time.tv_sec == eng->world.timer.tv_sec)//em quanto o segundo (current_time) for igual ao segundo do timer(relogio do jogo) vai contar os fps(frames por segundo)
+	if (current_time.tv_sec == eng->world.timer.tv_sec)
 		eng->world.fps_counter++;
 	else if (printf("world.fps_counter: (%d)\n", eng->world.fps_counter))
 	{
 		printf("\e[1;1H\e[2J");
+		eng->world.fps = eng->world.fps_counter;
 		eng->world.fps_counter = 0;
-		gettimeofday(&eng->world.timer, NULL);//Rélogio do jogo vai atualizar pois um segundo se passou
+		gettimeofday(&eng->world.timer, NULL);
 	}
 }
 
+//Retorna a cor da imagem na posição tex[y][x]
 int	get_pixel_image(t_eng *eng, int x, int y, int tex)
 {
-	return (*(unsigned int*)(eng->tex.addr[tex] + (y * eng->tex.line_length + x * (eng->tex.bits_per_pixel / 8))));//esta função retorna a cor da textura na posição tex[y][x]
+	return (*(unsigned int *)(eng->tex.addr[tex] + (y * eng->tex.line_length + \
+x * (eng->tex.bits_per_pixel / 8))));
 }
 
+//Adiciona um pixel na imagem da posicao imagem[x][y] com a o valor color
 void	put_pixel_image(t_canva *canva, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = canva->addr + (y * canva->line_length + x * (canva->bits_per_pixel / 8));//esta função vai pintar um pixel numa imagem[y][x] consoante a referencia de um addr
-	*(unsigned int*)dst = color;
+	dst = canva->addr + (y * canva->line_length + x * (canva->bits_per_pixel \
+	/ 8));
+	*(unsigned int *)dst = color;
 }
 
+//Vai juntar as cores RED GREEN BLUE em uma unica variavel int rgb
 int	rgb(int r, int g, int b)
 {
 	int	result;
@@ -69,10 +78,11 @@ int	rgb(int r, int g, int b)
 	result = result | g;
 	result = result << 8;
 	result = result | b;
-	return (result);//esta função irá ser acrescentada no parse, função destinada à junção das cores R G B para uma unica variavel (int)
+	return (result);
 }
 
-void	paint_vertical(t_eng *eng, int x, int drawstart, int drawend)//esta função pinta o canva(imagem) que será mostrada na tela 
+//Pinta uma linha vertical na posicao x do canva(imagem) com texturas e tamanhos
+void	paint_vertical(t_eng *eng, int x, int drawstart, int drawend)
 {
 	int		i;
 	int		xpercentage;
@@ -80,163 +90,223 @@ void	paint_vertical(t_eng *eng, int x, int drawstart, int drawend)//esta funçã
 
 	i = -1;
 	psize = drawend - drawstart;
-	xpercentage = eng->raycast.wallx * 64;
+	xpercentage = eng->raycast.wallx * eng->tex.img_width;
 
 	while (++i <= screenHeight)
 	{
 		if (i < drawstart)
-			put_pixel_image(&eng->canva, x, i, eng->file->ceilling.rgb);//Será pintado um pixel[y][x] com a cor do ceiling no canva
+			put_pixel_image(&eng->canva, x, i, eng->file->ceilling.rgb);
 		else if (i < drawend)
-			put_pixel_image(&eng->canva, x, i, get_pixel_image(eng, xpercentage, (float)(i - drawstart) / psize * eng->tex.img_width, eng->raycast.texture));//será pintado um pixel[y][x] com a cor da textura[y][x] selecionada (int tex)
+			put_pixel_image(&eng->canva, x, i, get_pixel_image(eng, xpercentage \
+, (float)(i - drawstart) / psize * eng->tex.img_height, eng->raycast.texture));
 		else
-			put_pixel_image(&eng->canva, x, i, eng->file->floor.rgb);//Será pintado um pixel[y][x] com a cor do floor no canva
+			put_pixel_image(&eng->canva, x, i, eng->file->floor.rgb);
 	}
 }
 
-
-int	update(t_eng *eng)//função de atualização de tela
+//Atualiza o tempo do jogo
+void	update_gametime(t_eng *eng)
 {
-	int	x = screenWidth;//x corresponde à posição maxima x da tela, ou seja a imagem será pintada do fim ao inicio.
 	struct timeval	current_time;
 
-	//timing for input and fps_counter counter
 	gettimeofday(&current_time, NULL);
-    eng->world.world_time = 1000000 * current_time.tv_sec + current_time.tv_usec;//current_time.tv_usec;
+	eng->world.world_time = 1000000 * current_time.tv_sec + \
+current_time.tv_usec;
+}
+
+//length of ray from one x or y-side to next x or y-side
+void	rc_calc_ray_length(t_eng *eng, int x)
+{
+	eng->raycast.camerax = 2 * x / (double)screenWidth - 1;
+	eng->raycast.raydirx = eng->player.dirx + eng->player.planex * \
+eng->raycast.camerax;
+	eng->raycast.raydiry = eng->player.diry + eng->player.planey * \
+eng->raycast.camerax;
+	eng->raycast.mapx = eng->player.posx;
+	eng->raycast.mapy = eng->player.posy;
+	if (eng->raycast.raydirx == 0)
+		eng->raycast.deltadistx = 1e30;
+	else
+		eng->raycast.deltadistx = fabs(1 / eng->raycast.raydirx);
+	if (eng->raycast.raydiry == 0)
+		eng->raycast.deltadisty = 1e30;
+	else
+		eng->raycast.deltadisty = fabs(1 / eng->raycast.raydiry);
+}
+
+//calculate step and initial sideDist
+void rc_calc_ray_dist(t_eng *eng)
+{
+	if (eng->raycast.raydirx < 0)
+	{
+		eng->raycast.stepx = -1;
+		eng->raycast.sidedistx = (eng->player.posx - \
+	(double)eng->raycast.mapx) * eng->raycast.deltadistx;
+	}
+	else
+	{
+		eng->raycast.stepx = 1;
+		eng->raycast.sidedistx = ((double)eng->raycast.mapx + 1.0 - \
+eng->player.posx) * eng->raycast.deltadistx;
+	}
+	if (eng->raycast.raydiry < 0)
+	{
+		eng->raycast.stepy = -1;
+		eng->raycast.sidedisty = (eng->player.posy - (double)eng->raycast.mapy) \
+	* eng->raycast.deltadisty;
+	}
+	else
+	{
+		eng->raycast.stepy = 1;
+		eng->raycast.sidedisty = ((double)eng->raycast.mapy + 1.0 - \
+eng->player.posy) * eng->raycast.deltadisty;
+	}
+}
+
+//check where ray hit a wall
+void	rc_check_wall_hit(t_eng *eng)
+{
+	eng->raycast.hit = 0;
+	while (eng->raycast.hit == 0)
+	{
+		if (eng->raycast.sidedistx < eng->raycast.sidedisty)
+		{
+			eng->raycast.sidedistx += eng->raycast.deltadistx;
+			eng->raycast.mapx += eng->raycast.stepx;
+			eng->raycast.side = 0;
+		}
+		else
+		{
+			eng->raycast.sidedisty += eng->raycast.deltadisty;
+			eng->raycast.mapy += eng->raycast.stepy;
+			eng->raycast.side = 1;
+		}
+		if (eng->file->map[eng->raycast.mapy][eng->raycast.mapx] != '0')
+			eng->raycast.hit = 1;
+	}
+}
+
+//Calculate distance projected on camera direction.
+void	rc_calc_cam_dir(t_eng *eng)
+{
+	if (eng->raycast.side == 0)
+		eng->raycast.perpwalldist = (eng->raycast.sidedistx - \
+eng->raycast.deltadistx);
+	else
+		eng->raycast.perpwalldist = (eng->raycast.sidedisty - \
+eng->raycast.deltadisty);
+	eng->raycast.lineheight = (screenHeight / eng->raycast.perpwalldist);
+	eng->raycast.drawstart = -eng->raycast.lineheight / 2 + screenHeight / 2;
+	eng->raycast.drawend = eng->raycast.lineheight / 2 + screenHeight / 2;
+	if (eng->raycast.side == 0)
+		eng->raycast.wallx = eng->player.posy + eng->raycast.perpwalldist \
+	* eng->raycast.raydiry;
+	else
+		eng->raycast.wallx = eng->player.posx + eng->raycast.perpwalldist \
+	* eng->raycast.raydirx;
+	eng->raycast.wallx -= floor((eng->raycast.wallx));
+}
+
+//choose wall tex: EA=0 WE=1 SO=2 NO=3
+void	rc_check_tex_hit(t_eng *eng)
+{
+	if (eng->raycast.side)
+	{
+		if (eng->raycast.raydiry > 0)
+				eng->raycast.texture = 0;
+		else
+			eng->raycast.texture = 1;
+	}
+	else
+	{
+		if (eng->raycast.raydirx > 0)
+			eng->raycast.texture = 2;
+		else
+			eng->raycast.texture = 3;
+	}
+}
+
+//This functions will write vertical lines in canva image
+void	rc_write_raycast(t_eng *eng)
+{
+	int	x;
+
+	x = screenWidth;
+	eng->event.frame_time = (eng->world.world_time - \
+eng->world.last_time) / 1000.0;
+	eng->world.last_time = eng->world.world_time;
+	while (--x)
+	{
+		rc_calc_ray_length(eng, x);
+		rc_calc_ray_dist(eng);
+		rc_check_wall_hit(eng);
+		rc_calc_cam_dir(eng);
+		rc_check_tex_hit(eng);
+		paint_vertical(eng, x, eng->raycast.drawstart + eng->event.screen_y, \
+eng->raycast.drawend + eng->event.screen_y);
+	}
+}
+
+void	rc_event_w(t_eng *eng)
+{
+	if (eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + \
+eng->player.dirx * eng->event.movespeed)] == '0')
+		eng->player.posx += eng->player.dirx * eng->event.movespeed;
+	if (eng->file->map[(int)(eng->player.posy + eng->player.diry * \
+eng->event.movespeed)][(int)(eng->player.posx)] == '0')
+		eng->player.posy += eng->player.diry * eng->event.movespeed;
+}
+
+void	rc_event_d(t_eng *eng, int s)
+{
+	eng->event.olddirx = eng->player.dirx;
+	eng->player.dirx = eng->player.dirx * cos(s) - eng->player.diry * sin(s);
+	eng->player.diry = eng->event.olddirx * sin(s) + eng->player.diry * cos(s);
+	eng->event.oldplanex = eng->player.planex;
+	eng->player.planex = eng->player.planex * cos(s) - eng->player.planey * \
+sin(s);
+	eng->player.planey = eng->event.oldplanex * sin(s) + eng->player.planey * \
+cos(s);
+	if (eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + \
+eng->player.dirx * eng->event.movespeed)] == '0')
+		eng->player.posx += eng->player.dirx * (eng->event.movespeed * 0.5);
+	if (eng->file->map[(int)(eng->player.posy + eng->player.diry * \
+eng->event.movespeed)][(int)(eng->player.posx)] == '0')
+		eng->player.posy += eng->player.diry * (eng->event.movespeed * 0.5);
+	eng->event.olddirx = eng->player.dirx;
+	eng->player.dirx = eng->player.dirx * cos(-s) - eng->player.diry * sin(-s);
+	eng->player.diry = eng->event.olddirx * sin(-s) + eng->player.diry * \
+cos(-s);
+	eng->event.oldplanex = eng->player.planex;
+	eng->player.planex = eng->player.planex * cos(-s) - eng->player.planey * \
+sin(-s);
+	eng->player.planey = eng->event.oldplanex * sin(-s) + eng->player.planey * \
+cos(-s);
+}
+
+//This function update the pos and dir of player
+void	rc_update_pos_dir(t_eng *eng)
+{
+	eng->event.movespeed = eng->event.frame_time * 0.003;
+	eng->event.rotspeed = (log(pow(eng->event.frame_time, 0.9) + 0.5)) * 0.0009;
+	if(eng->event.key_w)
+		rc_event_w(eng);
+	if (eng->event.key_d)
+		rc_event_d(eng, 1.57001);
+}
+
+//Funcao que sera chamada pelo loop hook
+int	update(t_eng *eng)
+{
+	update_gametime(eng);
 	if (eng->world.world_time - eng->world.last_time > eng->world.frames_rate)
 	{
 		show_fps(eng);
-		eng->event.frame_time = (eng->world.world_time - eng->world.last_time) / 1000.0; //eng->event.frame_time is the time this frame has taken, in seconds
-		eng->world.last_time = eng->world.world_time;
-		while (--x)
-		{
-			//calculate ray position and direction
-			eng->raycast.camerax = 2 * x / (double)screenWidth - 1; //x-coordinate in camera space
-			eng->raycast.raydirx = eng->player.dirx + eng->player.planex * eng->raycast.camerax;
-			eng->raycast.raydiry = eng->player.diry + eng->player.planey * eng->raycast.camerax;
-			//which box of the map we're in
-			eng->raycast.mapx = eng->player.posx;
-			eng->raycast.mapy = eng->player.posy;
-
-			//length of ray from current position to next x or y-side
-			if (eng->raycast.raydirx == 0)
-				eng->raycast.deltadistx = 1e30;
-			else
-				eng->raycast.deltadistx = fabs(1 / eng->raycast.raydirx); //talvez esteja errado
-			if (eng->raycast.raydiry == 0)
-				eng->raycast.deltadisty = 1e30;
-			else
-				eng->raycast.deltadisty = fabs(1 / eng->raycast.raydiry); //talvez esteja errado
-			//what direction to step in x or y-direction (either +1 or -1)
-			eng->raycast.hit = 0; //was there a wall hit?
-			//calculate step and initial sideDist
-			if(eng->raycast.raydirx < 0)
-			{
-				eng->raycast.stepx = -1;
-				eng->raycast.sidedistx = (eng->player.posx - (double)eng->raycast.mapx) * eng->raycast.deltadistx;
-			}
-			else
-			{
-				eng->raycast.stepx = 1;
-				eng->raycast.sidedistx = ((double)eng->raycast.mapx + 1.0 - eng->player.posx) * eng->raycast.deltadistx;
-			}
-			if(eng->raycast.raydiry < 0)
-			{
-				eng->raycast.stepy = -1;
-				eng->raycast.sidedisty = (eng->player.posy - (double)eng->raycast.mapy) * eng->raycast.deltadisty;
-			}
-			else
-			{
-				eng->raycast.stepy = 1;
-				eng->raycast.sidedisty = ((double)eng->raycast.mapy + 1.0 - eng->player.posy) * eng->raycast.deltadisty;
-			}
-			//perform DDA
-			while(eng->raycast.hit == 0)
-			{
-				//jump to next map square, either in x-direction, or in y-direction
-				if(eng->raycast.sidedistx < eng->raycast.sidedisty)
-				{
-					eng->raycast.sidedistx += eng->raycast.deltadistx;
-					eng->raycast.mapx += eng->raycast.stepx;
-					eng->raycast.side = 0;
-				}
-				else
-				{
-					eng->raycast.sidedisty += eng->raycast.deltadisty;
-					eng->raycast.mapy += eng->raycast.stepy;
-					eng->raycast.side = 1;
-				}
-				//Check if ray has hit a wall
-				if(eng->file->map[eng->raycast.mapy][eng->raycast.mapx] != '0')
-					eng->raycast.hit = 1;
-			}
-			//Calculate distance projected on camera direction. This is the shortest distance from the point where the wall is
-			//hit to the camera plane. Euclidean to center camera point would give fisheye effect!
-			//This can be computed as (eng->raycast.mapx - posX + (1 - eng->raycast.stepx) / 2) / eng->raycast.raydirx for side == 0, or same formula with Y
-			//for size == 1, but can be simplified to the code below thanks to how sideDist and deltaDist are computed:
-			//because they were left scaled to |rayDir|. sideDist is the entire length of the ray above after the multiple
-			//steps, but we subtract deltaDist once because one step more into the wall was taken above.
-			if(eng->raycast.side == 0)
-				eng->raycast.perpwalldist = (eng->raycast.sidedistx - eng->raycast.deltadistx);
-			else
-				eng->raycast.perpwalldist = (eng->raycast.sidedisty - eng->raycast.deltadisty);
-			//Calculate height of line to draw on screen
-			eng->raycast.lineheight = (screenHeight / eng->raycast.perpwalldist);
-			//calculate lowest and highest pixel to fill in current stripe
-			eng->raycast.drawstart = -eng->raycast.lineheight / 2 + screenHeight / 2;
-			eng->raycast.drawend = eng->raycast.lineheight / 2 + screenHeight / 2;
-			if(eng->raycast.side == 0)
-				eng->raycast.wallx = eng->player.posy + eng->raycast.perpwalldist * eng->raycast.raydiry;
-			else
-				eng->raycast.wallx = eng->player.posx + eng->raycast.perpwalldist * eng->raycast.raydirx;
-			eng->raycast.wallx -= floor((eng->raycast.wallx));
-			//choose wall color
-			if (eng->raycast.side) //Aqui sera escolhido qual textura sera mostrada exemplo: NO WE EA SO
-			{
-				if (eng->raycast.raydiry > 0)
-						eng->raycast.texture = 0; // EA east texture
-				else
-					eng->raycast.texture = 1; //WE west texture
-			}
-			else
-			{
-				if (eng->raycast.raydirx > 0)
-					eng->raycast.texture = 2; //SO south texture
-				else
-					eng->raycast.texture = 3; //NO north texture
-			}
-			paint_vertical(eng, x, eng->raycast.drawstart + eng->event.screen_y, eng->raycast.drawend + eng->event.screen_y);//draw the pixels of the stripe as a vertical line
-		}
+		rc_write_raycast(eng);
 		mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->canva.img, 0, 0);
-		//printf("Demorou %lf para desenhar tela\n", eng->event.frame_time);
-		//speed modifiers
-		eng->event.movespeed = eng->event.frame_time * 0.003; //the constant value is in squares/second
-		eng->event.rotspeed = eng->event.frame_time * 0.00007; //the constant value is in radians/second
-		if(eng->event.key_w)//falta corrigir esta etapa
-		{
-			if(eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + eng->player.dirx * eng->event.movespeed)] == '0')
-				eng->player.posx += eng->player.dirx * eng->event.movespeed;
-			if(eng->file->map[(int)(eng->player.posy + eng->player.diry * eng->event.movespeed)][(int)(eng->player.posx)] == '0')
-				eng->player.posy += eng->player.diry * eng->event.movespeed;
-			//eng->event.key_down = 0;
-		}
+		rc_update_pos_dir(eng);
 		if(eng->event.key_d)//falta corrigir as direcoes
 		{
-			eng->event.olddirx = eng->player.dirx;
-			eng->player.dirx = eng->player.dirx * cos(1.57001) - eng->player.diry * sin(1.57001);
-			eng->player.diry = eng->event.olddirx * sin(1.57001) + eng->player.diry * cos(1.57001);
-			eng->event.oldplanex = eng->player.planex;
-			eng->player.planex = eng->player.planex * cos(1.57001) - eng->player.planey * sin(1.57001);
-			eng->player.planey = eng->event.oldplanex * sin(1.57001) + eng->player.planey * cos(1.57001);
-			if(eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + eng->player.dirx * eng->event.movespeed)] == '0')
-				eng->player.posx += eng->player.dirx * (eng->event.movespeed * 0.5);
-			if(eng->file->map[(int)(eng->player.posy + eng->player.diry * eng->event.movespeed)][(int)(eng->player.posx)] == '0')
-				eng->player.posy += eng->player.diry * (eng->event.movespeed * 0.5);
-			eng->event.olddirx = eng->player.dirx;
-			eng->player.dirx = eng->player.dirx * cos(-1.57001) - eng->player.diry * sin(-1.57001);
-			eng->player.diry = eng->event.olddirx * sin(-1.57001) + eng->player.diry * cos(-1.57001);
-			eng->event.oldplanex = eng->player.planex;
-			eng->player.planex = eng->player.planex * cos(-1.57001) - eng->player.planey * sin(-1.57001);
-			eng->player.planey = eng->event.oldplanex * sin(-1.57001) + eng->player.planey * cos(-1.57001);
 		}
 		if(eng->event.key_a)//falta corrigir esta etapa
 		{
@@ -410,7 +480,7 @@ void	ft_start_engine(t_file *file)
 	eng.event.key_shift = 1;
 	eng.event.screen_y = 0;
 	eng.world.fps_counter = 0;
-	
+
 	//começo do mlx
 	eng.mlx_ptr = mlx_init();
 	eng.win_ptr = mlx_new_window(eng.mlx_ptr, screenWidth, screenHeight, "Cub3D");
