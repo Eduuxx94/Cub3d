@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/15 23:53:07 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/16 20:10:47 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,7 +257,7 @@ eng->event.movespeed)][(int)(eng->player.posx)] == '0')
 		eng->player.posy += eng->player.diry * eng->event.movespeed;
 }
 
-void	rc_event_d(t_eng *eng, int s)
+void	rc_event_rot(t_eng *eng, double s)
 {
 	eng->event.olddirx = eng->player.dirx;
 	eng->player.dirx = eng->player.dirx * cos(s) - eng->player.diry * sin(s);
@@ -288,11 +288,15 @@ cos(-s);
 void	rc_update_pos_dir(t_eng *eng)
 {
 	eng->event.movespeed = eng->event.frame_time * 0.003;
+	if (eng->event.key_w && (eng->event.key_d || eng->event.key_a))
+		eng->event.movespeed = eng->event.movespeed * 0.8;
 	eng->event.rotspeed = (log(pow(eng->event.frame_time, 0.9) + 0.5)) * 0.0009;
 	if(eng->event.key_w)
 		rc_event_w(eng);
-	if (eng->event.key_d)
+	if (eng->event.key_d && !eng->event.key_a)
 		rc_event_d(eng, 1.57001);
+	if (eng->event.key_a && !eng->event.key_d)
+		rc_event_rot(eng, -1.57001);
 }
 
 //Funcao que sera chamada pelo loop hook
@@ -305,28 +309,7 @@ int	update(t_eng *eng)
 		rc_write_raycast(eng);
 		mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->canva.img, 0, 0);
 		rc_update_pos_dir(eng);
-		if(eng->event.key_d)//falta corrigir as direcoes
-		{
-		}
-		if(eng->event.key_a)//falta corrigir esta etapa
-		{
-			eng->event.olddirx = eng->player.dirx;
-			eng->player.dirx = eng->player.dirx * cos(-1.57001) - eng->player.diry * sin(-1.57001);
-			eng->player.diry = eng->event.olddirx * sin(-1.57001) + eng->player.diry * cos(-1.57001);
-			eng->event.oldplanex = eng->player.planex;
-			eng->player.planex = eng->player.planex * cos(-1.57001) - eng->player.planey * sin(-1.57001);
-			eng->player.planey = eng->event.oldplanex * sin(-1.57001) + eng->player.planey * cos(-1.57001);
-			if(eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + eng->player.dirx * eng->event.movespeed)] == '0')
-				eng->player.posx += eng->player.dirx * (eng->event.movespeed * 0.5);
-			if(eng->file->map[(int)(eng->player.posy + eng->player.diry * eng->event.movespeed)][(int)(eng->player.posx)] == '0')
-				eng->player.posy += eng->player.diry * (eng->event.movespeed * 0.5);
-			eng->event.olddirx = eng->player.dirx;
-			eng->player.dirx = eng->player.dirx * cos(1.57001) - eng->player.diry * sin(1.57001);
-			eng->player.diry = eng->event.olddirx * sin(1.57001) + eng->player.diry * cos(1.57001);
-			eng->event.oldplanex = eng->player.planex;
-			eng->player.planex = eng->player.planex * cos(1.57001) - eng->player.planey * sin(1.57001);
-			eng->player.planey = eng->event.oldplanex * sin(1.57001) + eng->player.planey * cos(1.57001);
-		}
+		
 		if(eng->event.key_s)//falta corrigir as direcoes
 		{
 			if(eng->file->map[(int)eng->player.posy][(int)(eng->player.posx - eng->player.dirx * eng->event.movespeed)] == '0')
