@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-alme <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 19:25:52 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/11/04 15:27:12 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/18 19:52:20 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,8 @@ int	ft_start_parse(t_file *file, char *file_path)
 		return (1);
 	if (ft_check_file_colors(file) || ft_file_map(file))
 		return (1);
+	file->ceilling.rgb = rgb(file->ceilling.red, file->ceilling.green, \
+file->ceilling.blue);
+	file->floor.rgb = rgb(file->floor.red, file->floor.green, file->floor.blue);
 	return (0);
 }

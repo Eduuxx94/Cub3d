@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 10:22:49 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/09 14:27:32 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/18 19:48:41 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int		ft_file_check(char *file_path, char *type);
 int		ft_file_init(t_file *file, char *file_path);
 
 //colors.c functions
+int		rgb(int r, int g, int b);
 int		ft_color_line_export(char *str);
 int		ft_get_file_colors(t_rgb *rgb, char *str);
 int		ft_check_file_colors(t_file *file);

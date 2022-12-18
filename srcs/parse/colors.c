@@ -6,11 +6,24 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 16:53:44 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/09 14:57:37 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/18 19:50:39 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
+
+//Vai juntar as cores RED GREEN BLUE em uma unica variavel int rgb
+int	rgb(int r, int g, int b)
+{
+	int	result;
+
+	result = 0 | r;
+	result = result << 8;
+	result = result | g;
+	result = result << 8;
+	result = result | b;
+	return (result);
+}
 
 int	ft_color_line_export(char *str)
 {

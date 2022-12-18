@@ -6,12 +6,15 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/18 15:14:49 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/18 20:26:29 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENGINE_H
 # define ENGINE_H
+
+# define SCREENHEIGHT 740
+# define SCREENWIDTH 900
 
 # include "cub3d.h"
 # include "sys/time.h"
@@ -122,7 +125,6 @@ typedef struct s_world
 	double			last_time;
 }	t_world;
 
-
 typedef struct s_eng
 {
 	t_file			*file;
@@ -136,6 +138,42 @@ typedef struct s_eng
 	void			*win_ptr;
 }	t_eng;
 
+//engine.c file
 void	ft_start_engine(t_file *file);
+void	eng_load_sprites(t_eng *eng);
+void	eng_start_values(t_eng *eng);
+void	eng_init(t_eng *eng);
+void	eng_dir_plane(double dirx, double diry, double planex, double planey);
+
+//engine_utils.c file
+void	show_fps(t_eng *eng);
+int		ft_close(t_eng *eng);
+void	update_gametime(t_eng *eng);
+t_eng	*engine(void);
+
+//events.c file
+int		mouse(int x, int y, t_eng *eng);
+int		keytestout(int keycode, t_eng *eng);
+int		keytest(int keycode, t_eng *eng);
+int		update(t_eng *eng);
+
+//raycast1.c file
+void	rc_check_tex_hit(t_eng *eng);
+void	rc_calc_cam_dir(t_eng *eng);
+void	rc_check_wall_hit(t_eng *eng);
+void	rc_calc_ray_dist(t_eng *eng);
+void	rc_calc_ray_length(t_eng *eng, int x);
+
+//raycast2.c file
+void	rc_update_pos_dir(t_eng *eng);
+void	rc_event_rot(t_eng *eng, int key);
+void	rc_event_a_d(t_eng *eng, double s);
+void	rc_event_w_s(t_eng *eng, double dirx, double diry, double movespeed);
+void	rc_write_raycast(t_eng *eng);
+
+//raycast_utils.c file
+void	paint_vertical(t_eng *eng, int x, int drawstart, int drawend);
+void	put_pixel_image(t_canva *canva, int x, int y, int color);
+int		get_pixel_image(t_eng *eng, int x, int y, int tex);
 
 #endif
