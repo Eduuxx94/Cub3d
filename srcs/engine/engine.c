@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/16 20:10:47 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/18 19:11:46 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,17 +247,17 @@ eng->raycast.drawend + eng->event.screen_y);
 	}
 }
 
-void	rc_event_w(t_eng *eng)
+void	rc_event_w_s(t_eng *eng, double dirx, double diry, double movespeed)
 {
 	if (eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + \
-eng->player.dirx * eng->event.movespeed)] == '0')
-		eng->player.posx += eng->player.dirx * eng->event.movespeed;
-	if (eng->file->map[(int)(eng->player.posy + eng->player.diry * \
-eng->event.movespeed)][(int)(eng->player.posx)] == '0')
-		eng->player.posy += eng->player.diry * eng->event.movespeed;
+dirx * movespeed)] == '0')
+		eng->player.posx += dirx * movespeed;
+	if (eng->file->map[(int)(eng->player.posy + diry * \
+movespeed)][(int)(eng->player.posx)] == '0')
+		eng->player.posy += diry * movespeed;
 }
 
-void	rc_event_rot(t_eng *eng, double s)
+void	rc_event_a_d(t_eng *eng, double s)
 {
 	eng->event.olddirx = eng->player.dirx;
 	eng->player.dirx = eng->player.dirx * cos(s) - eng->player.diry * sin(s);
@@ -267,12 +267,8 @@ void	rc_event_rot(t_eng *eng, double s)
 sin(s);
 	eng->player.planey = eng->event.oldplanex * sin(s) + eng->player.planey * \
 cos(s);
-	if (eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + \
-eng->player.dirx * eng->event.movespeed)] == '0')
-		eng->player.posx += eng->player.dirx * (eng->event.movespeed * 0.5);
-	if (eng->file->map[(int)(eng->player.posy + eng->player.diry * \
-eng->event.movespeed)][(int)(eng->player.posx)] == '0')
-		eng->player.posy += eng->player.diry * (eng->event.movespeed * 0.5);
+	rc_event_w_s(eng, eng->player.dirx, eng->player.diry, eng->event.movespeed \
+	* 0.5);
 	eng->event.olddirx = eng->player.dirx;
 	eng->player.dirx = eng->player.dirx * cos(-s) - eng->player.diry * sin(-s);
 	eng->player.diry = eng->event.olddirx * sin(-s) + eng->player.diry * \
@@ -284,19 +280,44 @@ sin(-s);
 cos(-s);
 }
 
+void	rc_event_rot(t_eng *eng, int key)
+{
+	eng->event.olddirx = eng->player.dirx;
+	eng->player.dirx = eng->player.dirx * cos(-eng->event.rotspeed * key) - \
+eng->player.diry * sin(-eng->event.rotspeed * key);
+	eng->player.diry = eng->event.olddirx * sin(-eng->event.rotspeed * key) + \
+eng->player.diry * cos(-eng->event.rotspeed * key);
+	eng->event.oldplanex = eng->player.planex;
+	eng->player.planex = eng->player.planex * cos(-eng->event.rotspeed * \
+key) - eng->player.planey * sin(-eng->event.rotspeed * key);
+	eng->player.planey = eng->event.oldplanex * sin(-eng->event.rotspeed * \
+key) + eng->player.planey * cos(-eng->event.rotspeed * key);
+	if (eng->event.screen_x)
+		eng->event.screen_x = 0;
+}
+
 //This function update the pos and dir of player
 void	rc_update_pos_dir(t_eng *eng)
 {
 	eng->event.movespeed = eng->event.frame_time * 0.003;
 	if (eng->event.key_w && (eng->event.key_d || eng->event.key_a))
 		eng->event.movespeed = eng->event.movespeed * 0.8;
-	eng->event.rotspeed = (log(pow(eng->event.frame_time, 0.9) + 0.5)) * 0.0009;
-	if(eng->event.key_w)
-		rc_event_w(eng);
+	eng->event.rotspeed = eng->event.frame_time * 0.0004;
+	if (eng->event.key_w && !eng->event.key_s)
+		rc_event_w_s(eng, eng->player.dirx, eng->player.diry, \
+eng->event.movespeed);
+	else if (eng->event.key_s && !eng->event.key_w)
+		rc_event_w_s(eng, -eng->player.dirx, -eng->player.diry, \
+eng->event.movespeed * 0.7);
 	if (eng->event.key_d && !eng->event.key_a)
-		rc_event_d(eng, 1.57001);
-	if (eng->event.key_a && !eng->event.key_d)
-		rc_event_rot(eng, -1.57001);
+		rc_event_a_d(eng, 1.57001);
+	else if (eng->event.key_a && !eng->event.key_d)
+		rc_event_a_d(eng, -1.57001);
+	if (eng->event.key_left || eng->event.key_rigth)
+		if (!eng->event.key_left || !eng->event.key_rigth)
+			rc_event_rot(eng, eng->event.key_left + eng->event.key_rigth);
+	if (eng->event.screen_x && !eng->event.key_rigth && !eng->event.key_left)
+		rc_event_rot(eng, eng->event.screen_x);
 }
 
 //Funcao que sera chamada pelo loop hook
@@ -307,67 +328,36 @@ int	update(t_eng *eng)
 	{
 		show_fps(eng);
 		rc_write_raycast(eng);
-		mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->canva.img, 0, 0);
+		mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->canva.img, \
+0, 0);
 		rc_update_pos_dir(eng);
-		
-		if(eng->event.key_s)//falta corrigir as direcoes
-		{
-			if(eng->file->map[(int)eng->player.posy][(int)(eng->player.posx - eng->player.dirx * eng->event.movespeed)] == '0')
-				eng->player.posx -= eng->player.dirx * eng->event.movespeed;
-			if(eng->file->map[(int)(eng->player.posy - eng->player.diry * eng->event.movespeed)][(int)eng->player.posx] == '0')
-				eng->player.posy -= eng->player.diry * eng->event.movespeed;
-			//eng->key_back = 0;
-		}
-		if(eng->event.key_left)
-		{
-			//both camera direction and camera plane must be rotated
-			eng->event.olddirx = eng->player.dirx;
-			eng->player.dirx = eng->player.dirx * cos(-eng->event.rotspeed * eng->event.key_left) - eng->player.diry * sin(-eng->event.rotspeed * eng->event.key_left);
-			eng->player.diry = eng->event.olddirx * sin(-eng->event.rotspeed * eng->event.key_left) + eng->player.diry * cos(-eng->event.rotspeed * eng->event.key_left);
-			eng->event.oldplanex = eng->player.planex;
-			eng->player.planex = eng->player.planex * cos(-eng->event.rotspeed * eng->event.key_left) - eng->player.planey * sin(-eng->event.rotspeed * eng->event.key_left);
-			eng->player.planey = eng->event.oldplanex * sin(-eng->event.rotspeed * eng->event.key_left) + eng->player.planey * cos(-eng->event.rotspeed * eng->event.key_left);
-			eng->event.key_left = 0;
-		}
-		if(eng->event.key_rigth)
-		{
-			//both camera direction and camera plane must be rotated
-			eng->event.olddirx = eng->player.dirx;
-			eng->player.dirx = eng->player.dirx * cos(eng->event.rotspeed * eng->event.key_rigth) - eng->player.diry * sin(eng->event.rotspeed * eng->event.key_rigth);
-			eng->player.diry = eng->event.olddirx * sin(eng->event.rotspeed * eng->event.key_rigth) + eng->player.diry * cos(eng->event.rotspeed * eng->event.key_rigth);
-			eng->event.oldplanex = eng->player.planex;
-			eng->player.planex = eng->player.planex * cos(eng->event.rotspeed * eng->event.key_rigth) - eng->player.planey * sin(eng->event.rotspeed * eng->event.key_rigth);
-			eng->player.planey = eng->event.oldplanex * sin(eng->event.rotspeed * eng->event.key_rigth) + eng->player.planey * cos(eng->event.rotspeed * eng->event.key_rigth);
-			eng->event.key_rigth = 0;
-		}
-		//mlx_mouse_move(eng->mlx_ptr, eng->win_ptr, screenWidth / 2, screenHeight / 2);
-		//mlx_mouse_hide(eng->mlx_ptr, eng->win_ptr);
 	}
 	return (0);
 }
 
-int	keytest(int keycode, t_eng *eng) //Esta função atualiza as variaveis para ativação de eventos
+//Esta função atualiza as variaveis para ativação de eventos mlx_m_hide leaks??
+int	keytest(int keycode, t_eng *eng)
 {
 	if (keycode == SHIFT)
 	{
 		eng->event.key_shift = !eng->event.key_shift;
 		if (eng->event.key_shift)
 			mlx_mouse_show(eng->mlx_ptr, eng->win_ptr);
+		else
+			mlx_mouse_hide(eng->mlx_ptr, eng->win_ptr);
 	}
 	else if (keycode == ESC)
 		ft_close(eng);
-	else if (keycode == KEY_W)
-		eng->event.key_w = 1;
-	else if (keycode == KEY_S)
-		eng->event.key_s = 1;
-	else if (keycode == KEY_D)
-		eng->event.key_d = 1;
-	else if (keycode == KEY_A)
-		eng->event.key_a = 1;
+	else if ((keycode == KEY_W && ++eng->event.key_w) || (keycode == KEY_S \
+	&& ++eng->event.key_s))
+		;
+	else if ((keycode == KEY_D && ++eng->event.key_d) || (keycode == KEY_A \
+	&& ++eng->event.key_a))
+		;
 	else if (keycode == KEY_RIGTH)
-		eng->event.key_rigth = 15;
+		eng->event.key_rigth = -5;
 	else if (keycode == KEY_LEFT)
-		eng->event.key_left = 15;
+		eng->event.key_left = 5;
 	else if (keycode == KEY_UP && eng->event.screen_y < (screenHeight * 0.5))
 		eng->event.screen_y += 15;
 	else if (keycode == KEY_DOWN && eng->event.screen_y > (screenHeight * -0.5))
@@ -375,7 +365,8 @@ int	keytest(int keycode, t_eng *eng) //Esta função atualiza as variaveis para 
 	return (0);
 }
 
-int	keytestout(int keycode, t_eng *eng)//esta função atualiza as variaveis para desativar eventos
+//esta função atualiza as variaveis para desativar eventos
+int	keytestout(int keycode, t_eng *eng)
 {
 	if (keycode == KEY_W)
 		eng->event.key_w = 0;
@@ -392,24 +383,25 @@ int	keytestout(int keycode, t_eng *eng)//esta função atualiza as variaveis par
 	return (0);
 }
 
-int	mouse(int x, int y, t_eng *eng) //função que deteta movimentos do mouse
+//Função que ativa movimentos do mouse e atualiza a posição da camera
+int	mouse(int x, int y, t_eng *eng)
 {
 	if (eng->event.key_shift)
 		return (1);
-	mlx_mouse_hide(eng->mlx_ptr, eng->win_ptr);
 	if (y != screenHeight / 2 || x != screenWidth / 2)
 	{
-		if (y > screenHeight / 2 && eng->event.screen_y > (screenHeight * -0.5))
-			eng->event.screen_y -= (y - screenHeight / 2);
-		else if (y < screenHeight / 2 && eng->event.screen_y < (screenHeight * 0.5))
+		if (y != screenHeight / 2)
 			eng->event.screen_y += (screenHeight / 2 - y);
-		if (x > screenWidth / 2)
-			eng->event.key_rigth = x - screenWidth / 2;
-		else if (x < screenWidth / 2)
-			eng->event.key_left = screenWidth / 2 - x;
-		mlx_mouse_move(eng->mlx_ptr, eng->win_ptr, screenWidth / 2, screenHeight / 2);
+		if (x != screenWidth / 2)
+			eng->event.screen_x = screenWidth / 2 - x;
+		mlx_mouse_move(eng->mlx_ptr, eng->win_ptr, screenWidth / 2, \
+screenHeight / 2);
 	}
-	return(0);
+	if (eng->event.screen_y < (screenHeight * -0.5))
+		eng->event.screen_y = screenHeight * -0.5;
+	if (eng->event.screen_y > (screenHeight * 0.5))
+		eng->event.screen_y = screenHeight * 0.5;
+	return (0);
 }
 
 void	ft_start_engine(t_file *file)
@@ -462,6 +454,7 @@ void	ft_start_engine(t_file *file)
 	eng.event.key_rigth = 0;
 	eng.event.key_shift = 1;
 	eng.event.screen_y = 0;
+	eng.event.screen_x = 0;
 	eng.world.fps_counter = 0;
 
 	//começo do mlx

@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/15 21:23:01 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/18 15:14:49 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ typedef struct s_event
 	int		key_left;
 	int		key_shift;
 	int		screen_y;
+	int		screen_x;
 	double	frame_time;
 	double	movespeed;
 	double	rotspeed;
