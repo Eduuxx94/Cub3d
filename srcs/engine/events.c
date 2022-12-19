@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   events.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdias-mo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:03:20 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/18 20:26:29 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/19 21:20:47 by jdias-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ int	update(t_eng *eng)
 		mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->canva.img, \
 0, 0);
 		rc_update_pos_dir(eng);
+		render_minimap(eng);
+		mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->minimap.img, \
+10, 10);
 	}
 	return (0);
 }

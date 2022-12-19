@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+         #
+#    By: jdias-mo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/17 19:20:47 by ede-alme          #+#    #+#              #
-#    Updated: 2022/12/18 20:22:41 by ede-alme         ###   ########.fr        #
+#    Updated: 2022/12/19 20:48:51 by jdias-mo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,8 @@ SRC_ENGINE = engine.c \
 			raycast1.c \
 			raycast2.c \
 			raycast_utils.c \
+			minimap1.c \
+			minimap2.c \
 
 SRC = $(SRC_NAME) $(SRC_PARSE) $(SRC_UTILS) $(SRC_ENGINE)
 
@@ -82,7 +84,7 @@ all: $(NAME)
 clean:
 	@make clean -C includes/.mlx/
 	rm -rf $(OBJ_PATH)
-	
+
 fclean: clean
 	rm -rf $(NAME)
 

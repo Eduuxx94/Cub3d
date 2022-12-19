@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   engine_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdias-mo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:01:53 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/18 20:06:19 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/19 21:08:10 by jdias-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	ft_close(t_eng *eng)
 	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[2]);
 	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[3]);
 	mlx_destroy_image(eng->mlx_ptr, eng->canva.img);
+	mlx_destroy_image(eng->mlx_ptr, eng->minimap.img);
 	mlx_loop_end(eng->mlx_ptr);
 	mlx_clear_window(eng->mlx_ptr, eng->win_ptr);
 	mlx_destroy_window(eng->mlx_ptr, eng->win_ptr);

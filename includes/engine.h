@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   engine.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdias-mo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/18 20:26:29 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/19 21:14:12 by jdias-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,10 +133,22 @@ typedef struct s_eng
 	t_event			event;
 	t_tex			tex;
 	t_canva			canva;
+	t_canva			minimap;
 	t_raycast		raycast;
 	void			*mlx_ptr;
 	void			*win_ptr;
 }	t_eng;
+
+//minimap1.c file
+int	render_minimap(t_eng *eng);
+int	is_map(t_eng *eng, int x, int y);
+
+//minimap2.c file
+void	render_block(t_eng *eng, int x, int y, int color);
+void	render_map(t_eng *eng);
+void	render_player(t_eng *eng);
+void	render_bg(t_eng *eng);
+void	render_border(t_eng *eng);
 
 //engine.c file
 void	ft_start_engine(t_file *file);

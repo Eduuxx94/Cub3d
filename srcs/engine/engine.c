@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   engine.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jdias-mo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/18 20:26:29 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/19 21:08:51 by jdias-mo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,9 @@ void	eng_load_sprites(t_eng *eng)
 	eng->canva.img = mlx_new_image(eng->mlx_ptr, SCREENWIDTH, SCREENHEIGHT);
 	eng->canva.addr = mlx_get_data_addr(eng->canva.img, \
 &eng->canva.bits_per_pixel, &eng->canva.line_length, &eng->canva.endian);
+	eng->minimap.img = mlx_new_image(eng->mlx_ptr, 144, 144);
+	eng->minimap.addr = mlx_get_data_addr(eng->minimap.img, \
+&eng->minimap.bits_per_pixel, &eng->minimap.line_length, &eng->minimap.endian);
 }
 
 void	ft_start_engine(t_file *file)
