@@ -140,8 +140,8 @@ typedef struct s_eng
 }	t_eng;
 
 //minimap1.c file
-int	render_minimap(t_eng *eng);
-int	is_map(t_eng *eng, int x, int y);
+int		render_minimap(t_eng *eng);
+int		is_map(t_eng *eng, int x, int y);
 
 //minimap2.c file
 void	render_block(t_eng *eng, int x, int y, int color);

@@ -46,13 +46,13 @@ void	render_map(t_eng *eng)
 		j = -4;
 		while (++x <= 9)
 		{
-			if (is_map(eng, eng->player.posx + j, eng->player.posy + i)
-				&& eng->file->map[i + (int)eng->player.posy]
-				[j + (int)eng->player.posx] == '1')
+			if (is_map(eng, (int)eng->player.posx + j, \
+			(int)eng->player.posy + i) && eng->file->map \
+			[i + (int)eng->player.posy][j + (int)eng->player.posx] == '1')
 				render_block(eng, x, y, 0x000000);
-			else if (is_map(eng, eng->player.posx + j, eng->player.posy + i)
-				&& eng->file->map[i + (int)eng->player.posy]
-				[j + (int)eng->player.posx] == '0')
+			else if (is_map(eng, (int)eng->player.posx + j, \
+			(int)eng->player.posy + i) && eng->file->map \
+			[i + (int)eng->player.posy][j + (int)eng->player.posx] == '0')
 				render_block(eng, x, y, 0x757575);
 			j++;
 		}

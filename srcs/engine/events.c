@@ -25,7 +25,7 @@ int	update(t_eng *eng)
 		rc_update_pos_dir(eng);
 		render_minimap(eng);
 		mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->minimap.img, \
-10, 10);
+SCREENWIDTH - 200, SCREENHEIGHT - 200);
 	}
 	return (0);
 }
