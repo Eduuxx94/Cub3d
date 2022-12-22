@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:09:33 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/18 20:26:29 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/22 23:53:47 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,26 @@ eng->raycast.drawend + eng->event.screen_y);
 
 void	rc_event_w_s(t_eng *eng, double dirx, double diry, double movespeed)
 {
-	if (eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + \
-dirx * movespeed)] == '0')
+	float	dx;
+	float	dy;
+	float	collide;
+
+	collide = 0.1;
+	if (dirx >= 0)
+		dx = 1 * collide;
+	else
+		dx = -1 * collide;
+	if (diry >= 0)
+		dy = 1 * collide;
+	else
+		dy = -1 * collide;
+	if (eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + dirx * \
+movespeed)] == '0' && eng->file->map[(int)((eng->player.posy) + \
+dy)][(int)((eng->player.posx + dirx * movespeed) + dx)] == '0')
 		eng->player.posx += dirx * movespeed;
-	if (eng->file->map[(int)(eng->player.posy + diry * \
-movespeed)][(int)(eng->player.posx)] == '0')
+	if (eng->file->map[(int)(eng->player.posy + diry * movespeed)][(int)(eng->\
+player.posx)] == '0' && eng->file->map[(int)((eng->player.posy + diry * \
+movespeed) + dy)][(int)((eng->player.posx) + dx)] == '0')
 		eng->player.posy += diry * movespeed;
 }
 

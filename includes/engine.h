@@ -6,15 +6,15 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/18 20:26:29 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/22 20:19:34 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENGINE_H
 # define ENGINE_H
 
-# define SCREENHEIGHT 740
-# define SCREENWIDTH 900
+# define SCREENHEIGHT 1100
+# define SCREENWIDTH 1300
 
 # include "cub3d.h"
 # include "sys/time.h"
