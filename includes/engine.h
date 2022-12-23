@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/23 19:45:09 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/23 20:29:54 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ enum e_keys
 	KEY_W = 119,
 	KEY_S = 115,
 	KEY_M = 109,
+	KEY_F = 102,
 	TAB = 65289,
 	KEY_UP = 65362,
 	KEY_DOWN =65364,
@@ -181,7 +182,7 @@ void	put_pixel_image(t_canva *canva, int x, int y, int color);
 int		get_pixel_image(t_tex tex, int x, int y, int id);
 
 //anim.c file
-int		get_anim_id(int id, t_eng *eng);
+int		get_anim_id(t_eng *eng);
 void	load_bonus_sprites(t_eng *eng);
 void	put_shot(t_eng *eng, int x, int y);
 

@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:11:16 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/23 15:53:46 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/23 21:02:53 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ void	paint_vertical(t_eng *eng, int x, int drawstart, int drawend)
 		if (i < drawstart)
 			put_pixel_image(&eng->canva, x, i, eng->file->ceilling.rgb);
 		else if (i < drawend)
-			put_pixel_image(&eng->canva, x, i, get_pixel_image(eng->tex, xpercentage \
-, (float)(i - drawstart) / psize * eng->tex.img_height, eng->raycast.texture));
+			put_pixel_image(&eng->canva, x, i, get_pixel_image(eng->tex, \
+xpercentage, (float)(i - drawstart) / psize * eng->tex.img_height, \
+eng->raycast.texture));
 		else
 			put_pixel_image(&eng->canva, x, i, eng->file->floor.rgb);
 	}

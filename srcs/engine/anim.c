@@ -6,59 +6,59 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 14:34:37 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/23 19:39:38 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/23 21:24:20 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "engine.h"
 
-int	get_anim_id(int id, t_eng *eng)
+int	get_anim_id(t_eng *eng)
 {
-	return (0);
-	//printf("valor : %f\n", eng->world.world_time - eng->shot.timer);
-	if (eng->world.world_time - eng->shot.timer < 47500)
-		return (id);
-	if (id == 1)
+	if (!eng->shot.id)
+		return (0);
+	if (eng->world.world_time - eng->shot.timer < 30000)
+		return (eng->shot.id);
+	if (eng->shot.id == 1)
 	{
 		eng->shot.timer = eng->world.world_time;
-		id++;
+		eng->shot.id++;
 	}
-	else if (id == 2)
+	else if (eng->shot.id == 2)
 	{
 		eng->shot.timer = eng->world.world_time;
-		id++;
+		eng->shot.id++;
 	}
-	else if (id == 3)
+	else if (eng->shot.id == 3)
 	{
 		eng->shot.timer = eng->world.world_time;
-		id++;
+		eng->shot.id++;
 	}
-	else if (id == 4)
+	else if (eng->shot.id == 4)
 	{
 		eng->shot.timer = eng->world.world_time;
-		id++;
+		eng->shot.id++;
 	}
-	else if (id == 5)
+	else if (eng->shot.id == 5)
 	{
 		eng->shot.timer = eng->world.world_time;
-		id++;
+		eng->shot.id++;
 	}
-	else if (id == 6)
+	else if (eng->shot.id == 6)
 	{
 		eng->shot.timer = eng->world.world_time;
-		id++;
+		eng->shot.id++;
 	}
-	else if (id == 7)
+	else if (eng->shot.id == 7)
 	{
 		eng->shot.timer = eng->world.world_time;
-		id++;
+		eng->shot.id++;
 	}
-	else if (id == 8)
+	else if (eng->shot.id == 8)
 	{
 		eng->shot.timer = eng->world.world_time;
-		id = 0;
+		eng->shot.id = 0;
 	}
-	return (id);
+	return (eng->shot.id);
 }
 
 void	put_shot(t_eng *eng, int x, int y)
@@ -76,12 +76,16 @@ void	put_shot(t_eng *eng, int x, int y)
 		x = xtemp;
 		while (++x < SCREENWIDTH)
 		{
-			color = get_pixel_image(eng->shot, (float)(x - (SCREENWIDTH / 2 - 7)) / pxsize * eng->shot.img_height, (float)(y - (SCREENHEIGHT / 2 - 7)) / pysize * eng->shot.img_height, 0);
+			color = get_pixel_image(eng->shot, (float)(x - (SCREENWIDTH / 2 - \
+7)) / pxsize * eng->shot.img_height, (float)(y - (SCREENHEIGHT / 2 - 7)) / \
+pysize * eng->shot.img_height, get_anim_id(eng));
 			if (color != 13898154)
 				put_pixel_image(&eng->canva, x, y, color);
 		}
 	}
 }
+
+//void	load_bonus_addr(t_eng *eng)
 
 void	load_bonus_sprites(t_eng *eng)
 {
