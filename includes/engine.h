@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/22 20:19:34 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/23 18:45:23 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,11 @@ enum e_keys
 
 typedef struct s_tex
 {
-	void	*tex[4];
-	char	*addr[4];
+	int		id;
+	void	*tex[9];
+	char	*addr[9];
 	int		img_width;
+	double	timer;
 	int		img_height;
 	int		bits_per_pixel;
 	int		line_length;
@@ -134,6 +136,7 @@ typedef struct s_eng
 	t_tex			tex;
 	t_canva			canva;
 	t_raycast		raycast;
+	t_tex			shot;
 	void			*mlx_ptr;
 	void			*win_ptr;
 }	t_eng;
@@ -174,6 +177,10 @@ void	rc_write_raycast(t_eng *eng);
 //raycast_utils.c file
 void	paint_vertical(t_eng *eng, int x, int drawstart, int drawend);
 void	put_pixel_image(t_canva *canva, int x, int y, int color);
-int		get_pixel_image(t_eng *eng, int x, int y, int tex);
+int		get_pixel_image(t_tex tex, int x, int y, int id);
+
+//anim.c file
+void	load_bonus_sprites(t_eng *eng);
+void	put_shot(t_eng *eng, int x, int y);
 
 #endif

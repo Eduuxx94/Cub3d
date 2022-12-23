@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/18 20:26:29 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/23 14:53:19 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	eng_start_values(t_eng *eng)
 	eng->event.screen_y = 0;
 	eng->event.screen_x = 0;
 	eng->world.fps_counter = 0;
+	eng->shot.id = 0;
 	eng->mlx_ptr = mlx_init();
 	eng->win_ptr = mlx_new_window(eng->mlx_ptr, SCREENWIDTH, \
 SCREENHEIGHT, "Cub3D");
@@ -77,6 +78,7 @@ void	eng_load_sprites(t_eng *eng)
 	eng->canva.img = mlx_new_image(eng->mlx_ptr, SCREENWIDTH, SCREENHEIGHT);
 	eng->canva.addr = mlx_get_data_addr(eng->canva.img, \
 &eng->canva.bits_per_pixel, &eng->canva.line_length, &eng->canva.endian);
+	load_bonus_sprites(eng);
 }
 
 void	ft_start_engine(t_file *file)
