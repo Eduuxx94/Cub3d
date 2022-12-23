@@ -29,7 +29,7 @@ void	render_block(t_eng *eng, int x, int y, int color)
 				put_pixel_image(&eng->minimap, j, i, color);
 			if (i < (y - 6) && i > (y - 10) && j < (x - 6) \
 			&& j > (x - 10) && color == 0xf1c40f)
-				put_pixel_image(&eng->minimap, j, i, 0x6e2c00);
+				put_pixel_image(&eng->minimap, j, i, 0x000000);
 			if (i >= (y - 16) && j >= (x - 16) && color != 0xf1c40f)
 				put_pixel_image(&eng->minimap, j, i, color);
 		}

@@ -13,8 +13,8 @@
 #ifndef ENGINE_H
 # define ENGINE_H
 
-# define SCREENHEIGHT 740
-# define SCREENWIDTH 900
+# define SCREENHEIGHT 1000
+# define SCREENWIDTH 1900
 
 # include "cub3d.h"
 # include "sys/time.h"
