@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:03:20 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/23 18:05:50 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/23 19:44:18 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	update(t_eng *eng)
 	update_gametime(eng);
 	if (eng->world.world_time - eng->world.last_time > eng->world.frames_rate)
 	{
-		show_fps(eng);
+		//show_fps(eng);
 		rc_write_raycast(eng);
 		put_shot(eng, SCREENWIDTH / 2 - 5, SCREENHEIGHT / 2 - 5);
 		mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->canva.img, \
@@ -94,5 +94,15 @@ SCREENHEIGHT / 2);
 		eng->event.screen_y = SCREENHEIGHT * -0.5;
 	if (eng->event.screen_y > (SCREENHEIGHT * 0.5))
 		eng->event.screen_y = SCREENHEIGHT * 0.5;
+	return (0);
+}
+
+int	mouse_button(int keycode, t_eng *eng)
+{
+	(void)keycode;
+	(void)eng;
+	printf("valor do id: %i\n", keycode);
+	if (keycode == 1 && printf("1\n") && eng->shot.id && printf("2\n"))
+		eng->shot.id = 1;
 	return (0);
 }

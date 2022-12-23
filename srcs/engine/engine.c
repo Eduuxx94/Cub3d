@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/23 14:53:19 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/23 19:36:03 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void	ft_start_engine(t_file *file)
 	eng_start_values(eng);
 	eng_load_sprites(eng);
 	mlx_hook(eng->win_ptr, 6, (1L << 6), mouse, eng);
+	mlx_hook(eng->win_ptr, 4, (1L << 2), mouse_button, eng);
 	mlx_loop_hook(eng->mlx_ptr, update, eng);
 	mlx_hook(eng->win_ptr, 17, 0, ft_close, eng);
 	mlx_hook(eng->win_ptr, 2, 1L << 0, keytest, eng);

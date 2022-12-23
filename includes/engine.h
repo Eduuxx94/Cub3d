@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/23 18:45:23 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/23 19:45:09 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,8 +135,8 @@ typedef struct s_eng
 	t_event			event;
 	t_tex			tex;
 	t_canva			canva;
-	t_raycast		raycast;
 	t_tex			shot;
+	t_raycast		raycast;
 	void			*mlx_ptr;
 	void			*win_ptr;
 }	t_eng;
@@ -159,6 +159,7 @@ int		mouse(int x, int y, t_eng *eng);
 int		keytestout(int keycode, t_eng *eng);
 int		keytest(int keycode, t_eng *eng);
 int		update(t_eng *eng);
+int		mouse_button(int keycode, t_eng *eng);
 
 //raycast1.c file
 void	rc_check_tex_hit(t_eng *eng);
@@ -180,6 +181,7 @@ void	put_pixel_image(t_canva *canva, int x, int y, int color);
 int		get_pixel_image(t_tex tex, int x, int y, int id);
 
 //anim.c file
+int		get_anim_id(int id, t_eng *eng);
 void	load_bonus_sprites(t_eng *eng);
 void	put_shot(t_eng *eng, int x, int y);
 
