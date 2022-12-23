@@ -81,6 +81,8 @@ void	rc_check_wall_hit(t_eng *eng)
 		}
 		if (eng->file->map[eng->raycast.mapy][eng->raycast.mapx] != '0')
 			eng->raycast.hit = 1;
+		if (eng->file->map[eng->raycast.mapy][eng->raycast.mapx] == 'D')
+			eng->raycast.hit = 2;
 	}
 }
 
@@ -108,6 +110,11 @@ eng->raycast.deltadisty);
 //choose wall tex: EA=0 WE=1 SO=2 NO=3
 void	rc_check_tex_hit(t_eng *eng)
 {
+	if (eng->raycast.hit == 2)
+	{
+		eng->raycast.texture = 4;
+		return ;
+	}
 	if (eng->raycast.side)
 	{
 		if (eng->raycast.raydiry > 0)

@@ -46,8 +46,8 @@ enum e_keys
 
 typedef struct s_tex
 {
-	void	*tex[4];
-	char	*addr[4];
+	void	*tex[5];
+	char	*addr[5];
 	int		img_width;
 	int		img_height;
 	int		bits_per_pixel;
@@ -106,6 +106,7 @@ typedef struct s_event
 	int		key_rigth;
 	int		key_left;
 	int		key_shift;
+	int		key_space;
 	int		screen_y;
 	int		screen_x;
 	double	frame_time;

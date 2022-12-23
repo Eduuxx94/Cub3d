@@ -21,7 +21,7 @@ int	is_player(char c)
 
 int	is_valid_map_obj(char c)
 {
-	if (c == '0' || c == ' ' || c == '1' || is_player(c))
+	if (c == '0' || c == ' ' || c == '1' || c == 'D' || is_player(c))
 		return (0);
 	return (1);
 }

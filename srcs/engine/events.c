@@ -57,6 +57,8 @@ int	keytest(int keycode, t_eng *eng)
 		eng->event.screen_y += 15;
 	else if (keycode == KEY_DOWN && eng->event.screen_y > (SCREENHEIGHT * -0.5))
 		eng->event.screen_y -= 15;
+	else if (keycode == SPACE)
+		eng->event.key_space = 1;
 	return (0);
 }
 
@@ -75,6 +77,8 @@ int	keytestout(int keycode, t_eng *eng)
 		eng->event.key_left = 0;
 	if (keycode == KEY_RIGTH)
 		eng->event.key_rigth = 0;
+	if (keycode == SPACE)
+		eng->event.key_space = 0;
 	return (0);
 }
 

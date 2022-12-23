@@ -25,7 +25,12 @@ void	render_block(t_eng *eng, int x, int y, int color)
 		j = -1;
 		while (++j < x)
 		{
-			if (i >= (y - 16) && j >= (x - 16))
+			if (i >= (y - 16) && j >= (x - 16) && color == 0xf1c40f)
+				put_pixel_image(&eng->minimap, j, i, color);
+			if (i < (y - 6) && i > (y - 10) && j < (x - 6) \
+			&& j > (x - 10) && color == 0xf1c40f)
+				put_pixel_image(&eng->minimap, j, i, 0x6e2c00);
+			if (i >= (y - 16) && j >= (x - 16) && color != 0xf1c40f)
 				put_pixel_image(&eng->minimap, j, i, color);
 		}
 	}
@@ -54,6 +59,10 @@ void	render_map(t_eng *eng)
 			(int)eng->player.posy + i) && eng->file->map \
 			[i + (int)eng->player.posy][j + (int)eng->player.posx] == '0')
 				render_block(eng, x, y, 0x757575);
+			else if (is_map(eng, (int)eng->player.posx + j, \
+			(int)eng->player.posy + i) && eng->file->map \
+			[i + (int)eng->player.posy][j + (int)eng->player.posx] == 'D')
+				render_block(eng, x, y, 0xf1c40f);
 			j++;
 		}
 		i++;
@@ -89,7 +98,7 @@ void	render_bg(t_eng *eng)
 	{
 		x = -1;
 		while (++x <= 144)
-			put_pixel_image(&eng->minimap, y, x, 0xe0e0e0);
+			put_pixel_image(&eng->minimap, y, x, 0x000000);
 	}
 }
 

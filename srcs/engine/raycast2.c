@@ -30,6 +30,14 @@ eng->world.last_time) / 1000.0;
 		rc_check_tex_hit(eng);
 		paint_vertical(eng, x, eng->raycast.drawstart + eng->event.screen_y, \
 eng->raycast.drawend + eng->event.screen_y);
+		if (x == SCREENWIDTH / 2 && eng->raycast.hit == 2 \
+		&& eng->raycast.perpwalldist < 1 && eng->event.key_space)
+		{
+			if (eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
+			[(int)(eng->player.posx + eng->player.dirx * 1)] == 'D')
+				eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
+				[(int)(eng->player.posx + eng->player.dirx * 1)] = '0';
+		}	
 	}
 }
 

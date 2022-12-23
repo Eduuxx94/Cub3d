@@ -74,6 +74,10 @@ void	eng_load_sprites(t_eng *eng)
 &eng->tex.img_width, &eng->tex.img_height);
 	eng->tex.addr[3] = mlx_get_data_addr(eng->tex.tex[3], \
 &eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
+	eng->tex.tex[4] = mlx_xpm_file_to_image(eng->mlx_ptr, "./tiles/door.xpm", \
+&eng->tex.img_width, &eng->tex.img_height);
+	eng->tex.addr[4] = mlx_get_data_addr(eng->tex.tex[4], \
+&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
 	eng->canva.img = mlx_new_image(eng->mlx_ptr, SCREENWIDTH, SCREENHEIGHT);
 	eng->canva.addr = mlx_get_data_addr(eng->canva.img, \
 &eng->canva.bits_per_pixel, &eng->canva.line_length, &eng->canva.endian);
