@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:01:53 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 14:36:09 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 17:37:16 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	ft_close(t_eng *eng)
 	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[2]);
 	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[3]);
 	mlx_destroy_image(eng->mlx_ptr, eng->canva.img);
+	mlx_destroy_image(eng->mlx_ptr, eng->minimap.img);
 	destroy_anim_images(&eng->shot);
 	mlx_loop_end(eng->mlx_ptr);
 	mlx_clear_window(eng->mlx_ptr, eng->win_ptr);

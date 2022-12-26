@@ -6,15 +6,15 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 16:14:44 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 18:57:06 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENGINE_H
 # define ENGINE_H
 
-# define SCREENHEIGHT 750
-# define SCREENWIDTH 900
+# define SCREENHEIGHT 1200
+# define SCREENWIDTH 1300
 
 # include "cub3d.h"
 # include <signal.h>
@@ -107,6 +107,7 @@ typedef struct s_event
 	int		key_s;
 	int		key_d;
 	int		key_a;
+	int		key_space;
 	int		key_rigth;
 	int		key_left;
 	int		key_shift;
@@ -137,6 +138,7 @@ typedef struct s_eng
 	t_event			event;
 	t_tex			tex;
 	t_canva			canva;
+	t_canva			minimap;
 	t_tex			shot;
 	t_raycast		raycast;
 	void			*mlx_ptr;
@@ -190,5 +192,16 @@ void	put_shot(t_eng *eng, int x, int y);
 
 //sound.c file
 int		play_sound( char *file);
+
+//minimap1.c file
+int		render_minimap(t_eng *eng);
+int		is_map(t_eng *eng, int x, int y);
+
+//minimap2.c file
+void	render_block(t_eng *eng, int x, int y, int color);
+void	render_map(t_eng *eng);
+void	render_player(t_eng *eng);
+void	render_bg(t_eng *eng);
+void	render_border(t_eng *eng);
 
 #endif

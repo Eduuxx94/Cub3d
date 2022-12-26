@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:09:33 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 15:55:59 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 18:26:11 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,15 @@ eng->world.last_time) / 1000.0;
 		paint_vertical(eng, x, eng->raycast.drawstart + eng->event.screen_y, \
 eng->raycast.drawend + eng->event.screen_y);
 	}
+	if (x == SCREENWIDTH / 2 && eng->raycast.hit == 2 \
+	&& eng->raycast.perpwalldist < 1 && eng->event.key_space)
+	{
+		if (eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
+		[(int)(eng->player.posx + eng->player.dirx * 1)] == 'D')
+			eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
+			[(int)(eng->player.posx + eng->player.dirx * 1)] = '0';
+	}
+	eng->event.key_space = 0;
 }
 
 void	rc_event_w_s(t_eng *eng, double dirx, double diry, double movespeed)

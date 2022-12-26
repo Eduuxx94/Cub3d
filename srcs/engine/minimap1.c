@@ -1,27 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*   minimap1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/03 20:40:11 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 18:20:31 by ede-alme         ###   ########.fr       */
+/*   Created: 2022/12/26 17:29:11 by ede-alme          #+#    #+#             */
+/*   Updated: 2022/12/26 17:29:41 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parse.h"
+#include "engine.h"
 
-int	is_player(char c)
+int	render_minimap(t_eng *eng)
 {
-	if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
-		return (1);
+	render_bg(eng);
+	render_map(eng);
+	render_border(eng);
+	render_player(eng);
 	return (0);
 }
 
-int	is_valid_map_obj(char c)
+int	is_map(t_eng *eng, int x, int y)
 {
-	if (c == '0' || c == ' ' || c == '1' || is_player(c) || c == 'D')
+	int	ymax;
+	int	xmax;
+
+	if (x < 0 || y < 0)
+		return (0);
+	ymax = 0;
+	while (eng->file->map[ymax])
+		ymax++;
+	if (y >= ymax)
+		return (0);
+	xmax = 0;
+	while (eng->file->map && eng->file->map[y][xmax])
+		xmax++;
+	if (x >= xmax)
 		return (0);
 	return (1);
 }

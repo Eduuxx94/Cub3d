@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 17:16:05 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 18:21:48 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,16 @@ void	eng_load_sprites(t_eng *eng)
 &eng->tex.img_width, &eng->tex.img_height);
 	eng->tex.addr[3] = mlx_get_data_addr(eng->tex.tex[3], \
 &eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
+	eng->tex.tex[4] = mlx_xpm_file_to_image(eng->mlx_ptr, "./tiles/door.xpm", \
+&eng->tex.img_width, &eng->tex.img_height);
+	eng->tex.addr[4] = mlx_get_data_addr(eng->tex.tex[4], \
+&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
 	eng->canva.img = mlx_new_image(eng->mlx_ptr, SCREENWIDTH, SCREENHEIGHT);
 	eng->canva.addr = mlx_get_data_addr(eng->canva.img, \
 &eng->canva.bits_per_pixel, &eng->canva.line_length, &eng->canva.endian);
+	eng->minimap.img = mlx_new_image(eng->mlx_ptr, 144, 144);
+	eng->minimap.addr = mlx_get_data_addr(eng->minimap.img, \
+&eng->minimap.bits_per_pixel, &eng->minimap.line_length, &eng->minimap.endian);
 	load_bonus_sprites(eng);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:03:20 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 17:01:37 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 18:24:18 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ int	update(t_eng *eng)
 		mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->canva.img, \
 0, 0);
 		rc_update_pos_dir(eng);
+		render_minimap(eng);
+		mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->minimap.img, \
+5, 5);
 	}
 	return (0);
 }
@@ -55,6 +58,8 @@ int	keytest(int keycode, t_eng *eng)
 		eng->event.screen_y += 15;
 	else if (keycode == KEY_DOWN && eng->event.screen_y > (SCREENHEIGHT * -0.5))
 		eng->event.screen_y -= 15;
+	else if (keycode == SPACE)
+		eng->event.key_space = 1;
 	return (0);
 }
 
