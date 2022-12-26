@@ -6,17 +6,18 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/23 20:29:54 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 16:14:44 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENGINE_H
 # define ENGINE_H
 
-# define SCREENHEIGHT 1100
-# define SCREENWIDTH 1300
+# define SCREENHEIGHT 750
+# define SCREENWIDTH 900
 
 # include "cub3d.h"
+# include <signal.h>
 # include "sys/time.h"
 # include <stdlib.h>
 # include <math.h>
@@ -183,7 +184,11 @@ int		get_pixel_image(t_tex tex, int x, int y, int id);
 
 //anim.c file
 int		get_anim_id(t_eng *eng);
+void	create_data_anim(t_tex *anim);
 void	load_bonus_sprites(t_eng *eng);
 void	put_shot(t_eng *eng, int x, int y);
+
+//sound.c file
+int		play_sound( char *file);
 
 #endif

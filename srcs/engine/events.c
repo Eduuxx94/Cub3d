@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:03:20 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/23 21:05:33 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 17:01:37 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	update(t_eng *eng)
 	{
 		show_fps(eng);
 		rc_write_raycast(eng);
-		put_shot(eng, SCREENWIDTH / 2 - 5, SCREENHEIGHT / 2 - 5);
+		put_shot(eng, SCREENWIDTH * 0.48, SCREENHEIGHT * 0.48);
 		mlx_put_image_to_window(eng->mlx_ptr, eng->win_ptr, eng->canva.img, \
 0, 0);
 		rc_update_pos_dir(eng);
@@ -61,22 +61,20 @@ int	keytest(int keycode, t_eng *eng)
 //esta função atualiza as variaveis para desativar eventos
 int	keytestout(int keycode, t_eng *eng)
 {
-	if (keycode == KEY_F && !eng->shot.id)
-	{
-		eng->shot.id++;
+	if (keycode == KEY_F && !eng->shot.id && ++eng->shot.id && \
+play_sound("paplay ./sounds/fire_shot.ogg"))
 		eng->shot.timer = eng->world.world_time;
-	}
-	if (keycode == KEY_W)
+	else if (keycode == KEY_W)
 		eng->event.key_w = 0;
-	if (keycode == KEY_S)
+	else if (keycode == KEY_S)
 		eng->event.key_s = 0;
-	if (keycode == KEY_D)
+	else if (keycode == KEY_D)
 		eng->event.key_d = 0;
-	if (keycode == KEY_A)
+	else if (keycode == KEY_A)
 		eng->event.key_a = 0;
-	if (keycode == KEY_LEFT)
+	else if (keycode == KEY_LEFT)
 		eng->event.key_left = 0;
-	if (keycode == KEY_RIGTH)
+	else if (keycode == KEY_RIGTH)
 		eng->event.key_rigth = 0;
 	return (0);
 }

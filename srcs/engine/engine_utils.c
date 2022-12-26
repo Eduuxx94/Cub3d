@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:01:53 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/23 21:52:33 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 14:36:09 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,15 @@ void	update_gametime(t_eng *eng)
 current_time.tv_usec;
 }
 
+void	destroy_anim_images(t_tex *anim)
+{
+	int	i;
+
+	i = -1;
+	while (++i < 9)
+		mlx_destroy_image(engine()->mlx_ptr, anim->tex[i]);
+}
+
 //Dar free em todos os ponteiros do mlx e da struct file do parse
 int	ft_close(t_eng *eng)
 {
@@ -38,6 +47,7 @@ int	ft_close(t_eng *eng)
 	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[2]);
 	mlx_destroy_image(eng->mlx_ptr, eng->tex.tex[3]);
 	mlx_destroy_image(eng->mlx_ptr, eng->canva.img);
+	destroy_anim_images(&eng->shot);
 	mlx_loop_end(eng->mlx_ptr);
 	mlx_clear_window(eng->mlx_ptr, eng->win_ptr);
 	mlx_destroy_window(eng->mlx_ptr, eng->win_ptr);

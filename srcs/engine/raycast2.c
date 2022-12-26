@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:09:33 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/23 20:34:11 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 15:55:59 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,16 +83,20 @@ cos(-s);
 
 void	rc_event_rot(t_eng *eng, int key)
 {
+	if (eng->event.screen_x)
+		eng->event.rotspeed = key * 0.0006;
+	else
+		eng->event.rotspeed = eng->event.rotspeed * key;
 	eng->event.olddirx = eng->player.dirx;
-	eng->player.dirx = eng->player.dirx * cos(-eng->event.rotspeed * key) - \
-eng->player.diry * sin(-eng->event.rotspeed * key);
-	eng->player.diry = eng->event.olddirx * sin(-eng->event.rotspeed * key) + \
-eng->player.diry * cos(-eng->event.rotspeed * key);
+	eng->player.dirx = eng->player.dirx * cos(-eng->event.rotspeed) - \
+eng->player.diry * sin(-eng->event.rotspeed);
+	eng->player.diry = eng->event.olddirx * sin(-eng->event.rotspeed) + \
+eng->player.diry * cos(-eng->event.rotspeed);
 	eng->event.oldplanex = eng->player.planex;
-	eng->player.planex = eng->player.planex * cos(-eng->event.rotspeed * \
-key) - eng->player.planey * sin(-eng->event.rotspeed * key);
-	eng->player.planey = eng->event.oldplanex * sin(-eng->event.rotspeed * \
-key) + eng->player.planey * cos(-eng->event.rotspeed * key);
+	eng->player.planex = eng->player.planex * cos(-eng->event.rotspeed) - \
+eng->player.planey * sin(-eng->event.rotspeed);
+	eng->player.planey = eng->event.oldplanex * sin(-eng->event.rotspeed) + \
+eng->player.planey * cos(-eng->event.rotspeed);
 	if (eng->event.screen_x)
 		eng->event.screen_x = 0;
 }
