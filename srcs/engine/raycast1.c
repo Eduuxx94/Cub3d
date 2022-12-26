@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:07:38 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 18:12:53 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 20:42:28 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,23 +110,20 @@ eng->raycast.deltadisty);
 //choose wall tex: EA=0 WE=1 SO=2 NO=3
 void	rc_check_tex_hit(t_eng *eng)
 {
-	if (eng->raycast.hit == 2)
-	{
-		eng->raycast.texture = 4;
-		return ;
-	}
 	if (eng->raycast.side)
 	{
 		if (eng->raycast.raydiry > 0)
-				eng->raycast.texture = 0;
+				eng->raycast.texture = 1;
 		else
-			eng->raycast.texture = 1;
+			eng->raycast.texture = 0;
 	}
 	else
 	{
 		if (eng->raycast.raydirx > 0)
-			eng->raycast.texture = 2;
-		else
 			eng->raycast.texture = 3;
+		else
+			eng->raycast.texture = 2;
 	}
+	if (eng->raycast.hit == 2)
+		eng->raycast.texture += 4;
 }

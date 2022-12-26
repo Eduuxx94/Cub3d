@@ -6,15 +6,15 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 18:57:06 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 20:46:59 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENGINE_H
 # define ENGINE_H
-
-# define SCREENHEIGHT 1200
-# define SCREENWIDTH 1300
+//640 x 480
+# define SCREENHEIGHT 950
+# define SCREENWIDTH 1250
 
 # include "cub3d.h"
 # include <signal.h>
@@ -163,7 +163,7 @@ int		mouse(int x, int y, t_eng *eng);
 int		keytestout(int keycode, t_eng *eng);
 int		keytest(int keycode, t_eng *eng);
 int		update(t_eng *eng);
-int		mouse_button(int keycode, t_eng *eng);
+int		button_press(int keycode);
 
 //raycast1.c file
 void	rc_check_tex_hit(t_eng *eng);

@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 18:21:48 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 20:34:55 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,21 @@ void	eng_load_sprites(t_eng *eng)
 &eng->tex.img_width, &eng->tex.img_height);
 	eng->tex.addr[3] = mlx_get_data_addr(eng->tex.tex[3], \
 &eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
-	eng->tex.tex[4] = mlx_xpm_file_to_image(eng->mlx_ptr, "./tiles/door.xpm", \
-&eng->tex.img_width, &eng->tex.img_height);
+	eng->tex.tex[4] = mlx_xpm_file_to_image(eng->mlx_ptr, \
+"./tiles/D1_1024.xpm", &eng->tex.img_width, &eng->tex.img_height);
 	eng->tex.addr[4] = mlx_get_data_addr(eng->tex.tex[4], \
+&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
+	eng->tex.tex[5] = mlx_xpm_file_to_image(eng->mlx_ptr, \
+"./tiles/D2_1024.xpm", &eng->tex.img_width, &eng->tex.img_height);
+	eng->tex.addr[5] = mlx_get_data_addr(eng->tex.tex[4], \
+&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
+	eng->tex.tex[6] = mlx_xpm_file_to_image(eng->mlx_ptr, \
+"./tiles/D3_1024.xpm", &eng->tex.img_width, &eng->tex.img_height);
+	eng->tex.addr[6] = mlx_get_data_addr(eng->tex.tex[4], \
+&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
+	eng->tex.tex[7] = mlx_xpm_file_to_image(eng->mlx_ptr, \
+"./tiles/D4_1024.xpm", &eng->tex.img_width, &eng->tex.img_height);
+	eng->tex.addr[7] = mlx_get_data_addr(eng->tex.tex[4], \
 &eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
 	eng->canva.img = mlx_new_image(eng->mlx_ptr, SCREENWIDTH, SCREENHEIGHT);
 	eng->canva.addr = mlx_get_data_addr(eng->canva.img, \
@@ -94,5 +106,7 @@ void	ft_start_engine(t_file *file)
 	mlx_hook(eng->win_ptr, 17, 0, ft_close, eng);
 	mlx_hook(eng->win_ptr, 2, 1L << 0, keytest, eng);
 	mlx_hook(eng->win_ptr, 3, 1L << 1, keytestout, eng);
+	mlx_hook(eng->win_ptr, 3, 1L << 1, keytestout, eng);
+	mlx_hook(eng->win_ptr, 4, 1L << 2, button_press, NULL);
 	mlx_loop(eng->mlx_ptr);
 }

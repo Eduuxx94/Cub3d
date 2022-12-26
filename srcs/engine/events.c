@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:03:20 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 18:24:18 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 19:40:14 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,13 @@ SCREENHEIGHT / 2);
 		eng->event.screen_y = SCREENHEIGHT * -0.5;
 	if (eng->event.screen_y > (SCREENHEIGHT * 0.5))
 		eng->event.screen_y = SCREENHEIGHT * 0.5;
+	return (0);
+}
+
+int	button_press(int keycode)
+{
+	if (keycode == 1 && !engine()->shot.id && ++engine()->shot.id && \
+play_sound("paplay ./sounds/fire_shot.ogg"))
+		engine()->shot.timer = engine()->world.world_time;
 	return (0);
 }
