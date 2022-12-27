@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:07:38 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 20:42:28 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/27 17:55:38 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	rc_check_wall_hit(t_eng *eng)
 			eng->raycast.mapy += eng->raycast.stepy;
 			eng->raycast.side = 1;
 		}
-		if (eng->file->map[eng->raycast.mapy][eng->raycast.mapx] != '0')
+		if (eng->file->map[eng->raycast.mapy][eng->raycast.mapx] != '0' && eng->file->map[eng->raycast.mapy][eng->raycast.mapx] != 'F')
 			eng->raycast.hit = 1;
 		if (eng->file->map[eng->raycast.mapy][eng->raycast.mapx] == 'D')
 			eng->raycast.hit = 2;

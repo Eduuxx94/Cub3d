@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:09:33 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 22:28:56 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/27 18:02:45 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,14 @@ eng->raycast.drawend + eng->event.screen_y);
 			if (eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
 			[(int)(eng->player.posx + eng->player.dirx * 1)] == 'D')
 				eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
-				[(int)(eng->player.posx + eng->player.dirx * 1)] = '0';
+				[(int)(eng->player.posx + eng->player.dirx * 1)] = 'F';
+		}
+		else if (x == SCREENWIDTH / 2 && eng->event.key_space)
+		{
+			if (eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
+			[(int)(eng->player.posx + eng->player.dirx * 1)] == 'F')
+				eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
+				[(int)(eng->player.posx + eng->player.dirx * 1)] = 'D';
 		}
 	}
 	eng->event.key_space = 0;
@@ -57,13 +64,17 @@ void	rc_event_w_s(t_eng *eng, double dirx, double diry, double movespeed)
 		dy = 1 * collide;
 	else
 		dy = -1 * collide;
-	if (eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + dirx * \
+	if ((eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + dirx * \
 movespeed)] == '0' && eng->file->map[(int)((eng->player.posy) + \
-dy)][(int)((eng->player.posx + dirx * movespeed) + dx)] == '0')
+dy)][(int)((eng->player.posx + dirx * movespeed) + dx)] == '0') || (eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + dirx * \
+movespeed)] == '0' && eng->file->map[(int)((eng->player.posy) + \
+dy)][(int)((eng->player.posx + dirx * movespeed) + dx)] == 'F'))
 		eng->player.posx += dirx * movespeed;
-	if (eng->file->map[(int)(eng->player.posy + diry * movespeed)][(int)(eng->\
+	if ((eng->file->map[(int)(eng->player.posy + diry * movespeed)][(int)(eng->\
 player.posx)] == '0' && eng->file->map[(int)((eng->player.posy + diry * \
-movespeed) + dy)][(int)((eng->player.posx) + dx)] == '0')
+movespeed) + dy)][(int)((eng->player.posx) + dx)] == '0') || (eng->file->map[(int)(eng->player.posy + diry * movespeed)][(int)(eng->\
+player.posx)] == '0' && eng->file->map[(int)((eng->player.posy + diry * \
+movespeed) + dy)][(int)((eng->player.posx) + dx)] == 'F'))
 		eng->player.posy += diry * movespeed;
 }
 
