@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:07:35 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 20:34:55 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 23:55:05 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,43 +48,29 @@ SCREENHEIGHT, "Cub3D");
 }
 
 //Load sprites of mandatory game
-void	eng_load_sprites(t_eng *eng)
+void	eng_load_sprites(t_eng *eng, int i)
 {
-	eng->tex.tex[0] = mlx_xpm_file_to_image(eng->mlx_ptr, eng->file->_no, \
-&eng->tex.img_width, &eng->tex.img_height);
-	eng->tex.addr[0] = mlx_get_data_addr(eng->tex.tex[0], \
-&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
-	eng->tex.tex[1] = mlx_xpm_file_to_image(eng->mlx_ptr, eng->file->_so, \
-&eng->tex.img_width, &eng->tex.img_height);
-	eng->tex.addr[1] = mlx_get_data_addr(eng->tex.tex[1], \
-&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
-	eng->tex.tex[2] = mlx_xpm_file_to_image(eng->mlx_ptr, eng->file->_we, \
-&eng->tex.img_width, &eng->tex.img_height);
-	eng->tex.addr[2] = mlx_get_data_addr(eng->tex.tex[2], \
-&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
-	eng->tex.tex[3] = mlx_xpm_file_to_image(eng->mlx_ptr, eng->file->_ea, \
-&eng->tex.img_width, &eng->tex.img_height);
-	eng->tex.addr[3] = mlx_get_data_addr(eng->tex.tex[3], \
-&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
-	eng->tex.tex[4] = mlx_xpm_file_to_image(eng->mlx_ptr, \
-"./tiles/D1_1024.xpm", &eng->tex.img_width, &eng->tex.img_height);
-	eng->tex.addr[4] = mlx_get_data_addr(eng->tex.tex[4], \
-&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
-	eng->tex.tex[5] = mlx_xpm_file_to_image(eng->mlx_ptr, \
-"./tiles/D2_1024.xpm", &eng->tex.img_width, &eng->tex.img_height);
-	eng->tex.addr[5] = mlx_get_data_addr(eng->tex.tex[4], \
-&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
-	eng->tex.tex[6] = mlx_xpm_file_to_image(eng->mlx_ptr, \
-"./tiles/D3_1024.xpm", &eng->tex.img_width, &eng->tex.img_height);
-	eng->tex.addr[6] = mlx_get_data_addr(eng->tex.tex[4], \
-&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
-	eng->tex.tex[7] = mlx_xpm_file_to_image(eng->mlx_ptr, \
-"./tiles/D4_1024.xpm", &eng->tex.img_width, &eng->tex.img_height);
-	eng->tex.addr[7] = mlx_get_data_addr(eng->tex.tex[4], \
-&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
 	eng->canva.img = mlx_new_image(eng->mlx_ptr, SCREENWIDTH, SCREENHEIGHT);
 	eng->canva.addr = mlx_get_data_addr(eng->canva.img, \
 &eng->canva.bits_per_pixel, &eng->canva.line_length, &eng->canva.endian);
+	while (++i < 4 && put_loading(i, NULL))
+	{
+		eng->tex.tex[i] = mlx_xpm_file_to_image(eng->mlx_ptr, eng->file->id[i], \
+&eng->tex.img_width, &eng->tex.img_height);
+		eng->tex.addr[i] = mlx_get_data_addr(eng->tex.tex[i], \
+&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
+	}
+	eng->tex.tex[i--] = mlx_xpm_file_to_image(eng->mlx_ptr, \
+"./tiles/D1_1024.xpm", &eng->tex.img_width, &eng->tex.img_height);
+	eng->tex.tex[5] = mlx_xpm_file_to_image(eng->mlx_ptr, \
+"./tiles/D2_1024.xpm", &eng->tex.img_width, &eng->tex.img_height);
+	eng->tex.tex[6] = mlx_xpm_file_to_image(eng->mlx_ptr, \
+"./tiles/D3_1024.xpm", &eng->tex.img_width, &eng->tex.img_height);
+	eng->tex.tex[7] = mlx_xpm_file_to_image(eng->mlx_ptr, \
+"./tiles/D4_1024.xpm", &eng->tex.img_width, &eng->tex.img_height);
+	while (++i < 8 && put_loading(i, NULL))
+		eng->tex.addr[i] = mlx_get_data_addr(eng->tex.tex[i], \
+&eng->tex.bits_per_pixel, &eng->tex.line_length, &eng->tex.endian);
 	eng->minimap.img = mlx_new_image(eng->mlx_ptr, 144, 144);
 	eng->minimap.addr = mlx_get_data_addr(eng->minimap.img, \
 &eng->minimap.bits_per_pixel, &eng->minimap.line_length, &eng->minimap.endian);
@@ -100,7 +86,7 @@ void	ft_start_engine(t_file *file)
 	eng->file = file;
 	eng_init(eng);
 	eng_start_values(eng);
-	eng_load_sprites(eng);
+	eng_load_sprites(eng, -1);
 	mlx_hook(eng->win_ptr, 6, (1L << 6), mouse, eng);
 	mlx_loop_hook(eng->mlx_ptr, update, eng);
 	mlx_hook(eng->win_ptr, 17, 0, ft_close, eng);

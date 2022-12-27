@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:03:20 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 19:40:14 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/27 00:40:05 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ int	keytest(int keycode, t_eng *eng)
 		eng->event.screen_y += 15;
 	else if (keycode == KEY_DOWN && eng->event.screen_y > (SCREENHEIGHT * -0.5))
 		eng->event.screen_y -= 15;
-	else if (keycode == SPACE)
-		eng->event.key_space = 1;
 	return (0);
 }
 
@@ -81,6 +79,8 @@ play_sound("paplay ./sounds/fire_shot.ogg"))
 		eng->event.key_left = 0;
 	else if (keycode == KEY_RIGTH)
 		eng->event.key_rigth = 0;
+	else if (keycode == SPACE)
+		eng->event.key_space = 1;
 	return (0);
 }
 

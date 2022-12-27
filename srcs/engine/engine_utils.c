@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:01:53 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 17:37:16 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 23:17:08 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int	ft_close(t_eng *eng)
 	mlx_clear_window(eng->mlx_ptr, eng->win_ptr);
 	mlx_destroy_window(eng->mlx_ptr, eng->win_ptr);
 	mlx_destroy_display(eng->mlx_ptr);
+	free(eng->file->id);
 	ft_free_sfile(eng->file);
 	free(eng->mlx_ptr);
 	exit(0);

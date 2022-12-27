@@ -6,7 +6,7 @@
 #    By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/17 19:20:47 by ede-alme          #+#    #+#              #
-#    Updated: 2022/12/26 18:18:35 by ede-alme         ###   ########.fr        #
+#    Updated: 2022/12/26 23:17:25 by ede-alme         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,6 +46,7 @@ SRC_ENGINE = engine.c \
 			sound.c \
 			minimap1.c \
 			minimap2.c \
+			loading.c \
 
 SRC = $(SRC_NAME) $(SRC_PARSE) $(SRC_UTILS) $(SRC_ENGINE)
 

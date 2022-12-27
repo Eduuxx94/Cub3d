@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 20:46:59 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/27 00:40:46 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ typedef struct s_eng
 
 //engine.c file
 void	ft_start_engine(t_file *file);
-void	eng_load_sprites(t_eng *eng);
+void	eng_load_sprites(t_eng *eng, int i);
 void	eng_start_values(t_eng *eng);
 void	eng_init(t_eng *eng);
 void	eng_dir_plane(double dirx, double diry, double planex, double planey);
@@ -199,9 +199,11 @@ int		is_map(t_eng *eng, int x, int y);
 
 //minimap2.c file
 void	render_block(t_eng *eng, int x, int y, int color);
-void	render_map(t_eng *eng);
+void	render_map(t_eng *eng, int y, int i);
 void	render_player(t_eng *eng);
 void	render_bg(t_eng *eng);
 void	render_border(t_eng *eng);
 
+//Loading.c files
+int		put_loading(int i, char *loading);
 #endif

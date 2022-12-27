@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 17:29:11 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 17:29:41 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/27 00:40:27 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	render_minimap(t_eng *eng)
 {
 	render_bg(eng);
-	render_map(eng);
+	render_map(eng, 0, -5);
 	render_border(eng);
 	render_player(eng);
 	return (0);

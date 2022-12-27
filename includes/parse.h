@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 10:22:49 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/18 19:48:41 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/26 23:05:21 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_rgb
 
 typedef struct s_file
 {
+	char	**id;
 	int		fd;
 	char	*file_path;
 	char	*_no;

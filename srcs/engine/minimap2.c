@@ -6,10 +6,9 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 17:29:28 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 17:30:35 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/27 00:39:51 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "engine.h"
 
@@ -37,23 +36,19 @@ void	render_block(t_eng *eng, int x, int y, int color)
 	}
 }
 
-void	render_map(t_eng *eng)
+void	render_map(t_eng *eng, int y, int i)
 {
 	int	x;
-	int	y;
-	int	i;
 	int	j;
 
-	y = 0;
-	i = -4;
-	while (++y <= 9)
+	while (++y <= 9 && ++i + 50)
 	{
 		x = 0;
-		j = -4;
-		while (++x <= 9)
+		j = -5;
+		while (++x <= 9 && ++j + 50)
 		{
-			if (is_map(eng, (int)eng->player.posx + j, \
-			(int)eng->player.posy + i) && eng->file->map \
+			if (is_map(eng, (int)eng->player.posx + j, (int)eng->player.posy + \
+			i) && eng->file->map \
 			[i + (int)eng->player.posy][j + (int)eng->player.posx] == '1')
 				render_block(eng, x, y, 0x000000);
 			else if (is_map(eng, (int)eng->player.posx + j, \
@@ -64,9 +59,7 @@ void	render_map(t_eng *eng)
 			(int)eng->player.posy + i) && eng->file->map \
 			[i + (int)eng->player.posy][j + (int)eng->player.posx] == 'D')
 				render_block(eng, x, y, 0xf1c40f);
-			j++;
 		}
-		i++;
 	}
 }
 
