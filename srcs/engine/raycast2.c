@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:09:33 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/27 18:35:30 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/27 18:57:24 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,7 @@ eng->world.last_time) / 1000.0;
 		rc_check_tex_hit(eng);
 		paint_vertical(eng, x, eng->raycast.drawstart + eng->event.screen_y, \
 eng->raycast.drawend + eng->event.screen_y);
-		if (eng->event.key_space && x == SCREENWIDTH / 2 && eng->world.world_time - eng->world.last_door > 400000)
-		{
-			if (eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
-			[(int)(eng->player.posx + eng->player.dirx * 1)] == 'D')
-				eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
-				[(int)(eng->player.posx + eng->player.dirx * 1)] = 'F';
-			else if (eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
-			[(int)(eng->player.posx + eng->player.dirx * 1)] == 'F')
-				eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
-				[(int)(eng->player.posx + eng->player.dirx * 1)] = 'D';
-			eng->world.last_door = eng->world.world_time;
-		}
+		swap_door(eng, x);
 	}
 	eng->event.key_space = 0;
 }
@@ -50,28 +39,22 @@ void	rc_event_w_s(t_eng *eng, double dirx, double diry, double movespeed)
 {
 	float	dx;
 	float	dy;
-	float	collide;
 
-	collide = 0.1;
-	if (dirx >= 0)
-		dx = 1 * collide;
-	else
-		dx = -1 * collide;
-	if (diry >= 0)
-		dy = 1 * collide;
-	else
-		dy = -1 * collide;
-	if ((eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + dirx * \
-movespeed)] == '0' || eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + dirx * \
-movespeed)] == 'F') && (eng->file->map[(int)((eng->player.posy) + \
-dy)][(int)((eng->player.posx + dirx * movespeed) + dx)] == '0' || eng->file->map[(int)((eng->player.posy) + \
-dy)][(int)((eng->player.posx + dirx * movespeed) + dx)] == 'F'))
+	dx = get_dir(dirx);
+	dy = get_dir(diry);
+	if ((eng->file->map[(int)(eng->player.posy)][(int)(eng->player.posx + dirx \
+	* movespeed)] == '0' || eng->file->map[(int)(eng->player.posy)][(int)(eng->\
+player.posx + dirx * movespeed)] == 'F') && (eng->file->map[(int)((eng->player.\
+posy) + dy)][(int)((eng->player.posx + dirx * movespeed) + dx)] == '0' || eng->\
+file->map[(int)((eng->player.posy) + dy)][(int)((eng->player.posx + dirx * \
+movespeed) + dx)] == 'F'))
 		eng->player.posx += dirx * movespeed;
 	if ((eng->file->map[(int)(eng->player.posy + diry * movespeed)][(int)(eng->\
-player.posx)] == '0' || eng->file->map[(int)(eng->player.posy + diry * movespeed)][(int)(eng->\
-player.posx)] == 'F') && (eng->file->map[(int)((eng->player.posy + diry * \
-movespeed) + dy)][(int)((eng->player.posx) + dx)] == '0' || eng->file->map[(int)((eng->player.posy + diry * \
-movespeed) + dy)][(int)((eng->player.posx) + dx)] == 'F'))
+player.posx)] == '0' || eng->file->map[(int)(eng->player.posy + diry * \
+movespeed)][(int)(eng->player.posx)] == 'F') && (eng->file->map[(int)((eng->\
+player.posy + diry * movespeed) + dy)][(int)((eng->player.posx) + dx)] == '0' \
+	|| eng->file->map[(int)((eng->player.posy + diry * movespeed) + dy)][(int) \
+	((eng->player.posx) + dx)] == 'F'))
 		eng->player.posy += diry * movespeed;
 }
 

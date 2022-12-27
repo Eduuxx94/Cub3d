@@ -6,15 +6,15 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/27 18:38:30 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/27 19:36:35 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENGINE_H
 # define ENGINE_H
-//640 x 480
-# define SCREENHEIGHT 700
-# define SCREENWIDTH 900
+
+# define SCREENHEIGHT 300
+# define SCREENWIDTH 300
 
 # include "cub3d.h"
 # include <signal.h>
@@ -184,12 +184,14 @@ void	rc_write_raycast(t_eng *eng);
 void	paint_vertical(t_eng *eng, int x, int drawstart, int drawend);
 void	put_pixel_image(t_canva *canva, int x, int y, int color);
 int		get_pixel_image(t_tex tex, int x, int y, int id);
+int		get_dir(int value);
 
 //anim.c file
 int		get_anim_id(t_eng *eng);
 void	create_data_anim(t_tex *anim);
 void	load_bonus_sprites(t_eng *eng);
 void	put_shot(t_eng *eng, int x, int y);
+void	swap_door(t_eng *eng, int x);
 
 //sound.c file
 int		play_sound( char *file);
@@ -207,4 +209,5 @@ void	render_border(t_eng *eng);
 
 //Loading.c files
 int		put_loading(int i, char *loading);
+
 #endif

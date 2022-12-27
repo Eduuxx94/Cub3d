@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 14:34:37 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 22:43:19 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/27 18:45:13 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,21 @@ void	load_bonus_sprites(t_eng *eng)
 	eng->shot.tex[8] = mlx_xpm_file_to_image(eng->mlx_ptr, "./tiles/fire8.xpm"\
 , &eng->shot.img_width, &eng->shot.img_height);
 	create_data_anim(&eng->shot);
+}
+
+void	swap_door(t_eng *eng, int x)
+{
+	if (eng->event.key_space && x == SCREENWIDTH / 2 && eng->world.world_time \
+	- eng->world.last_door > 400000)
+	{
+		if (eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
+		[(int)(eng->player.posx + eng->player.dirx * 1)] == 'D')
+			eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
+			[(int)(eng->player.posx + eng->player.dirx * 1)] = 'F';
+		else if (eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
+		[(int)(eng->player.posx + eng->player.dirx * 1)] == 'F')
+			eng->file->map[(int)(eng->player.posy + eng->player.diry * 1)] \
+			[(int)(eng->player.posx + eng->player.dirx * 1)] = 'D';
+		eng->world.last_door = eng->world.world_time;
+	}
 }

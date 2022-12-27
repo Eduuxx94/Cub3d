@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 20:11:16 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/26 22:36:21 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/27 18:57:30 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,15 @@ eng->raycast.texture));
 		else
 			put_pixel_image(&eng->canva, x, i, eng->file->floor.rgb);
 	}
+}
+
+int	get_dir(int value)
+{
+	int	dir;
+
+	if (value >= 0)
+		dir = 1 * 0.1;
+	else
+		dir = -1 * 0.1;
+	return (dir);
 }

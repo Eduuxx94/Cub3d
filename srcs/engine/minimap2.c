@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 17:29:28 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/27 18:37:52 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/27 19:35:55 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ void	render_block(t_eng *eng, int x, int y, int color)
 		{
 			if (i >= (y - 16) && j >= (x - 16))
 				put_pixel_image(&eng->minimap, j, i, color);
-			if (i < (y - 4) && i > (y - 12) && j < (x - 4) \
-			&& j > (x - 12) && (color == 0xf1c40f || color == 0x00a300))
+			if (i < (y - 5) && i > (y - 11) && j < (x - 5) \
+			&& j > (x - 11) && (color == 0xf1c40f || color == 0x00a300))
 				put_pixel_image(&eng->minimap, j, i, 0x000000);
 		}
 	}
