@@ -199,7 +199,7 @@ int		is_map(t_eng *eng, int x, int y);
 
 //minimap2.c file
 void	render_block(t_eng *eng, int x, int y, int color);
-void	render_map(t_eng *eng, int y, int i);
+void	render_map(int y, int i, int x, int j);
 void	render_player(t_eng *eng);
 void	render_bg(t_eng *eng);
 void	render_border(t_eng *eng);

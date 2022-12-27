@@ -15,7 +15,7 @@
 int	render_minimap(t_eng *eng)
 {
 	render_bg(eng);
-	render_map(eng, 0, -5);
+	render_map(0, -5, 0, -5);
 	render_border(eng);
 	render_player(eng);
 	return (0);

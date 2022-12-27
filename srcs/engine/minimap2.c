@@ -25,40 +25,39 @@ void	render_block(t_eng *eng, int x, int y, int color)
 		j = -1;
 		while (++j < x)
 		{
-			if (i >= (y - 16) && j >= (x - 16) && color == 0xf1c40f)
+			if (i >= (y - 16) && j >= (x - 16))
 				put_pixel_image(&eng->minimap, j, i, color);
-			if (i < (y - 6) && i > (y - 10) && j < (x - 6) \
-			&& j > (x - 10) && color == 0xf1c40f)
+			if (i < (y - 4) && i > (y - 12) && j < (x - 4) \
+			&& j > (x - 12) && (color == 0xf1c40f || color == 0x00a300))
 				put_pixel_image(&eng->minimap, j, i, 0x000000);
-			if (i >= (y - 16) && j >= (x - 16) && color != 0xf1c40f)
-				put_pixel_image(&eng->minimap, j, i, color);
 		}
 	}
 }
 
-void	render_map(t_eng *eng, int y, int i)
+void	render_map(int y, int i, int x, int j)
 {
-	int	x;
-	int	j;
-
 	while (++y <= 9 && ++i + 50)
 	{
-		x = 0;
 		j = -5;
+		x = 0;
 		while (++x <= 9 && ++j + 50)
 		{
-			if (is_map(eng, (int)eng->player.posx + j, (int)eng->player.posy + \
-			i) && eng->file->map \
-			[i + (int)eng->player.posy][j + (int)eng->player.posx] == '1')
-				render_block(eng, x, y, 0x000000);
-			else if (is_map(eng, (int)eng->player.posx + j, \
-			(int)eng->player.posy + i) && eng->file->map \
-			[i + (int)eng->player.posy][j + (int)eng->player.posx] == '0')
-				render_block(eng, x, y, 0x757575);
-			else if (is_map(eng, (int)eng->player.posx + j, \
-			(int)eng->player.posy + i) && eng->file->map \
-			[i + (int)eng->player.posy][j + (int)eng->player.posx] == 'D')
-				render_block(eng, x, y, 0xf1c40f);
+			if (is_map(engine(), (int)engine()->player.posx + j, \
+			(int)engine()->player.posy + i) && engine()->file->map[i + \
+			(int)engine()->player.posy][j + (int)engine()->player.posx] == '1')
+				render_block(engine(), x, y, 0x000000);
+			else if (is_map(engine(), (int)engine()->player.posx + j, \
+			(int)engine()->player.posy + i) && engine()->file->map[i + \
+			(int)engine()->player.posy][j + (int)engine()->player.posx] == '0')
+				render_block(engine(), x, y, 0x757575);
+			else if (is_map(engine(), (int)engine()->player.posx + j, \
+			(int)engine()->player.posy + i) && engine()->file->map[i + \
+			(int)engine()->player.posy][j + (int)engine()->player.posx] == 'D')
+				render_block(engine(), x, y, 0xf1c40f);
+			else if (is_map(engine(), (int)engine()->player.posx + j, \
+			(int)engine()->player.posy + i) && engine()->file->map[i + \
+			(int)engine()->player.posy][j + (int)engine()->player.posx] == 'F')
+				render_block(engine(), x, y, 0x00a300);
 		}
 	}
 }
