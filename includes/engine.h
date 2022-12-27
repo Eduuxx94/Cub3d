@@ -6,7 +6,7 @@
 /*   By: ede-alme <ede-alme@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 11:08:50 by ede-alme          #+#    #+#             */
-/*   Updated: 2022/12/27 17:35:12 by ede-alme         ###   ########.fr       */
+/*   Updated: 2022/12/27 18:38:30 by ede-alme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ typedef struct s_world
 	int				fps_counter;
 	double			world_time;
 	double			last_time;
+	double			last_door;
 }	t_world;
 
 typedef struct s_eng
@@ -199,7 +200,7 @@ int		is_map(t_eng *eng, int x, int y);
 
 //minimap2.c file
 void	render_block(t_eng *eng, int x, int y, int color);
-void	render_map(t_eng *eng, int y, int i);
+void	render_map(int y, int i, int x, int j);
 void	render_player(t_eng *eng);
 void	render_bg(t_eng *eng);
 void	render_border(t_eng *eng);
