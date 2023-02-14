@@ -25,4 +25,9 @@ There is a example how my check map works:
 ![check_map](https://user-images.githubusercontent.com/60687885/199610878-7ff79209-b54e-4617-99b2-9bc14d2142c6.gif)
 
 The RayCast code:
+
     The code initializes various variables and loads necessary game sprites using the MLX library. It also sets up various hooks for keyboard and mouse input, and for updating the game state. Overall, it seems to be initializing the game engine and setting it up to be run.
+
+Loop:
+
+    Handling key and mouse events, and rendering the game using the mlx library. The update function is called by the game loop and updates the game time, checks for certain events, and renders the game. The keytest and keytestout functions handle key events and update variables based on the key pressed or released. The mouse function handles mouse events and updates the camera position based on mouse movement. The button_press function handles mouse button events and updates variables related to shooting.
