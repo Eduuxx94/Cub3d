@@ -4,11 +4,6 @@ This will be the last project developed in C. For that reason, the project will 
 
 The project is to create a “realistic” 3D graphical representation of the inside of a maze from a first-person perspective using ray-cast principles.
 
-Example:
-
-![Screenshot_2021-11-15-20-29-19-5](https://user-images.githubusercontent.com/60687885/199837502-e3f44670-a6b7-4471-bb87-541c326136ba.png)
-
-
 My Goals
 
     Rigor, use of C, use of basic algorithms, information research, windows, colors, events, fill shapes, etc.
@@ -28,3 +23,6 @@ How my check map works:
 There is a example how my check map works:
 
 ![check_map](https://user-images.githubusercontent.com/60687885/199610878-7ff79209-b54e-4617-99b2-9bc14d2142c6.gif)
+
+The RayCast code:
+    The code initializes various variables and loads necessary game sprites using the MLX library. It also sets up various hooks for keyboard and mouse input, and for updating the game state. Overall, it seems to be initializing the game engine and setting it up to be run.
